@@ -16,8 +16,6 @@
 
 
 
-Game* Game::game = nullptr;
-
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GamePlaying>()),
 				running(false), gFont(nullptr) {}
 
@@ -78,10 +76,8 @@ void Game::setRunningToFalse() {
 }
 
 Game* Game::getInstance() {
-	if (game == nullptr) {
-		game = new Game();
-	}
-	return game;
+	static Game instance;
+	return &instance;
 }
 
 void Game::init() {
@@ -116,10 +112,10 @@ const SDL_Renderer* Game::getRenderer() const {
 	return gRenderer;
 }
 
-const bool& Game::isRunning() const {
-	return running;
-}
-
 const SDL_Event& Game::getEvent() const {
 	return gEvent;
+}
+
+const bool& Game::isRunning() const {
+	return running;
 }

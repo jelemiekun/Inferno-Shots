@@ -8,8 +8,6 @@ class GameState;
 class Game {
 
 private:
-	static Game* game;
-
 	std::unique_ptr<GameState> gameState;
 
 protected:
@@ -18,6 +16,8 @@ protected:
 public:
 	Game(const Game&) = delete;
 	Game& operator=(const Game&) = delete;
+	Game(Game&&) = delete;
+	Game& operator=(Game&&) = delete;
 
 private:
 	SDL_Event gEvent;
@@ -48,7 +48,7 @@ public:
 	void render();
 
 	const SDL_Renderer* getRenderer() const;
-	const bool& isRunning() const;
 	const SDL_Event& getEvent() const;
+	const bool& isRunning() const;
 };
 
