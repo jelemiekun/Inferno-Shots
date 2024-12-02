@@ -8,6 +8,7 @@
 #include "PrototypeRegistry.h"
 #include "TextureType.h"
 #include "Command.h"
+#include "Background.h"
 
 
 
@@ -72,11 +73,15 @@ void Game::setRunningToFalse() {
 	running = false;
 }
 
+void Game::initBackground() {
+	Background::getInstance()->init();
+}
+
 void Game::initPlayer() {
 	// Initialize main prototype of Player
 	SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
 	TextureType* playerTexture = new TextureType(Prototype_Type::PLAYER);
-	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(5, playerTexture, position, 5.0f, 30.0f);
+	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(5, playerTexture, position, 10.0f, 30.0f);
 
 	// Add main prototype player to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
@@ -92,26 +97,26 @@ void Game::initPlayer() {
 	InvokerPlaying::getInstance()->addPlayer(player1);
 
 	// Set commands
-	auto moveLeftCommand = std::make_shared<MoveLeftComand>();
-	auto moveUpLeftCommand = std::make_shared<MoveUpLeftComand>();
-	auto moveUpCommand = std::make_shared<MoveUpComand>();
-	auto moveUpRightCommand = std::make_shared<MoveUpRightComand>();
-	auto moveRightCommand = std::make_shared<MoveRightComand>();
-	auto moveDownRightCommand = std::make_shared<MoveDownRightComand>();
-	auto moveDownCommand = std::make_shared<MoveDownComand>();
-	auto moveDownLeftCommand = std::make_shared<MoveDownLeftComand>();
+	auto moveLeftCommand = std::make_shared<MoveLeftCommand>();
+	auto moveUpLeftCommand = std::make_shared<MoveUpLeftCommand>();
+	auto moveUpCommand = std::make_shared<MoveUpCommand>();
+	auto moveUpRightCommand = std::make_shared<MoveUpRightCommand>();
+	auto moveRightCommand = std::make_shared<MoveRightCommand>();
+	auto moveDownRightCommand = std::make_shared<MoveDownRightCommand>();
+	auto moveDownCommand = std::make_shared<MoveDownCommand>();
+	auto moveDownLeftCommand = std::make_shared<MoveDownLeftCommand>();
 
-	auto faceLeftCommand = std::make_shared<FaceLeftComand>();
-	auto faceUpLeftCommand = std::make_shared<FaceUpLeftComand>();
-	auto faceUpCommand = std::make_shared<FaceUpComand>();
-	auto faceUpRightCommand = std::make_shared<FaceUpRightComand>();
-	auto faceRightCommand = std::make_shared<FaceRightComand>();
-	auto faceDownRightCommand = std::make_shared<FaceDownRightComand>();
-	auto faceDownCommand = std::make_shared<FaceDownComand>();
-	auto faceDownLeftCommand = std::make_shared<FaceDownLeftComand>();
+	auto faceLeftCommand = std::make_shared<FaceLeftCommand>();
+	auto faceUpLeftCommand = std::make_shared<FaceUpLeftCommand>();
+	auto faceUpCommand = std::make_shared<FaceUpCommand>();
+	auto faceUpRightCommand = std::make_shared<FaceUpRightCommand>();
+	auto faceRightCommand = std::make_shared<FaceRightCommand>();
+	auto faceDownRightCommand = std::make_shared<FaceDownRightCommand>();
+	auto faceDownCommand = std::make_shared<FaceDownCommand>();
+	auto faceDownLeftCommand = std::make_shared<FaceDownLeftCommand>();
 
 	std::shared_ptr<SprintCommand> sprintCommand = std::make_shared<SprintCommand>();
-	std::shared_ptr<FireCommans> fireCommand = std::make_shared<FireCommans>();
+	std::shared_ptr<FireCommand> fireCommand = std::make_shared<FireCommand>();
 
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_w, moveUpCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_a, moveLeftCommand, player1);
@@ -121,7 +126,19 @@ void Game::initPlayer() {
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_e, moveUpRightCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_z, moveDownLeftCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_c, moveDownRightCommand, player1);
+
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_f, faceLeftCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_r, faceUpLeftCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_t, faceUpCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_y, faceUpRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_h, faceRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_v, faceDownRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_b, faceDownCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_n, faceDownLeftCommand, player1);
+
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_LSHIFT, sprintCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_x, fireCommand, player1);
+
 }
 
 Game* Game::getInstance() {
@@ -137,6 +154,7 @@ void Game::init() {
 	initSDL_ttf();
 	initGFont();
 	setRunningToTrue();
+	initBackground();
 	initPlayer();
 }
 
@@ -158,6 +176,7 @@ void Game::render() {
 	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
 	SDL_RenderClear(gRenderer);
 
+	Background::getInstance()->render();
 	gameState->render();
 
 	SDL_RenderPresent(gRenderer);

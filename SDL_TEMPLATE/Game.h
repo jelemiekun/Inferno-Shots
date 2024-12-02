@@ -38,6 +38,7 @@ private:
 	void initGFont();
 	void setRunningToTrue();
 	void setRunningToFalse();
+	void initBackground();
 	void initPlayer();
 
 public:

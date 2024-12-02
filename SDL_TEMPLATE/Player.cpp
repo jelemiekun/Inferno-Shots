@@ -40,6 +40,10 @@ void Player::update() {
 
 void Player::render() {
     SDL_Rect srcRect = { 0, 0, textureType->dimension.x / 4, textureType->dimension.y / 8 };
+
+
+
+
     SDL_Rect dstRect = { position->x, position->y, ENTITY_DIMENSION.x, ENTITY_DIMENSION.y };
     SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, &dstRect);
 }
