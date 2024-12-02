@@ -9,6 +9,8 @@ public:
 };
 
 class GamePlaying : public GameState {
+private:
+
 public:
 	void input() override;
 	void update() override;

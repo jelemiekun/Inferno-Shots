@@ -41,7 +41,17 @@ void Player::update() {
 void Player::render() {
     SDL_Rect srcRect = { 0, 0, textureType->dimension.x / 4, textureType->dimension.y / 8 };
 
-
+    switch (directionFacing) {
+    case Face_Direction::LEFT:      srcRect.y = (textureType->dimension.y / 8) * 2; break;
+    case Face_Direction::UP_LEFT:   srcRect.y = (textureType->dimension.y / 8) * 4; break;
+    case Face_Direction::UP:        srcRect.y = (textureType->dimension.y / 8) * 0; break;
+    case Face_Direction::UP_RIGHT:  srcRect.y = (textureType->dimension.y / 8) * 5; break;
+    case Face_Direction::RIGHT:     srcRect.y = (textureType->dimension.y / 8) * 3; break;
+    case Face_Direction::DOWN_RIGHT:srcRect.y = (textureType->dimension.y / 8) * 7; break;
+    case Face_Direction::DOWN:      srcRect.y = (textureType->dimension.y / 8) * 1; break;
+    case Face_Direction::DOWN_LEFT: srcRect.y = (textureType->dimension.y / 8) * 6; break;
+    default: break;
+    }
 
 
     SDL_Rect dstRect = { position->x, position->y, ENTITY_DIMENSION.x, ENTITY_DIMENSION.y };

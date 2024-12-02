@@ -23,6 +23,8 @@ private:
 		SDL_Keycode,
 		std::pair<std::shared_ptr<Command>, std::shared_ptr<Player>>> 
 		keyBindings;
+
+public:
 	std::unordered_map<int, std::shared_ptr<Player>> players;
 
 public:

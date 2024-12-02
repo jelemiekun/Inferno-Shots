@@ -1,10 +1,54 @@
 #include "GameState.h"
 #include "InvokerPlaying.h"
 #include "Game.h"
+#include "cmath"
+
+struct StateVector {
+    float x;
+    float y;
+};
 
 void GamePlaying::input() {
-    SDL_Keycode keyCode = Game::getInstance()->getEvent().key.keysym.sym;
-    InvokerPlaying::getInstance()->pressButton(keyCode);
+    SDL_Keycode keyCode = SDLK_KP_000;
+
+    if (Game::getInstance()->getEvent().type == SDL_KEYDOWN) {
+        keyCode = Game::getInstance()->getEvent().key.keysym.sym;
+    } else if (Game::getInstance()->getEvent().type == SDL_MOUSEMOTION) {
+        SDL_Point mousePos = { 0, 0 };
+        SDL_GetMouseState(&mousePos.x, &mousePos.y);
+
+        for (const auto& player : InvokerPlaying::getInstance()->players) {
+            StateVector vector = { mousePos.x - player.second->position->x, mousePos.y - player.second->position->y };
+
+            float magnitude = std::sqrt((vector.x * vector.x) + (vector.y * vector.y));
+
+            StateVector normalizedVector = { 0, 0 };
+            if (magnitude != 0) {
+                normalizedVector = { vector.x / magnitude, vector.y / magnitude };
+
+                if (normalizedVector.x < -0.5f && normalizedVector.y > 0.5f) {
+                    keyCode = SDLK_v;
+                } else if (normalizedVector.x > 0.5f && normalizedVector.y > 0.5f) {
+                    keyCode = SDLK_n;
+                } else if (normalizedVector.x < -0.5f && normalizedVector.y < -0.5f) {
+                    keyCode = SDLK_r;
+                } else if (normalizedVector.x > 0.5f && normalizedVector.y < -0.5f) {
+                    keyCode = SDLK_y;
+                } else if (normalizedVector.x > 0.0f && std::abs(normalizedVector.y) <= 0.5f) {
+                    keyCode = SDLK_h;
+                } else if (normalizedVector.x < 0.0f && std::abs(normalizedVector.y) <= 0.5f) {
+                    keyCode = SDLK_f;
+                } else if (normalizedVector.y > 0.0f && std::abs(normalizedVector.x) <= 0.5f) {
+                    keyCode = SDLK_b;
+                } else if (normalizedVector.y < 0.0f && std::abs(normalizedVector.x) <= 0.5f) {
+                    keyCode = SDLK_t;
+                }
+            }
+        }
+
+    }
+
+    if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
 }
 
 

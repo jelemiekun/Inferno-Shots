@@ -132,9 +132,9 @@ void Game::initPlayer() {
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_t, faceUpCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_y, faceUpRightCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_h, faceRightCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_v, faceDownRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_n, faceDownRightCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_b, faceDownCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_n, faceDownLeftCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_v, faceDownLeftCommand, player1);
 
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_LSHIFT, sprintCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_x, fireCommand, player1);
