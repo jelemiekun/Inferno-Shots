@@ -2,27 +2,19 @@
 #include <SDL.h>
 #include <queue>
 #include <memory>
+#include "AppInfo.h"
+#include "Prototype.h"
 
 using Vector = SDL_Point;
 
 class Command;
 
-enum class Face_Direction {
-	LEFT,
-	UP_LEFT,
-	UP,
-	UP_RIGHT,
-	RIGHT,
-	DOWN_RIGHT,
-	DOWN,
-	DOWN_LEFT
-};
-
-class Player : public std::enable_shared_from_this<Player> {
+class Player : 
+	, public Prototype, public std::enable_shared_from_this<Player> {
 private:
 	static int playerCounter;
 
-private:
+public:
 	std::unique_ptr<int> ID;
 	std::unique_ptr<int> heartCount;
 	std::unique_ptr<SDL_Point> position;
@@ -38,10 +30,11 @@ public:
 	Player(int heartCount, SDL_Point position, float movementSpeed, float speedDecay, bool inCooldown);
 	~Player() = default;
 
-	void input(SDL_Event& gEvent);
 	void update();
 	void render();
 
 	int getID() const;
+
+	std::shared_ptr<Prototype> clone() const override;
 };
 

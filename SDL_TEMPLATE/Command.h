@@ -93,3 +93,17 @@ class FaceDownLeftComand : Command {
 public:
 	void execute(std::shared_ptr<Player> player) override;
 };
+
+// Sprint
+
+class SprintCommand : Command {
+public:
+	void execute(std::shared_ptr<Player> player) override;
+};
+
+// Fire
+
+class FireCommans : Command {
+public:
+	void execute(std::shared_ptr<Player> player) override;
+};

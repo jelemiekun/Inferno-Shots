@@ -9,11 +9,11 @@ void GamePlaying::input() {
 
 
 void GamePlaying::update() {
-
+    Invoker::getInstance()->updatePlayers();
 }
 
 void GamePlaying::render() {
-
+    Invoker::getInstance()->renderPlayers();
 }
 
 void GamePaused::input() {
@@ -25,5 +25,17 @@ void GamePaused::update() {
 }
 
 void GamePaused::render() {
+
+}
+
+void GameOver::input() {
+
+}
+
+void GameOver::update() {
+
+}
+
+void GameOver::render() {
 
 }

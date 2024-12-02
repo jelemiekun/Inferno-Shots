@@ -22,11 +22,13 @@ void Player::update() {
 }
 
 void Player::render() {
-
+    // TODO
 }
 
 int Player::getID() const {
     return *ID;
 }
 
-//TODO
+std::shared_ptr<Prototype> Player::clone() const {
+    return std::make_shared<Player>(*this);
+}

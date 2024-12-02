@@ -23,8 +23,11 @@ private:
 		SDL_Keycode,
 		std::pair<std::shared_ptr<Command>, std::shared_ptr<Player>>> 
 		keyBindings;
+	std::unordered_map<int, std::shared_ptr<Player>> players;
 
 public:
+
+	void addPlayer(std::shared_ptr<Player> player);
 
 	void assignKeyToCommand(
 		SDL_Keycode keyCode,
@@ -33,5 +36,6 @@ public:
 	);
 
 	void pressButton(SDL_Keycode keyCode);
+	void updatePlayers();
+	void renderPlayers();
 };
-

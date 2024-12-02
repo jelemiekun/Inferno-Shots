@@ -22,3 +22,9 @@ public:
 	void render() override;
 };
 
+class GameOver : public GameState {
+public:
+	void input() override;
+	void update() override;
+	void render() override;
+};

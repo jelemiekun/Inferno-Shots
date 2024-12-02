@@ -9,7 +9,9 @@ Invoker* Invoker::getInstance() {
 	return &instance;
 }
 
-
+void Invoker::addPlayer(std::shared_ptr<Player> player) {
+	players[player->getID()] = player;
+}
 
 void Invoker::assignKeyToCommand (
 	SDL_Keycode keyCode,
@@ -28,5 +30,17 @@ void Invoker::pressButton(SDL_Keycode keyCode) {
 		if (command && player) {
 			player->commandQueue.push(command);
 		}
+	}
+}
+
+void Invoker::updatePlayers() {
+	for (auto& player : players) {
+		player.second->update();
+	}
+}
+
+void Invoker::renderPlayers() {
+	for (auto& player : players) {
+		player.second->render();
 	}
 }
