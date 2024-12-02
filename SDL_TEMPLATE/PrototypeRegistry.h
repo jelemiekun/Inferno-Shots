@@ -1,13 +1,9 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
+#include "GameEnums.h"
 
 class Prototype;
-
-enum class Prototype_Type {
-	PLAYER,
-	SMALL_ENEMY
-};
 
 class PrototypeRegistry {
 private:

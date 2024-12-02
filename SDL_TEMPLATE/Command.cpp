@@ -4,39 +4,39 @@
 // Move Commands
 
 void MoveLeftComand::execute(std::shared_ptr<Player> player) {
-    player->position->x -= *player->movementSpeed;
+    player->position->x -= static_cast<int>(*player->movementSpeed);
 }
 
 void MoveUpLeftComand::execute(std::shared_ptr<Player> player) {
-    player->position->x -= *player->movementSpeed;
-    player->position->y -= *player->movementSpeed;
+    player->position->x -= static_cast<int>(*player->movementSpeed);
+    player->position->y -= static_cast<int>(*player->movementSpeed);
 }
 
 void MoveUpComand::execute(std::shared_ptr<Player> player) {
-    player->position->x -= *player->movementSpeed;
+    player->position->y -= static_cast<int>(*player->movementSpeed);
 }
 
 void MoveUpRightComand::execute(std::shared_ptr<Player> player) {
-    player->position->x += *player->movementSpeed;
-    player->position->y -= *player->movementSpeed;
+    player->position->x += static_cast<int>(*player->movementSpeed);
+    player->position->y -= static_cast<int>(*player->movementSpeed);
 }
 
 void MoveRightComand::execute(std::shared_ptr<Player> player) {
-    player->position->x += *player->movementSpeed;
+    player->position->x += static_cast<int>(*player->movementSpeed);
 }
 
 void MoveDownRightComand::execute(std::shared_ptr<Player> player) {
-    player->position->x += *player->movementSpeed;
-    player->position->y += *player->movementSpeed;
+    player->position->x += static_cast<int>(*player->movementSpeed);
+    player->position->y += static_cast<int>(*player->movementSpeed);
 }
 
 void MoveDownComand::execute(std::shared_ptr<Player> player) {
-    player->position->y += *player->movementSpeed;
+    player->position->y += static_cast<int>(*player->movementSpeed);
 }
 
 void MoveDownLeftComand::execute(std::shared_ptr<Player> player) {
-    player->position->x -= *player->movementSpeed;
-    player->position->y += *player->movementSpeed;
+    player->position->x -= static_cast<int>(*player->movementSpeed);
+    player->position->y += static_cast<int>(*player->movementSpeed);
 }
 
 // Face Direction Commands

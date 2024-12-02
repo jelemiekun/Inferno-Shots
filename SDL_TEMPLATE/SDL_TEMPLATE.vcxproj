@@ -22,11 +22,13 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="FPSManager.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameEnums.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InvokerPlaying.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PrototypeRegistry.cpp" />
+    <ClCompile Include="TextureType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -36,11 +38,13 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="FPSManager.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameEnums.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InvokerPlaying.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Prototype.h" />
     <ClInclude Include="PrototypeRegistry.h" />
+    <ClInclude Include="TextureType.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

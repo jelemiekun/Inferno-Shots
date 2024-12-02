@@ -38,6 +38,7 @@ private:
 	void initGFont();
 	void setRunningToTrue();
 	void setRunningToFalse();
+	void initPlayer();
 
 public:
 	static Game* getInstance();
@@ -47,7 +48,7 @@ public:
 	void update();
 	void render();
 
-	const SDL_Renderer* getRenderer() const;
+	SDL_Renderer* getRenderer();
 	const SDL_Event& getEvent() const;
 	const bool& isRunning() const;
 };

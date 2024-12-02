@@ -5,105 +5,103 @@ class Player;
 
 class Command {
 public:
-	virtual ~Command() = default;
 	virtual void execute(std::shared_ptr<Player> player) = 0;
 };
 
 // Move Commands
 
-class MoveLeftComand : Command {
+class MoveLeftComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class MoveUpLeftComand : Command {
+class MoveUpLeftComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class MoveUpComand : Command {
+class MoveUpComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class MoveUpRightComand : Command {
+class MoveUpRightComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class MoveRightComand : Command {
+class MoveRightComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class MoveDownRightComand : Command {
+class MoveDownRightComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class MoveDownComand : Command {
+class MoveDownComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class MoveDownLeftComand : Command {
+class MoveDownLeftComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
 // Face Direction Commands
 
-
-class FaceLeftComand : Command {
+class FaceLeftComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class FaceUpLeftComand : Command {
+class FaceUpLeftComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class FaceUpComand : Command {
+class FaceUpComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class FaceUpRightComand : Command {
+class FaceUpRightComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class FaceRightComand : Command {
+class FaceRightComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class FaceDownRightComand : Command {
+class FaceDownRightComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class FaceDownComand : Command {
+class FaceDownComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
-class FaceDownLeftComand : Command {
+class FaceDownLeftComand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
 // Sprint
 
-class SprintCommand : Command {
+class SprintCommand : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
 
 // Fire
 
-class FireCommans : Command {
+class FireCommans : public Command {
 public:
-	void execute(std::shared_ptr<Player> player) override;
+    void execute(std::shared_ptr<Player> player) override;
 };
