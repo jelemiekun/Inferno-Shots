@@ -18,6 +18,9 @@ private:
 	constexpr static int FRAME_DURATION = 50;
 
 public:
+	constexpr static int SPEED_AMOUNT = 7;
+
+public:
 	std::unique_ptr<int> ID;
 	std::unique_ptr<TextureType> textureType;
 	std::unique_ptr<int> heartCount;
@@ -25,6 +28,7 @@ public:
 	std::unique_ptr<float> movementSpeed;
 	std::unique_ptr<float> speedDecay;
 	std::unique_ptr<bool> inCooldown;
+	std::unique_ptr<bool> isSprinting;
 	std::unique_ptr<bool> isMoving;
 	std::unique_ptr<int> frameCounter;
 	Face_Direction directionFacing;

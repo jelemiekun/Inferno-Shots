@@ -10,11 +10,13 @@ struct StateVector {
 
 void GamePlaying::input() {
     SDL_Keycode keyCode = SDLK_KP_000;
+    SDL_Point mousePos = { 0, 0 };
 
-    if (Game::getInstance()->getEvent().type == SDL_KEYDOWN) {
+    switch (Game::getInstance()->getEvent().type) {
+    case SDL_KEYDOWN:
         keyCode = Game::getInstance()->getEvent().key.keysym.sym;
-    } else if (Game::getInstance()->getEvent().type == SDL_MOUSEMOTION) {
-        SDL_Point mousePos = { 0, 0 };
+        if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
+    case SDL_MOUSEMOTION:
         SDL_GetMouseState(&mousePos.x, &mousePos.y);
 
         for (const auto& player : InvokerPlaying::getInstance()->players) {
@@ -45,10 +47,17 @@ void GamePlaying::input() {
                 }
             }
         }
-
+        if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
+        break;
+    case SDL_KEYUP:
+        if (Game::getInstance()->getEvent().key.keysym.sym == SDLK_LSHIFT) {
+            keyCode = SDLK_CAPSLOCK;
+            InvokerPlaying::getInstance()->pressButton(keyCode);
+        }
+        break;
+    default:
+        break;
     }
-
-    if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
 }
 
 

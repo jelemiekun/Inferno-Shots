@@ -99,6 +99,11 @@ public:
     void execute(std::shared_ptr<Player> player) override;
 };
 
+class RemoveSprintCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
 // Fire
 
 class FireCommand : public Command {

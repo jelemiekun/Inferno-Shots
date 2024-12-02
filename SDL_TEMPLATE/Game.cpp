@@ -116,6 +116,8 @@ void Game::initPlayer() {
 	auto faceDownLeftCommand = std::make_shared<FaceDownLeftCommand>();
 
 	std::shared_ptr<SprintCommand> sprintCommand = std::make_shared<SprintCommand>();
+	std::shared_ptr<RemoveSprintCommand> removeSprintCommand = std::make_shared<RemoveSprintCommand>();
+
 	std::shared_ptr<FireCommand> fireCommand = std::make_shared<FireCommand>();
 
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_w, moveUpCommand, player1);
@@ -137,6 +139,8 @@ void Game::initPlayer() {
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_v, faceDownLeftCommand, player1);
 
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_LSHIFT, sprintCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_CAPSLOCK, removeSprintCommand, player1);
+	
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_x, fireCommand, player1);
 
 }

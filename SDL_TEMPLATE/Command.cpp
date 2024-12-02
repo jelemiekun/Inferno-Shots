@@ -10,21 +10,25 @@
 constexpr static int BORDER_ALLOWANCE = 12;
 
 void MoveLeftCommand::execute(std::shared_ptr<Player> player) {
+    int movementSpeed = *player->movementSpeed;
+
+    if (*player->isSprinting) movementSpeed += Player::SPEED_AMOUNT;
+
     if (Background::getInstance()->isRightEdge()) {
-        player->position->x -= static_cast<int>(*player->movementSpeed);
+        player->position->x -= static_cast<int>(movementSpeed);
 
         if (player->position->x <= (SCREEN_WIDTH / 2)) {
-            Background::getInstance()->srcRect->x -= static_cast<int>(*player->movementSpeed);
+            Background::getInstance()->srcRect->x -= static_cast<int>(movementSpeed);
         }
     } else if (Background::getInstance()->isLeftEdge()) {
         Background::getInstance()->srcRect->x = 0;
-        player->position->x -= static_cast<int>(*player->movementSpeed);
+        player->position->x -= static_cast<int>(movementSpeed);
 
         if (player->position->x < BORDER_ALLOWANCE) {
             player->position->x = BORDER_ALLOWANCE;
         }
     } else {
-        Background::getInstance()->srcRect->x -= static_cast<int>(*player->movementSpeed);
+        Background::getInstance()->srcRect->x -= static_cast<int>(movementSpeed);
     }
 }
 
@@ -37,21 +41,25 @@ void MoveUpLeftCommand::execute(std::shared_ptr<Player> player) {
 }
 
 void MoveUpCommand::execute(std::shared_ptr<Player> player) {
+    int movementSpeed = *player->movementSpeed;
+
+    if (*player->isSprinting) movementSpeed += Player::SPEED_AMOUNT;
+
     if (Background::getInstance()->isDownEdge()) {
-        player->position->y -= static_cast<int>(*player->movementSpeed);
+        player->position->y -= static_cast<int>(movementSpeed);
 
         if (player->position->y <= (SCREEN_HEIGHT / 2)) {
-            Background::getInstance()->srcRect->y -= static_cast<int>(*player->movementSpeed);
+            Background::getInstance()->srcRect->y -= static_cast<int>(movementSpeed);
         }
     } else if (Background::getInstance()->isUpEdge()) {
         Background::getInstance()->srcRect->y = 0;
-        player->position->y -= static_cast<int>(*player->movementSpeed);
+        player->position->y -= static_cast<int>(movementSpeed);
 
         if (player->position->y < BORDER_ALLOWANCE) {
             player->position->y = BORDER_ALLOWANCE;
         }
     } else {
-        Background::getInstance()->srcRect->y -= static_cast<int>(*player->movementSpeed);
+        Background::getInstance()->srcRect->y -= static_cast<int>(movementSpeed);
     }
 }
 
@@ -64,20 +72,24 @@ void MoveUpRightCommand::execute(std::shared_ptr<Player> player) {
 }
 
 void MoveRightCommand::execute(std::shared_ptr<Player> player) {
+    int movementSpeed = *player->movementSpeed;
+
+    if (*player->isSprinting) movementSpeed += Player::SPEED_AMOUNT;
+
     if (Background::getInstance()->isLeftEdge()) {
-        player->position->x += static_cast<int>(*player->movementSpeed);
+        player->position->x += static_cast<int>(movementSpeed);
 
         if (player->position->x >= (SCREEN_WIDTH / 2)) {
-            Background::getInstance()->srcRect->x += static_cast<int>(*player->movementSpeed);
+            Background::getInstance()->srcRect->x += static_cast<int>(movementSpeed);
         }
     } else if (Background::getInstance()->isRightEdge()) {
-        player->position->x += static_cast<int>(*player->movementSpeed);
+        player->position->x += static_cast<int>(movementSpeed);
 
         if (player->position->x > SCREEN_WIDTH - BORDER_ALLOWANCE - ENTITY_DIMENSION.x) {
             player->position->x = SCREEN_WIDTH - BORDER_ALLOWANCE - ENTITY_DIMENSION.x;
         }
     } else {
-        Background::getInstance()->srcRect->x += static_cast<int>(*player->movementSpeed);
+        Background::getInstance()->srcRect->x += static_cast<int>(movementSpeed);
     }
 }
 
@@ -90,20 +102,24 @@ void MoveDownRightCommand::execute(std::shared_ptr<Player> player) {
 }
 
 void MoveDownCommand::execute(std::shared_ptr<Player> player) {
+    int movementSpeed = *player->movementSpeed;
+
+    if (*player->isSprinting) movementSpeed += Player::SPEED_AMOUNT;
+
     if (Background::getInstance()->isUpEdge()) {
-        player->position->y += static_cast<int>(*player->movementSpeed);
+        player->position->y += static_cast<int>(movementSpeed);
 
         if (player->position->y >= (SCREEN_HEIGHT / 2)) {
-            Background::getInstance()->srcRect->y += static_cast<int>(*player->movementSpeed);
+            Background::getInstance()->srcRect->y += static_cast<int>(movementSpeed);
         }
     } else if (Background::getInstance()->isDownEdge()) {
-        player->position->y += static_cast<int>(*player->movementSpeed);
+        player->position->y += static_cast<int>(movementSpeed);
 
         if (player->position->y > SCREEN_HEIGHT - BORDER_ALLOWANCE - ENTITY_DIMENSION.y) {
             player->position->y = SCREEN_HEIGHT - BORDER_ALLOWANCE - ENTITY_DIMENSION.y;
         }
     } else {
-        Background::getInstance()->srcRect->y += static_cast<int>(*player->movementSpeed);
+        Background::getInstance()->srcRect->y += static_cast<int>(movementSpeed);
     }
 }
 
@@ -152,7 +168,11 @@ void FaceDownLeftCommand::execute(std::shared_ptr<Player> player) {
 // Sprint
 
 void SprintCommand::execute(std::shared_ptr<Player> player) {
-    *player->movementSpeed += 10;
+    *player->isSprinting = true;
+}
+
+void RemoveSprintCommand::execute(std::shared_ptr<Player> player) {
+    *player->isSprinting = false;
 }
 
 // Fire
