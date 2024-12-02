@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "GameState.h"
 #include "AppInfo.h"
-#include "Invoker.h"
+#include "InvokerPlaying.h"
 #include "Prototype.h"
 #include "PrototypeRegistry.h"
 
@@ -90,7 +90,6 @@ void Game::init() {
 		SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
 		std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(5, position, 5.0f, 30.0f);
 
-		// Register the Player prototype
 		PrototypeRegistry::getInstance()->addPrototype(
 			Prototype_Type::PLAYER, std::static_pointer_cast<Prototype>(playerPrototype)
 		);
@@ -100,7 +99,7 @@ void Game::init() {
 			PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::PLAYER)
 		);
 
-		Invoker::getInstance()->addPlayer(clonedPlayer);
+		InvokerPlaying::getInstance()->addPlayer(clonedPlayer);
 	}
 }
 

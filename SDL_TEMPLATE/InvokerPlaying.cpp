@@ -1,19 +1,19 @@
-#include "Invoker.h"
+#include "InvokerPlaying.h"
 #include "Command.h"
 #include "Player.h"
 
-Invoker::Invoker() {}
+InvokerPlaying::InvokerPlaying() {}
 
-Invoker* Invoker::getInstance() {
-	static Invoker instance;
+InvokerPlaying* InvokerPlaying::getInstance() {
+	static InvokerPlaying instance;
 	return &instance;
 }
 
-void Invoker::addPlayer(std::shared_ptr<Player> player) {
+void InvokerPlaying::addPlayer(std::shared_ptr<Player> player) {
 	players[player->getID()] = player;
 }
 
-void Invoker::assignKeyToCommand (
+void InvokerPlaying::assignKeyToCommand (
 	SDL_Keycode keyCode,
 	std::shared_ptr<Command> command,
 	std::shared_ptr<Player> player
@@ -21,7 +21,7 @@ void Invoker::assignKeyToCommand (
 	keyBindings[keyCode] = std::make_pair(command, player);
 }
 
-void Invoker::pressButton(SDL_Keycode keyCode) {
+void InvokerPlaying::pressButton(SDL_Keycode keyCode) {
 	auto it = keyBindings.find(keyCode);
 	if (it != keyBindings.end()) {
 		auto& pair = it->second;
@@ -33,13 +33,13 @@ void Invoker::pressButton(SDL_Keycode keyCode) {
 	}
 }
 
-void Invoker::updatePlayers() {
+void InvokerPlaying::updatePlayers() {
 	for (auto& player : players) {
 		player.second->update();
 	}
 }
 
-void Invoker::renderPlayers() {
+void InvokerPlaying::renderPlayers() {
 	for (auto& player : players) {
 		player.second->render();
 	}

@@ -6,17 +6,17 @@
 
 class Command;
 
-class Invoker {
+class InvokerPlaying{
 private:
-	Invoker();
+	InvokerPlaying();
 
 public:
-	static Invoker* getInstance();
+	static InvokerPlaying* getInstance();
 
-	Invoker(const Invoker&) = delete;
-	Invoker& operator=(const Invoker&) = delete;
-	Invoker(Invoker&&) = delete;
-	Invoker& operator=(Invoker&&) = delete;
+	InvokerPlaying(const InvokerPlaying&) = delete;
+	InvokerPlaying& operator=(const InvokerPlaying&) = delete;
+	InvokerPlaying(InvokerPlaying&&) = delete;
+	InvokerPlaying& operator=(InvokerPlaying&&) = delete;
 
 private:
 	std::unordered_map<
