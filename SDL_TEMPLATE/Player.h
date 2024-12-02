@@ -14,6 +14,8 @@ class Player :
 	public Prototype, public std::enable_shared_from_this<Player> {
 private:
 	static int playerCounter;
+	constexpr static int UNIQUE_FRAME_COUNT = 4;
+	constexpr static int FRAME_DURATION = 50;
 
 public:
 	std::unique_ptr<int> ID;
@@ -23,7 +25,12 @@ public:
 	std::unique_ptr<float> movementSpeed;
 	std::unique_ptr<float> speedDecay;
 	std::unique_ptr<bool> inCooldown;
+	std::unique_ptr<bool> isMoving;
+	std::unique_ptr<int> frameCounter;
 	Face_Direction directionFacing;
+
+private:
+	void isCommandMove(Command* command);
 
 public:
 	std::queue<std::shared_ptr<Command>> commandQueue;

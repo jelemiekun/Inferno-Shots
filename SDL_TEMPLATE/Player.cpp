@@ -14,6 +14,8 @@ Player::Player(int heartCount, TextureType* textureType, SDL_Point position, flo
     movementSpeed(std::make_unique<float>(movementSpeed)),
     speedDecay(std::make_unique<float>(speedDecay)),
     inCooldown(std::make_unique<bool>(false)),
+    isMoving(std::make_unique<bool>(false)),
+    frameCounter(std::make_unique<int>(0)),
     directionFacing(Face_Direction::DOWN) {
 }
 
@@ -25,16 +27,34 @@ Player::Player(const Player& other)
     movementSpeed(std::make_unique<float>(*other.movementSpeed)),
     speedDecay(std::make_unique<float>(*other.speedDecay)),
     inCooldown(std::make_unique<bool>(*other.inCooldown)),
+    isMoving(std::make_unique<bool>(false)),
+    frameCounter(std::make_unique<int>(0)),
     directionFacing(Face_Direction::DOWN) {
 }
 
+void Player::isCommandMove(Command* command) {
+    if (dynamic_cast<MoveLeftCommand*>(command) ||
+        dynamic_cast<MoveUpLeftCommand*>(command) ||
+        dynamic_cast<MoveUpCommand*>(command) ||
+        dynamic_cast<MoveUpRightCommand*>(command) ||
+        dynamic_cast<MoveRightCommand*>(command) ||
+        dynamic_cast<MoveDownRightCommand*>(command) ||
+        dynamic_cast<MoveDownCommand*>(command) ||
+        dynamic_cast<MoveDownLeftCommand*>(command)) {
+        *isMoving = true;
+    }
+}
 
 
 void Player::update() {
+    *isMoving = false;
+
     while (!commandQueue.empty()) {
         auto command = std::move(commandQueue.front());
         commandQueue.pop();
         command->execute(shared_from_this());
+        
+        isCommandMove(command.get());
     }
 }
 
@@ -51,6 +71,34 @@ void Player::render() {
     case Face_Direction::DOWN:      srcRect.y = (textureType->dimension.y / 8) * 1; break;
     case Face_Direction::DOWN_LEFT: srcRect.y = (textureType->dimension.y / 8) * 6; break;
     default: break;
+    }
+
+    // Get the current time in milliseconds
+    Uint32 currentTime = SDL_GetTicks();
+
+    // Calculate the time difference from the last frame update
+    static Uint32 lastFrameTime = 0;
+    Uint32 deltaTime = currentTime - lastFrameTime;
+
+    // Always update the frame counter, regardless of whether the player is moving
+    if (deltaTime >= FRAME_DURATION) {
+        lastFrameTime = currentTime; // Reset the last frame time
+
+        // Update the frame counter
+        if (*frameCounter / FRAME_DURATION >= UNIQUE_FRAME_COUNT) {
+            *frameCounter = 0;
+        } else {
+            *frameCounter += 1;
+        }
+    }
+
+    // Update the srcRect.x only when the player is moving
+    if (*isMoving) {
+        srcRect.x = (textureType->dimension.x / UNIQUE_FRAME_COUNT) * (*frameCounter);
+    } else {
+        // If not moving, just reset to the first frame
+        *frameCounter = 0;
+        srcRect.x = 0;
     }
 
 
