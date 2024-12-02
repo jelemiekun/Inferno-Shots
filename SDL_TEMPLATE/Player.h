@@ -10,7 +10,7 @@ using Vector = SDL_Point;
 class Command;
 
 class Player : 
-	, public Prototype, public std::enable_shared_from_this<Player> {
+	public Prototype, public std::enable_shared_from_this<Player> {
 private:
 	static int playerCounter;
 
@@ -27,7 +27,8 @@ public:
 	std::queue<std::shared_ptr<Command>> commandQueue;
 
 public:
-	Player(int heartCount, SDL_Point position, float movementSpeed, float speedDecay, bool inCooldown);
+	Player(int heartCount, SDL_Point position, float movementSpeed, float speedDecay);
+	Player(const Player& other);
 	~Player() = default;
 
 	void update();

@@ -2,9 +2,9 @@
 #include <unordered_map>
 #include <SDL.h>
 #include <memory>
+#include "Player.h"
 
 class Command;
-class Player;
 
 class Invoker {
 private:

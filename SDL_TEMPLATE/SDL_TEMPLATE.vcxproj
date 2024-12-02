@@ -26,6 +26,7 @@
     <ClCompile Include="Invoker.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PrototypeRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -38,6 +39,8 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Invoker.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Prototype.h" />
+    <ClInclude Include="PrototypeRegistry.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
