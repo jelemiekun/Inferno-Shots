@@ -73,18 +73,14 @@ void Player::render() {
     default: break;
     }
 
-    // Get the current time in milliseconds
     Uint32 currentTime = SDL_GetTicks();
 
-    // Calculate the time difference from the last frame update
     static Uint32 lastFrameTime = 0;
     Uint32 deltaTime = currentTime - lastFrameTime;
 
-    // Always update the frame counter, regardless of whether the player is moving
     if (deltaTime >= FRAME_DURATION) {
-        lastFrameTime = currentTime; // Reset the last frame time
+        lastFrameTime = currentTime;
 
-        // Update the frame counter
         if (*frameCounter / FRAME_DURATION >= UNIQUE_FRAME_COUNT) {
             *frameCounter = 0;
         } else {
@@ -92,11 +88,9 @@ void Player::render() {
         }
     }
 
-    // Update the srcRect.x only when the player is moving
     if (*isMoving) {
         srcRect.x = (textureType->dimension.x / UNIQUE_FRAME_COUNT) * (*frameCounter);
     } else {
-        // If not moving, just reset to the first frame
         *frameCounter = 0;
         srcRect.x = 0;
     }
