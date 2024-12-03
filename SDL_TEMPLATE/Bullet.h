@@ -19,14 +19,14 @@ public:
 	std::unique_ptr<bool> remove;
 
 public:
-	static constexpr SDL_Point BULLET_DIMENSION = { 90, 90 };
+	static constexpr SDL_Point BULLET_DIMENSION = { 10, 10 };
 	static std::vector<std::unique_ptr<Bullet>> bullets;
 
 private:
 	void checkCollision();
 
 public:
-	Bullet(std::shared_ptr<TextureType> texture);
+	Bullet();
 	Bullet(const Bullet& other);
 	~Bullet();
 

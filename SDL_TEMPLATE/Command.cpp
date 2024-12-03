@@ -180,18 +180,23 @@ void RemoveSprintCommand::execute(std::shared_ptr<Player> player) {
 // Fire
 
 void FireCommand::execute(std::shared_ptr<Player> player) {
-    std::cout << "FIRING!" << '\n';
-
     std::shared_ptr<Bullet> sharedBullet = std::dynamic_pointer_cast<Bullet>(
         PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::BULLET)
     );
 
     std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
 
-    bullet->initPos(*player->position.get());
+    SDL_Point fixedPos = { 
+        player->position->x + (ENTITY_DIMENSION.x / 2), 
+        player->position->y + (ENTITY_DIMENSION.y / 2) 
+    };
+
+    bullet->initPos(fixedPos);
     bullet->initDirections( *player->directionX, *player->directionY);
     bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
-    bullet->initTexture(sharedBullet->textureType);
+
+    static std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
+    bullet->initTexture(bulletTexture);
 
     Bullet::bullets.push_back(std::move(bullet));
 }

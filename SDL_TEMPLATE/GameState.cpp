@@ -69,6 +69,17 @@ void GamePlaying::input() {
 void GamePlaying::update() {
     InvokerPlaying::getInstance()->updatePlayers();
 
+    Bullet::bullets.erase(
+        std::remove_if(
+            Bullet::bullets.begin(),
+            Bullet::bullets.end(),
+            [](const std::unique_ptr<Bullet>& bullet) {
+                return bullet->remove && *bullet->remove;
+            }
+        ),
+        Bullet::bullets.end()
+    );
+
     for (auto& bullet : Bullet::bullets) {
         bullet->update();
     }

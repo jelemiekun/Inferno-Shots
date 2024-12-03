@@ -146,8 +146,7 @@ void Game::initPlayer() {
 }
 
 void Game::initBullet() {
-	std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
-	std::shared_ptr<Bullet> bulletPrototype = std::make_shared<Bullet>(bulletTexture);
+	std::shared_ptr<Bullet> bulletPrototype = std::make_shared<Bullet>();
 
 	PrototypeRegistry::getInstance()->addPrototype(
 		Prototype_Type::BULLET, std::static_pointer_cast<Prototype>(bulletPrototype)

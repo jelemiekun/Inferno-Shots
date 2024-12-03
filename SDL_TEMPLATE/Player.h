@@ -19,7 +19,7 @@ private:
 
 public:
 	constexpr static int SPEED_AMOUNT = 7;
-	constexpr static int BULLET_SPEED_SCALAR = 3;
+	constexpr static int BULLET_SPEED_SCALAR = 10;
 
 public:
 	std::unique_ptr<int> ID;
