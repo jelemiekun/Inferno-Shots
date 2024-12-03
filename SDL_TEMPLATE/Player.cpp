@@ -4,10 +4,9 @@
 #include "Game.h"
 #include "Background.h"
 #include "AppInfo.h"
+#include "GameEnums.h"
 
 int Player::playerCounter = 1;
-
-constexpr static int BORDER_ALLOWANCE = 12;
 
 // Constructor for prototype only, will not increment counter
 Player::Player(int heartCount, TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay)

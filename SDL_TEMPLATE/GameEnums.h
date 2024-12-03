@@ -5,6 +5,7 @@
 using Dimension = SDL_Point;
 
 constexpr Dimension ENTITY_DIMENSION = { 45, 65 };
+constexpr int BORDER_ALLOWANCE = 12;
 
 enum class Face_Direction {
 	LEFT,

@@ -32,26 +32,32 @@ void Bullet::initTexture(std::shared_ptr<TextureType> textureType) {
 }
 
 void Bullet::checkCollision() {
-	if (position->x < 0 ||
-		position->x + BULLET_DIMENSION.x > Background::getInstance()->getDimension().x - position->x ||
-		position->y < 0 ||
-		position->y + BULLET_DIMENSION.y > Background::getInstance()->getDimension().y - position->y) {
+	if (position->x < BORDER_ALLOWANCE * 1.5 ||
+		position->x + BULLET_DIMENSION.x > Background::getInstance()->getDimension().x - (BORDER_ALLOWANCE * 1.5) ||
+		position->y < BORDER_ALLOWANCE * 1.5 ||
+		position->y + BULLET_DIMENSION.y > Background::getInstance()->getDimension().y - (BORDER_ALLOWANCE)) {
 		*remove = true;
 	}
-
 }
 
 void Bullet::update() {
-	position->x += (*directionX * *movementSpeed);
-	position->y += (*directionY * *movementSpeed);
+	position->x += static_cast<int>(*directionX * *movementSpeed);
+	position->y += static_cast<int>(*directionY * *movementSpeed);
 
 	checkCollision();
 }
 
+
 void Bullet::render() {
 	float angle = std::atan2(*directionY, *directionX) * (180.0f / M_PI);
 
-	SDL_Rect dstRect = { position->x, position->y, BULLET_DIMENSION.x ,BULLET_DIMENSION.y };
+	SDL_Rect dstRect = {
+	position->x - Background::getInstance()->srcRect->x,
+	position->y - Background::getInstance()->srcRect->y,
+	BULLET_DIMENSION.x,
+	BULLET_DIMENSION.y
+	};
+
 	SDL_SetRenderTarget(Game::getInstance()->getRenderer(), Background::getInstance()->background);
 	SDL_RenderCopyEx(
 		Game::getInstance()->getRenderer(),

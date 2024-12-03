@@ -138,9 +138,9 @@ void FireCommand::execute(std::shared_ptr<Player> player) {
 
     std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
 
-    SDL_Point fixedPos = { 
-        player->position->x + (ENTITY_DIMENSION.x / 2), 
-        player->position->y + (ENTITY_DIMENSION.y / 2) 
+    SDL_Point fixedPos = {
+        player->position->x + (ENTITY_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
+        player->position->y + (ENTITY_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
     };
 
     bullet->initPos(fixedPos);
