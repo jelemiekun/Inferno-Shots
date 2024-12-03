@@ -16,6 +16,8 @@ Player::Player(int heartCount, TextureType* textureType, SDL_Point position, flo
     inCooldown(std::make_unique<bool>(false)),
     isSprinting(std::make_unique<bool>(false)),
     isMoving(std::make_unique<bool>(false)),
+    directionX(std::make_unique<float>()),
+    directionY(std::make_unique<float>()),
     frameCounter(std::make_unique<int>(0)),
     directionFacing(Face_Direction::DOWN) {
 }
@@ -30,6 +32,8 @@ Player::Player(const Player& other)
     inCooldown(std::make_unique<bool>(*other.inCooldown)),
     isSprinting(std::make_unique<bool>(false)),
     isMoving(std::make_unique<bool>(false)),
+    directionX(std::make_unique<float>()),
+    directionY(std::make_unique<float>()),
     frameCounter(std::make_unique<int>(0)),
     directionFacing(Face_Direction::DOWN) {
 }

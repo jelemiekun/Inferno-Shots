@@ -40,6 +40,7 @@ private:
 	void setRunningToFalse();
 	void initBackground();
 	void initPlayer();
+	void initBullet();
 
 public:
 	static Game* getInstance();

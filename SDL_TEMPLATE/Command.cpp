@@ -4,6 +4,8 @@
 #include "Background.h"
 #include "AppInfo.h"
 #include "GameEnums.h"
+#include "Bullet.h"
+#include "PrototypeRegistry.h"
 
 // Move Commands
 
@@ -178,5 +180,18 @@ void RemoveSprintCommand::execute(std::shared_ptr<Player> player) {
 // Fire
 
 void FireCommand::execute(std::shared_ptr<Player> player) {
-    // Empty implementation
+    std::cout << "FIRING!" << '\n';
+
+    // Clone a player
+    std::shared_ptr<Bullet> sharedBullet = std::dynamic_pointer_cast<Bullet>(
+        PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::BULLET)
+    );
+
+    std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
+
+    bullet->initPos(*player->position.get());
+    bullet->initDirections( *player->directionX, *player->directionY);
+    bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
+
+    Bullet::bullets.push_back(std::move(bullet));
 }

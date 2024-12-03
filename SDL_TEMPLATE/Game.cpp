@@ -9,6 +9,7 @@
 #include "TextureType.h"
 #include "Command.h"
 #include "Background.h"
+#include "Bullet.h"
 
 
 
@@ -142,7 +143,15 @@ void Game::initPlayer() {
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_CAPSLOCK, removeSprintCommand, player1);
 	
 	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_x, fireCommand, player1);
+}
 
+void Game::initBullet() {
+	std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
+	std::shared_ptr<Bullet> bulletPrototype = std::make_shared<Bullet>(bulletTexture);
+
+	PrototypeRegistry::getInstance()->addPrototype(
+		Prototype_Type::BULLET, std::static_pointer_cast<Prototype>(bulletPrototype)
+	);
 }
 
 Game* Game::getInstance() {
@@ -160,6 +169,7 @@ void Game::init() {
 	setRunningToTrue();
 	initBackground();
 	initPlayer();
+	initBullet();
 }
 
 void Game::input() {

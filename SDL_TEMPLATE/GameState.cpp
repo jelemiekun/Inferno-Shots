@@ -2,6 +2,8 @@
 #include "InvokerPlaying.h"
 #include "Game.h"
 #include "cmath"
+#include "Bullet.h"
+#include "Player.h"
 
 struct StateVector {
     float x;
@@ -19,7 +21,7 @@ void GamePlaying::input() {
     case SDL_MOUSEMOTION:
         SDL_GetMouseState(&mousePos.x, &mousePos.y);
 
-        for (const auto& player : InvokerPlaying::getInstance()->players) {
+        for (auto& player : InvokerPlaying::getInstance()->players) {
             StateVector vector = { mousePos.x - player.second->position->x, mousePos.y - player.second->position->y };
 
             float magnitude = std::sqrt((vector.x * vector.x) + (vector.y * vector.y));
@@ -45,6 +47,9 @@ void GamePlaying::input() {
                 } else if (normalizedVector.y < 0.0f && std::abs(normalizedVector.x) <= 0.5f) {
                     keyCode = SDLK_t;
                 }
+
+                *player.second->directionX = normalizedVector.x;
+                *player.second->directionY = normalizedVector.y;
             }
         }
         if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
@@ -63,10 +68,19 @@ void GamePlaying::input() {
 
 void GamePlaying::update() {
     InvokerPlaying::getInstance()->updatePlayers();
+
+    for (auto& bullet : Bullet::bullets) {
+        bullet->update();
+    }
 }
+
 
 void GamePlaying::render() {
     InvokerPlaying::getInstance()->renderPlayers();
+
+    for (const auto& bullet : Bullet::bullets) {
+        bullet->render();
+    }
 }
 
 void GamePaused::input() {

@@ -19,6 +19,7 @@ private:
 
 public:
 	constexpr static int SPEED_AMOUNT = 7;
+	constexpr static int BULLET_SPEED_SCALAR = 3;
 
 public:
 	std::unique_ptr<int> ID;
@@ -31,6 +32,8 @@ public:
 	std::unique_ptr<bool> isSprinting;
 	std::unique_ptr<bool> isMoving;
 	std::unique_ptr<int> frameCounter;
+	std::unique_ptr<float> directionX;
+	std::unique_ptr<float> directionY;
 	Face_Direction directionFacing;
 
 private:

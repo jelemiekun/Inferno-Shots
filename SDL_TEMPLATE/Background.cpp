@@ -58,3 +58,7 @@ bool Background::isUpEdge() {
 bool Background::isDownEdge() {
 	return srcRect->y + srcRect->h >= dimension->y;
 }
+
+const SDL_Point& Background::getDimension() const {
+	return *dimension;
+}

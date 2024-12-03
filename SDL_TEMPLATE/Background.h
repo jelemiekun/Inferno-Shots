@@ -36,5 +36,6 @@ public:
 	bool isLeftEdge();
 	bool isUpEdge();
 	bool isDownEdge();
+	const SDL_Point& getDimension() const;
 };
 
