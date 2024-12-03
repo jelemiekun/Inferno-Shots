@@ -31,6 +31,10 @@ void Bullet::initMovementSpeed(float movementSpeed) {
 	this->movementSpeed = std::make_unique<float>(movementSpeed);
 }
 
+void Bullet::initTexture(std::shared_ptr<TextureType> textureType) {
+	this->textureType = textureType;
+}
+
 void Bullet::checkCollision() {
 	// Check border collision
 	if (position->x < 0 || position->x + BULLET_DIMENSION.x > Background::getInstance()->getDimension().x ||
@@ -49,9 +53,11 @@ void Bullet::update() {
 }
 
 void Bullet::render() {
+	SDL_Rect srcRect = { 0, 0, textureType->dimension.x, textureType->dimension.y };
 	SDL_Rect dstRect = { position->x, position->y, BULLET_DIMENSION.x ,BULLET_DIMENSION.y };
-	std::cout << position->x << ", " << position->y << ", " << BULLET_DIMENSION.x << ", " << BULLET_DIMENSION.y << '\n';
-	SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, nullptr, &dstRect);
+	std::cout << position->x << ", " << position->y << ", " << BULLET_DIMENSION.x << ", " << BULLET_DIMENSION.y << ", " <<
+		textureType->dimension.x << ", " << textureType->dimension.y << '\n';
+	SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, &dstRect);
 }
 
 std::shared_ptr<Prototype> Bullet::clone() const {

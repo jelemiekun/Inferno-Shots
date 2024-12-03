@@ -7,8 +7,9 @@
 class TextureType;
 
 class Bullet : public Prototype {
-private:
+public:
 	std::shared_ptr<TextureType> textureType;
+private:
 	std::unique_ptr<SDL_Point> position;
 	std::unique_ptr<float> directionX;
 	std::unique_ptr<float> directionY;
@@ -18,7 +19,7 @@ public:
 	std::unique_ptr<bool> remove;
 
 public:
-	static constexpr SDL_Point BULLET_DIMENSION = { 30, 30 };
+	static constexpr SDL_Point BULLET_DIMENSION = { 90, 90 };
 	static std::vector<std::unique_ptr<Bullet>> bullets;
 
 private:
@@ -32,6 +33,7 @@ public:
 	void initPos(SDL_Point initPos);
 	void initDirections(float x, float y);
 	void initMovementSpeed(float movementSpeed);
+	void initTexture(std::shared_ptr<TextureType> textureType);
 	void update();
 	void render();
 

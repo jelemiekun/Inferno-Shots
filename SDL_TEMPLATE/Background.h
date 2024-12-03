@@ -9,7 +9,6 @@ private:
 	Background();
 
 private:
-	const std::string BACKGROUND_PATH = "assets/images/backgroundGame.png";
 	Dimension* dimension;
 
 public:

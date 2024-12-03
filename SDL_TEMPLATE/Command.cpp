@@ -182,7 +182,6 @@ void RemoveSprintCommand::execute(std::shared_ptr<Player> player) {
 void FireCommand::execute(std::shared_ptr<Player> player) {
     std::cout << "FIRING!" << '\n';
 
-    // Clone a player
     std::shared_ptr<Bullet> sharedBullet = std::dynamic_pointer_cast<Bullet>(
         PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::BULLET)
     );
@@ -192,6 +191,7 @@ void FireCommand::execute(std::shared_ptr<Player> player) {
     bullet->initPos(*player->position.get());
     bullet->initDirections( *player->directionX, *player->directionY);
     bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
+    bullet->initTexture(sharedBullet->textureType);
 
     Bullet::bullets.push_back(std::move(bullet));
 }

@@ -35,7 +35,7 @@ Background* Background::getInstance() {
 }
 
 void Background::init() {
-	background = IMG_LoadTexture(Game::getInstance()->getRenderer(), BACKGROUND_PATH.c_str());
+	background = IMG_LoadTexture(Game::getInstance()->getRenderer(), "assets/images/backgroundGame.png");
 	checkIfBackgroundIsLoaded();
 }
 
