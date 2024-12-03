@@ -50,6 +50,48 @@ public:
     void execute(std::shared_ptr<Player> player) override;
 };
 
+// KeyUp Move Commands
+
+class KeyUpMoveLeftCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
+class KeyUpMoveUpLeftCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
+class KeyUpMoveUpCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
+class KeyUpMoveUpRightCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
+class KeyUpMoveRightCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
+class KeyUpMoveDownRightCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
+class KeyUpMoveDownCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
+class KeyUpMoveDownLeftCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};
+
 // Face Direction Commands
 
 class FaceLeftCommand : public Command {

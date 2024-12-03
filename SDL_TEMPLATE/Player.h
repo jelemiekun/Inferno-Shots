@@ -35,9 +35,19 @@ public:
 	std::unique_ptr<float> directionX;
 	std::unique_ptr<float> directionY;
 	Face_Direction directionFacing;
+	
+	std::unique_ptr<bool> isMovingLeft;
+	std::unique_ptr<bool> isMovingUpLeft;
+	std::unique_ptr<bool> isMovingUp;
+	std::unique_ptr<bool> isMovingUpRight;
+	std::unique_ptr<bool> isMovingRight;
+	std::unique_ptr<bool> isMovingDownRight;
+	std::unique_ptr<bool> isMovingDown;
+	std::unique_ptr<bool> isMovingDownLeft;
 
 private:
 	void isCommandMove(Command* command);
+	void updateMove();
 
 public:
 	std::queue<std::shared_ptr<Command>> commandQueue;

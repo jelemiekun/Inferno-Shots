@@ -30,23 +30,14 @@ void GamePlaying::input() {
             if (magnitude != 0) {
                 normalizedVector = { vector.x / magnitude, vector.y / magnitude };
 
-                if (normalizedVector.x < -0.5f && normalizedVector.y > 0.5f) {
-                    keyCode = SDLK_v;
-                } else if (normalizedVector.x > 0.5f && normalizedVector.y > 0.5f) {
-                    keyCode = SDLK_n;
-                } else if (normalizedVector.x < -0.5f && normalizedVector.y < -0.5f) {
-                    keyCode = SDLK_r;
-                } else if (normalizedVector.x > 0.5f && normalizedVector.y < -0.5f) {
-                    keyCode = SDLK_y;
-                } else if (normalizedVector.x > 0.0f && std::abs(normalizedVector.y) <= 0.5f) {
-                    keyCode = SDLK_h;
-                } else if (normalizedVector.x < 0.0f && std::abs(normalizedVector.y) <= 0.5f) {
-                    keyCode = SDLK_f;
-                } else if (normalizedVector.y > 0.0f && std::abs(normalizedVector.x) <= 0.5f) {
-                    keyCode = SDLK_b;
-                } else if (normalizedVector.y < 0.0f && std::abs(normalizedVector.x) <= 0.5f) {
-                    keyCode = SDLK_t;
-                }
+                if (normalizedVector.x < -0.5f && normalizedVector.y > 0.5f) { keyCode = SDLK_v;
+                } else if (normalizedVector.x > 0.5f && normalizedVector.y > 0.5f) { keyCode = SDLK_n;
+                } else if (normalizedVector.x < -0.5f && normalizedVector.y < -0.5f) { keyCode = SDLK_r;
+                } else if (normalizedVector.x > 0.5f && normalizedVector.y < -0.5f) { keyCode = SDLK_y;
+                } else if (normalizedVector.x > 0.0f && std::abs(normalizedVector.y) <= 0.5f) { keyCode = SDLK_h;
+                } else if (normalizedVector.x < 0.0f && std::abs(normalizedVector.y) <= 0.5f) { keyCode = SDLK_f;
+                } else if (normalizedVector.y > 0.0f && std::abs(normalizedVector.x) <= 0.5f) { keyCode = SDLK_b;
+                } else if (normalizedVector.y < 0.0f && std::abs(normalizedVector.x) <= 0.5f) { keyCode = SDLK_t; }
 
                 *player.second->directionX = normalizedVector.x;
                 *player.second->directionY = normalizedVector.y;
@@ -55,13 +46,17 @@ void GamePlaying::input() {
         if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
         break;
     case SDL_KEYUP:
-        if (Game::getInstance()->getEvent().key.keysym.sym == SDLK_LSHIFT) {
-            keyCode = SDLK_CAPSLOCK;
-            InvokerPlaying::getInstance()->pressButton(keyCode);
+        switch (Game::getInstance()->getEvent().key.keysym.sym) {
+        case SDLK_LSHIFT: keyCode = SDLK_CAPSLOCK; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_a: keyCode = SDLK_j; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_q: keyCode = SDLK_u; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_w: keyCode = SDLK_i; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_e: keyCode = SDLK_o; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_d: keyCode = SDLK_l; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_c: keyCode = SDLK_g; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_s: keyCode = SDLK_k; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_z: keyCode = SDLK_m; InvokerPlaying::getInstance()->pressButton(keyCode);
         }
-        break;
-    default:
-        break;
     }
 }
 

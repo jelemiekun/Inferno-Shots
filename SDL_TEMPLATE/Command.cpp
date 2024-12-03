@@ -9,129 +9,80 @@
 
 // Move Commands
 
-constexpr static int BORDER_ALLOWANCE = 12;
-
 void MoveLeftCommand::execute(std::shared_ptr<Player> player) {
-    int movementSpeed = *player->movementSpeed;
-
-    if (*player->isSprinting) movementSpeed += Player::SPEED_AMOUNT;
-
-    if (Background::getInstance()->isRightEdge()) {
-        player->position->x -= static_cast<int>(movementSpeed);
-
-        if (player->position->x <= (SCREEN_WIDTH / 2)) {
-            Background::getInstance()->srcRect->x -= static_cast<int>(movementSpeed);
-        }
-    } else if (Background::getInstance()->isLeftEdge()) {
-        Background::getInstance()->srcRect->x = 0;
-        player->position->x -= static_cast<int>(movementSpeed);
-
-        if (player->position->x < BORDER_ALLOWANCE) {
-            player->position->x = BORDER_ALLOWANCE;
-        }
-    } else {
-        Background::getInstance()->srcRect->x -= static_cast<int>(movementSpeed);
-    }
+    *player->isMovingLeft = true;
 }
 
 void MoveUpLeftCommand::execute(std::shared_ptr<Player> player) {
-    MoveUpCommand moveUp;
-    MoveLeftCommand moveLeft;
-
-    moveUp.execute(player);
-    moveLeft.execute(player);
+    *player->isMovingLeft = true;
+    *player->isMovingUp = true;
 }
 
 void MoveUpCommand::execute(std::shared_ptr<Player> player) {
-    int movementSpeed = *player->movementSpeed;
-
-    if (*player->isSprinting) movementSpeed += Player::SPEED_AMOUNT;
-
-    if (Background::getInstance()->isDownEdge()) {
-        player->position->y -= static_cast<int>(movementSpeed);
-
-        if (player->position->y <= (SCREEN_HEIGHT / 2)) {
-            Background::getInstance()->srcRect->y -= static_cast<int>(movementSpeed);
-        }
-    } else if (Background::getInstance()->isUpEdge()) {
-        Background::getInstance()->srcRect->y = 0;
-        player->position->y -= static_cast<int>(movementSpeed);
-
-        if (player->position->y < BORDER_ALLOWANCE) {
-            player->position->y = BORDER_ALLOWANCE;
-        }
-    } else {
-        Background::getInstance()->srcRect->y -= static_cast<int>(movementSpeed);
-    }
+    *player->isMovingUp = true;
 }
 
 void MoveUpRightCommand::execute(std::shared_ptr<Player> player) {
-    MoveUpCommand moveUp;
-    MoveRightCommand moveRight;
-
-    moveUp.execute(player);
-    moveRight.execute(player);
+    *player->isMovingUp = true;
+    *player->isMovingRight = true;
 }
 
 void MoveRightCommand::execute(std::shared_ptr<Player> player) {
-    int movementSpeed = *player->movementSpeed;
-
-    if (*player->isSprinting) movementSpeed += Player::SPEED_AMOUNT;
-
-    if (Background::getInstance()->isLeftEdge()) {
-        player->position->x += static_cast<int>(movementSpeed);
-
-        if (player->position->x >= (SCREEN_WIDTH / 2)) {
-            Background::getInstance()->srcRect->x += static_cast<int>(movementSpeed);
-        }
-    } else if (Background::getInstance()->isRightEdge()) {
-        player->position->x += static_cast<int>(movementSpeed);
-
-        if (player->position->x > SCREEN_WIDTH - BORDER_ALLOWANCE - ENTITY_DIMENSION.x) {
-            player->position->x = SCREEN_WIDTH - BORDER_ALLOWANCE - ENTITY_DIMENSION.x;
-        }
-    } else {
-        Background::getInstance()->srcRect->x += static_cast<int>(movementSpeed);
-    }
+    *player->isMovingRight = true;
 }
 
 void MoveDownRightCommand::execute(std::shared_ptr<Player> player) {
-    MoveDownCommand moveDown;
-    MoveRightCommand moveRight;
-
-    moveDown.execute(player);
-    moveRight.execute(player);
+    *player->isMovingDown = true;
+    *player->isMovingRight = true;
 }
 
 void MoveDownCommand::execute(std::shared_ptr<Player> player) {
-    int movementSpeed = *player->movementSpeed;
-
-    if (*player->isSprinting) movementSpeed += Player::SPEED_AMOUNT;
-
-    if (Background::getInstance()->isUpEdge()) {
-        player->position->y += static_cast<int>(movementSpeed);
-
-        if (player->position->y >= (SCREEN_HEIGHT / 2)) {
-            Background::getInstance()->srcRect->y += static_cast<int>(movementSpeed);
-        }
-    } else if (Background::getInstance()->isDownEdge()) {
-        player->position->y += static_cast<int>(movementSpeed);
-
-        if (player->position->y > SCREEN_HEIGHT - BORDER_ALLOWANCE - ENTITY_DIMENSION.y) {
-            player->position->y = SCREEN_HEIGHT - BORDER_ALLOWANCE - ENTITY_DIMENSION.y;
-        }
-    } else {
-        Background::getInstance()->srcRect->y += static_cast<int>(movementSpeed);
-    }
+    *player->isMovingDown = true;
 }
 
 void MoveDownLeftCommand::execute(std::shared_ptr<Player> player) {
-    MoveDownCommand moveDown;
-    MoveLeftCommand moveLeft;
-
-    moveDown.execute(player);
-    moveLeft.execute(player);
+    *player->isMovingDown = true;
+    *player->isMovingLeft = true;
 }
+
+// KeyUp Move Commands
+
+void KeyUpMoveLeftCommand::execute(std::shared_ptr<Player> player) {
+    *player->isMovingLeft = false;
+}
+
+void KeyUpMoveUpLeftCommand::execute(std::shared_ptr<Player> player) {
+    *player->isMovingUp = false;
+    *player->isMovingLeft = false;
+}
+
+void KeyUpMoveUpCommand::execute(std::shared_ptr<Player> player) {
+    *player->isMovingUp = false;
+}
+
+void KeyUpMoveUpRightCommand::execute(std::shared_ptr<Player> player) {
+    *player->isMovingUp = false;
+    *player->isMovingRight = false;
+}
+
+void KeyUpMoveRightCommand::execute(std::shared_ptr<Player> player) {
+    *player->isMovingRight = false;
+}
+
+void KeyUpMoveDownRightCommand::execute(std::shared_ptr<Player> player) {
+    *player->isMovingDown = false;
+    *player->isMovingRight = false;
+}
+
+void KeyUpMoveDownCommand::execute(std::shared_ptr<Player> player) {
+    *player->isMovingDown = false;
+}
+
+void KeyUpMoveDownLeftCommand::execute(std::shared_ptr<Player> player) {
+    *player->isMovingDown = false;
+    *player->isMovingLeft = false;
+}
+
 
 // Face Direction Commands
 
@@ -175,6 +126,7 @@ void SprintCommand::execute(std::shared_ptr<Player> player) {
 
 void RemoveSprintCommand::execute(std::shared_ptr<Player> player) {
     *player->isSprinting = false;
+    std::cout << *player->isSprinting << '\n';
 }
 
 // Fire

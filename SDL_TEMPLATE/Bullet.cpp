@@ -52,6 +52,7 @@ void Bullet::render() {
 	float angle = std::atan2(*directionY, *directionX) * (180.0f / M_PI);
 
 	SDL_Rect dstRect = { position->x, position->y, BULLET_DIMENSION.x ,BULLET_DIMENSION.y };
+	SDL_SetRenderTarget(Game::getInstance()->getRenderer(), Background::getInstance()->background);
 	SDL_RenderCopyEx(
 		Game::getInstance()->getRenderer(),
 		textureType->texture,
@@ -61,6 +62,7 @@ void Bullet::render() {
 		nullptr, 
 		SDL_FLIP_NONE
 	);
+	SDL_SetRenderTarget(Game::getInstance()->getRenderer(), nullptr);
 }
 
 std::shared_ptr<Prototype> Bullet::clone() const {

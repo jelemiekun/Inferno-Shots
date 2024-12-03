@@ -2,8 +2,12 @@
 #include "Command.h"
 #include "TextureType.h"
 #include "Game.h"
+#include "Background.h"
+#include "AppInfo.h"
 
 int Player::playerCounter = 1;
+
+constexpr static int BORDER_ALLOWANCE = 12;
 
 // Constructor for prototype only, will not increment counter
 Player::Player(int heartCount, TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay)
@@ -19,8 +23,15 @@ Player::Player(int heartCount, TextureType* textureType, SDL_Point position, flo
     directionX(std::make_unique<float>()),
     directionY(std::make_unique<float>()),
     frameCounter(std::make_unique<int>(0)),
-    directionFacing(Face_Direction::DOWN) {
-}
+    directionFacing(Face_Direction::DOWN),
+    isMovingLeft(std::make_unique<bool>(false)), 
+    isMovingUpLeft(std::make_unique<bool>(false)), 
+    isMovingUp(std::make_unique<bool>(false)), 
+    isMovingUpRight(std::make_unique<bool>(false)), 
+    isMovingRight(std::make_unique<bool>(false)), 
+    isMovingDownRight(std::make_unique<bool>(false)), 
+    isMovingDown(std::make_unique<bool>(false)), 
+    isMovingDownLeft(std::make_unique<bool>(false)) {}
 
 Player::Player(const Player& other)
     : ID(std::make_unique<int>(playerCounter++)),
@@ -35,8 +46,15 @@ Player::Player(const Player& other)
     directionX(std::make_unique<float>()),
     directionY(std::make_unique<float>()),
     frameCounter(std::make_unique<int>(0)),
-    directionFacing(Face_Direction::DOWN) {
-}
+    directionFacing(Face_Direction::DOWN),
+    isMovingLeft(std::make_unique<bool>(false)),
+    isMovingUpLeft(std::make_unique<bool>(false)),
+    isMovingUp(std::make_unique<bool>(false)),
+    isMovingUpRight(std::make_unique<bool>(false)),
+    isMovingRight(std::make_unique<bool>(false)),
+    isMovingDownRight(std::make_unique<bool>(false)),
+    isMovingDown(std::make_unique<bool>(false)),
+    isMovingDownLeft(std::make_unique<bool>(false)) {}
 
 void Player::isCommandMove(Command* command) {
     if (dynamic_cast<MoveLeftCommand*>(command) ||
@@ -51,6 +69,96 @@ void Player::isCommandMove(Command* command) {
     }
 }
 
+void Player::updateMove() {
+    if (*isMovingLeft) {
+        float newMovementSpeed = *movementSpeed;
+
+        if (*isSprinting) newMovementSpeed += Player::SPEED_AMOUNT;
+
+        if (Background::getInstance()->isRightEdge()) {
+            position->x -= static_cast<int>(newMovementSpeed);
+
+            if (position->x <= (SCREEN_WIDTH / 2)) {
+                Background::getInstance()->srcRect->x -= static_cast<int>(newMovementSpeed);
+            }
+        } else if (Background::getInstance()->isLeftEdge()) {
+            Background::getInstance()->srcRect->x = 0;
+            position->x -= static_cast<int>(newMovementSpeed);
+
+            if (position->x < BORDER_ALLOWANCE) {
+                position->x = BORDER_ALLOWANCE;
+            }
+        } else {
+            Background::getInstance()->srcRect->x -= static_cast<int>(newMovementSpeed);
+        }
+    }
+    if (*isMovingUp) {
+        float newMovementSpeed = *movementSpeed;
+
+        if (*isSprinting) newMovementSpeed += Player::SPEED_AMOUNT;
+
+        if (Background::getInstance()->isDownEdge()) {
+            position->y -= static_cast<int>(newMovementSpeed);
+
+            if (position->y <= (SCREEN_HEIGHT / 2)) {
+                Background::getInstance()->srcRect->y -= static_cast<int>(newMovementSpeed);
+            }
+        } else if (Background::getInstance()->isUpEdge()) {
+            Background::getInstance()->srcRect->y = 0;
+            position->y -= static_cast<int>(newMovementSpeed);
+
+            if (position->y < BORDER_ALLOWANCE) {
+                position->y = BORDER_ALLOWANCE;
+            }
+        } else {
+            Background::getInstance()->srcRect->y -= static_cast<int>(newMovementSpeed);
+        }
+    }
+    if (*isMovingRight) {
+        float newMovementSpeed = *movementSpeed;
+
+        if (*isSprinting) newMovementSpeed += Player::SPEED_AMOUNT;
+
+        if (Background::getInstance()->isLeftEdge()) {
+            position->x += static_cast<int>(newMovementSpeed);
+
+            if (position->x >= (SCREEN_WIDTH / 2)) {
+                Background::getInstance()->srcRect->x += static_cast<int>(newMovementSpeed);
+            }
+        } else if (Background::getInstance()->isRightEdge()) {
+            position->x += static_cast<int>(newMovementSpeed);
+
+            if (position->x > SCREEN_WIDTH - BORDER_ALLOWANCE - ENTITY_DIMENSION.x) {
+                position->x = SCREEN_WIDTH - BORDER_ALLOWANCE - ENTITY_DIMENSION.x;
+            }
+        } else {
+            Background::getInstance()->srcRect->x += static_cast<int>(newMovementSpeed);
+        }
+    }
+    if (*isMovingDown) {
+        float newMovementSpeed = *movementSpeed;
+
+        if (*isSprinting) newMovementSpeed += Player::SPEED_AMOUNT;
+
+        if (Background::getInstance()->isUpEdge()) {
+            position->y += static_cast<int>(newMovementSpeed);
+
+            if (position->y >= (SCREEN_HEIGHT / 2)) {
+                Background::getInstance()->srcRect->y += static_cast<int>(newMovementSpeed);
+            }
+        } else if (Background::getInstance()->isDownEdge()) {
+            position->y += static_cast<int>(newMovementSpeed);
+
+            if (position->y > SCREEN_HEIGHT - BORDER_ALLOWANCE - ENTITY_DIMENSION.y) {
+                position->y = SCREEN_HEIGHT - BORDER_ALLOWANCE - ENTITY_DIMENSION.y;
+            }
+        } else {
+            Background::getInstance()->srcRect->y += static_cast<int>(newMovementSpeed);
+        }
+    }
+
+}
+
 
 void Player::update() {
     *isMoving = false;
@@ -62,6 +170,8 @@ void Player::update() {
         
         isCommandMove(command.get());
     }
+
+    updateMove();
 }
 
 void Player::render() {
