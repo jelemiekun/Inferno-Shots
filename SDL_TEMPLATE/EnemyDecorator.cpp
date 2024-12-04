@@ -6,6 +6,14 @@ void EnemyDecorator::initPos() {
     decoratedEnemy->initPos();
 }
 
+void EnemyDecorator::undoMove() {
+    decoratedEnemy->undoMove();
+}
+
+void EnemyDecorator::checkCollision() {
+    decoratedEnemy->checkCollision();
+}
+
 void EnemyDecorator::update() {
     decoratedEnemy->update();
 }

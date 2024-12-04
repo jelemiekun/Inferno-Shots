@@ -5,11 +5,9 @@
 #include "Background.h"
 #include "Game.h"
 #include "Player.h"
-#include "Background.h"
+#include "WaveManager.h"
 #include <cmath>
 #include <random>
-
-constexpr static SDL_Point NORMAL_ENEMY_DIMENSION = { 30, 30 };
 
 constexpr static float NORMAL_ENEMY_SPED = 3.0F;
 
@@ -51,29 +49,19 @@ std::shared_ptr<Player> NormalEnemy::getNearestPlayer() {
 
 
 void NormalEnemy::calculateNormalizedLength(std::shared_ptr<Player> nearestPlayer) {
-	// Get the player position adjusted for background scrolling
-	float playerX = nearestPlayer->position->x + Background::getInstance()->srcRect->x;
-	float playerY = nearestPlayer->position->y + Background::getInstance()->srcRect->y;
+	float dx = (nearestPlayer->position->x + (Player::PLAYER_DIMENSION.x / 2)) - position->x + Background::getInstance()->srcRect->x;
+	float dy = (nearestPlayer->position->y + (Player::PLAYER_DIMENSION.y / 2)) - position->y + Background::getInstance()->srcRect->y;
 
-	// Calculate the direction vector from the enemy to the player
-	float dx = playerX - position->x;
-	float dy = playerY - position->y;
-
-	// Normalize the direction vector
 	float distance = sqrt(dx * dx + dy * dy);
-	if (distance > 0) { // Avoid division by zero
-		*directionX = dx / distance;
-		*directionY = dy / distance;
-	}
+
+	*directionX = dx / distance;
+	*directionY = dy / distance;
 }
 
-
 void NormalEnemy::move() {
-	// Move the enemy in the direction of the player with its speed
 	position->x += *directionX * *movementSpeed;
 	position->y += *directionY * *movementSpeed;
 }
-
 
 void NormalEnemy::initPos() {
 	static std::random_device dev;
@@ -93,20 +81,85 @@ void NormalEnemy::initPos() {
 	position->y = distY(rng);
 }
 
+void NormalEnemy::undoMove() {
+	position->x -= *directionX * *movementSpeed;
+	position->y -= *directionY * *movementSpeed;
+}
+
+void NormalEnemy::checkCollision() {
+	for (const auto& otherEnemy : WaveManager::getInstance()->getEnemies()) {
+		NormalEnemy* normalEnemyPtr = dynamic_cast<NormalEnemy*>(otherEnemy.get());
+		if (!normalEnemyPtr || otherEnemy == shared_from_this()) {
+			continue;
+		}
+
+		SDL_Point pos1 = *position;
+		SDL_Point pos2 = *normalEnemyPtr->position;
+
+		if (pos1.x < pos2.x + NORMAL_ENEMY_DIMENSION.x &&
+			pos1.x + NORMAL_ENEMY_DIMENSION.x > pos2.x &&
+			pos1.y < pos2.y + NORMAL_ENEMY_DIMENSION.y &&
+			pos1.y + NORMAL_ENEMY_DIMENSION.y > pos2.y) {
+			undoMove();
+			undoMove();
+			undoMove();
+		}
+	}
+
+	for (const auto& enemy : WaveManager::getInstance()->getEnemies()) {
+		NormalEnemy* normalEnemyPtr = dynamic_cast<NormalEnemy*>(enemy.get());
+		if (!normalEnemyPtr) continue;
+
+		for (const auto& player : InvokerPlaying::getInstance()->players) {
+			SDL_Point enemyPos = *normalEnemyPtr->position;
+			SDL_Point playerPos = *player.second->position;
+			SDL_Rect enemyRect = { 
+				enemyPos.x, 
+				enemyPos.y, 
+				NORMAL_ENEMY_DIMENSION.x, 
+				NORMAL_ENEMY_DIMENSION.y 
+			};
+			SDL_Rect playerRect = { 
+				playerPos.x + Background::getInstance()->srcRect->x,
+				playerPos.y + Background::getInstance()->srcRect->y,
+				Player::PLAYER_DIMENSION.x, 
+				Player::PLAYER_DIMENSION.y 
+			};
+
+			if (SDL_HasIntersection(&enemyRect, &playerRect)) {
+				*normalEnemyPtr->dead = true;
+			}
+		}
+	}
+
+	if (position->x < BORDER_ALLOWANCE)
+		position->x = BORDER_ALLOWANCE;
+	if (position->x + NORMAL_ENEMY_DIMENSION.x > Background::getInstance()->getDimension().x - BORDER_ALLOWANCE)
+		position->x = Background::getInstance()->getDimension().x - NORMAL_ENEMY_DIMENSION.x - BORDER_ALLOWANCE;
+	if (position->y < BORDER_ALLOWANCE)
+		position->y = BORDER_ALLOWANCE;
+	if (position->y + NORMAL_ENEMY_DIMENSION.y > Background::getInstance()->getDimension().y - BORDER_ALLOWANCE)
+		position->y = Background::getInstance()->getDimension().y - NORMAL_ENEMY_DIMENSION.y - BORDER_ALLOWANCE;
+}
+
+
 
 void NormalEnemy::update() {
 	std::shared_ptr<Player> nearestPlayer = getNearestPlayer();
 	if (nearestPlayer) {
-		// Calculate the direction the enemy should move
 		calculateNormalizedLength(nearestPlayer);
-		// Move the enemy based on that direction
 		move();
 	}
 }
 
 void NormalEnemy::render() const {
-	SDL_Rect dstRect = { position->x, position->y, NORMAL_ENEMY_DIMENSION.x, NORMAL_ENEMY_DIMENSION.y };
-
+	SDL_Rect dstRect = { 
+		position->x - Background::getInstance()->srcRect->x,
+		position->y - Background::getInstance()->srcRect->y,
+		NORMAL_ENEMY_DIMENSION.x, 
+		NORMAL_ENEMY_DIMENSION.y 
+	};
+	
 	SDL_SetRenderTarget(Game::getInstance()->getRenderer(), Background::getInstance()->background);
 	SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, nullptr, &dstRect);
 	SDL_SetRenderTarget(Game::getInstance()->getRenderer(), nullptr);

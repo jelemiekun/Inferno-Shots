@@ -4,6 +4,8 @@
 #include "Background.h"
 #include "Game.h"
 #include "TextureType.h"
+#include "WaveManager.h"
+#include "NormalEnemy.h"
 
 std::vector<std::unique_ptr<Bullet>> Bullet::bullets;
 
@@ -37,6 +39,24 @@ void Bullet::checkCollision() {
 		position->y < BORDER_ALLOWANCE * 1.5 ||
 		position->y + BULLET_DIMENSION.y > Background::getInstance()->getDimension().y - (BORDER_ALLOWANCE)) {
 		*remove = true;
+	}
+
+	SDL_Rect bulletRect = { position->x, position->y, BULLET_DIMENSION.x ,BULLET_DIMENSION.y };
+	for (auto& enemy : WaveManager::getInstance()->getEnemies()) {
+		NormalEnemy* normalEnemyPtr = dynamic_cast<NormalEnemy*>(enemy.get());
+		if (!normalEnemyPtr) continue;
+
+		SDL_Rect enemyRect = {
+			normalEnemyPtr->position->x,
+			normalEnemyPtr->position->y,
+			NormalEnemy::NORMAL_ENEMY_DIMENSION.x,
+			NormalEnemy::NORMAL_ENEMY_DIMENSION.y
+		};
+
+		if (SDL_HasIntersection(&bulletRect, &enemyRect)) {
+			*normalEnemyPtr->dead = true;
+			*remove = true;
+		}
 	}
 }
 

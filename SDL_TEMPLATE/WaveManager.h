@@ -32,5 +32,6 @@ public:
     void incrementWave();
 
     const int& getWaveCount() const;
+    const std::vector<std::shared_ptr<Enemy>>& getEnemies() const;
 };
 

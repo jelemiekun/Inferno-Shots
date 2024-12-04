@@ -4,6 +4,8 @@
 class Enemy : public Prototype {
 public:
     virtual ~Enemy() = default;
+    virtual void undoMove() = 0;
+    virtual void checkCollision() = 0;
     virtual void initPos() = 0;
     virtual void update() = 0;
     virtual void render() const = 0;

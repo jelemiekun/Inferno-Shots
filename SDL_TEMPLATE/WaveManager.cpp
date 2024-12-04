@@ -30,6 +30,8 @@ void WaveManager::update() {
     for (auto& enemy : enemies) {
         enemy->update();
 
+        enemy->checkCollision();
+
         if (enemy->isDead()) {
             enemiesToRemove.push_back(enemy);
         }
@@ -64,4 +66,8 @@ void WaveManager::incrementWave() {
 
 const int& WaveManager::getWaveCount() const {
     return *WaveManager::waveCount;
+}
+
+const std::vector<std::shared_ptr<Enemy>>& WaveManager::getEnemies() const {
+    return enemies;
 }

@@ -19,7 +19,7 @@ private:
 
 public:
 	constexpr static Dimension PLAYER_DIMENSION = { 45, 65 };
-	constexpr static int SPEED_AMOUNT = 20;
+	constexpr static int SPEED_AMOUNT = 3;
 	constexpr static int BULLET_SPEED_SCALAR = 10;
 
 public:
