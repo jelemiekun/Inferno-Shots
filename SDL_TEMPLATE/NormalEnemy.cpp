@@ -7,10 +7,12 @@
 
 constexpr static SDL_Point NORMAL_ENEMY_DIMENSION = { 30, 30 };
 
-NormalEnemy::NormalEnemy(std::shared_ptr<TextureType> type, float speed) : 
+constexpr static float NORMAL_ENEMY_SPED = 10.0F;
+
+NormalEnemy::NormalEnemy(std::shared_ptr<TextureType> type) : 
 	textureType(type),
 	position(std::make_unique<SDL_Point>()),
-	movementSpeed(std::make_unique<float>(speed)),
+	movementSpeed(std::make_unique<float>(NORMAL_ENEMY_SPED)),
 	directionX(std::make_unique<float>(0.0F)),
 	directionY(std::make_unique<float>(0.0F)),
 	dead(std::make_unique<bool>(false)) {}

@@ -4,6 +4,7 @@
 #include "cmath"
 #include "Bullet.h"
 #include "Player.h"
+#include "WaveManager.h"
 
 struct StateVector {
     float x;
@@ -86,6 +87,13 @@ void GamePlaying::update() {
     for (auto& bullet : Bullet::bullets) {
         bullet->update();
     }
+
+    WaveManager::getInstance()->update();
+
+    if (WaveManager::getInstance()->isWaveFinish()) {
+        WaveManager::getInstance()->incrementWave();
+        WaveManager::getInstance()->initWave();
+    }
 }
 
 
@@ -95,6 +103,8 @@ void GamePlaying::render() {
     for (const auto& bullet : Bullet::bullets) {
         bullet->render();
     }
+
+    WaveManager::getInstance()->render();
 }
 
 void GamePaused::input() {

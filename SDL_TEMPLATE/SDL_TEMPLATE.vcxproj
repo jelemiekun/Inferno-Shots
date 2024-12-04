@@ -33,6 +33,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PrototypeRegistry.cpp" />
     <ClCompile Include="TextureType.cpp" />
+    <ClCompile Include="WaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Prototype.h" />
     <ClInclude Include="PrototypeRegistry.h" />
     <ClInclude Include="TextureType.h" />
+    <ClInclude Include="WaveManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

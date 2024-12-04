@@ -21,7 +21,7 @@ private:
 	void move();
 
 public:
-	NormalEnemy(std::shared_ptr<TextureType> type, float speed);
+	NormalEnemy(std::shared_ptr<TextureType> type);
 	NormalEnemy(const NormalEnemy& other);
 
 	void update() override;

@@ -10,8 +10,8 @@
 #include "Command.h"
 #include "Background.h"
 #include "Bullet.h"
-
-
+#include "Enemy.h"
+#include "NormalEnemy.h"
 
 
 
@@ -171,6 +171,16 @@ void Game::initBullet() {
 	);
 }
 
+void Game::initEnemy() {
+	std::shared_ptr<TextureType> normalEnemyTexture = std::make_shared<TextureType>(Prototype_Type::NORMAL_ENEMY);
+	std::shared_ptr<NormalEnemy> normalEnemyPrototype = std::make_shared<NormalEnemy>(normalEnemyTexture);
+
+	// Add main prototype normal enemy to Prototype Registry
+	PrototypeRegistry::getInstance()->addPrototype(
+		Prototype_Type::NORMAL_ENEMY, std::static_pointer_cast<Prototype>(normalEnemyPrototype)
+	);
+}
+
 Game* Game::getInstance() {
 	static Game instance;
 	return &instance;
@@ -187,6 +197,7 @@ void Game::init() {
 	initBackground();
 	initPlayer();
 	initBullet();
+	initEnemy();
 }
 
 void Game::input() {

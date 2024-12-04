@@ -41,6 +41,7 @@ private:
 	void initBackground();
 	void initPlayer();
 	void initBullet();
+	void initEnemy();
 
 public:
 	static Game* getInstance();
