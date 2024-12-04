@@ -22,6 +22,7 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="EnemyDecorator.cpp" />
     <ClCompile Include="FPSManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEnums.cpp" />
@@ -42,6 +43,8 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyDecorator.h" />
+    <ClInclude Include="FastEnemy.h" />
     <ClInclude Include="FPSManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameEnums.h" />
