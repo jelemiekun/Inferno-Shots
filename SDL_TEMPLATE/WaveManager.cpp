@@ -19,7 +19,7 @@ void WaveManager::initWave() {
         std::shared_ptr<NormalEnemy> enemy = std::dynamic_pointer_cast<NormalEnemy>(
             PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::NORMAL_ENEMY)
         );
-
+        enemy->initPos();
         enemies.push_back(enemy);
     }
 }

@@ -24,6 +24,7 @@ public:
 	NormalEnemy(std::shared_ptr<TextureType> type);
 	NormalEnemy(const NormalEnemy& other);
 
+	void initPos() override;
 	void update() override;
 	void render() const override;
 	std::shared_ptr<Prototype> clone() const override;

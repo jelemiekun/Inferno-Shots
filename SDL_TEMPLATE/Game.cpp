@@ -175,7 +175,6 @@ void Game::initEnemy() {
 	std::shared_ptr<TextureType> normalEnemyTexture = std::make_shared<TextureType>(Prototype_Type::NORMAL_ENEMY);
 	std::shared_ptr<NormalEnemy> normalEnemyPrototype = std::make_shared<NormalEnemy>(normalEnemyTexture);
 
-	// Add main prototype normal enemy to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
 		Prototype_Type::NORMAL_ENEMY, std::static_pointer_cast<Prototype>(normalEnemyPrototype)
 	);

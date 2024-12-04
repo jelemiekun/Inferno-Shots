@@ -7,6 +7,7 @@ protected:
 
 public:
     EnemyDecorator(std::shared_ptr<Enemy> enemy);
+    virtual void initPos() override;
     virtual void update() override;
     virtual void render() const override;
     virtual const bool& isDead() const override;

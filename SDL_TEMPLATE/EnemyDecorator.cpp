@@ -2,6 +2,10 @@
 
 EnemyDecorator::EnemyDecorator(std::shared_ptr<Enemy> enemy) : decoratedEnemy(enemy) {}
 
+void EnemyDecorator::initPos() {
+    decoratedEnemy->initPos();
+}
+
 void EnemyDecorator::update() {
     decoratedEnemy->update();
 }

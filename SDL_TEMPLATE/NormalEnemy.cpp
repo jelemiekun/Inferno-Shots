@@ -1,13 +1,17 @@
 #include "NormalEnemy.h"
 #include "TextureType.h"
 #include "InvokerPlaying.h"
+#include "GameEnums.h"
 #include "Background.h"
 #include "Game.h"
+#include "Player.h"
+#include "Background.h"
 #include <cmath>
+#include <random>
 
 constexpr static SDL_Point NORMAL_ENEMY_DIMENSION = { 30, 30 };
 
-constexpr static float NORMAL_ENEMY_SPED = 10.0F;
+constexpr static float NORMAL_ENEMY_SPED = 3.0F;
 
 NormalEnemy::NormalEnemy(std::shared_ptr<TextureType> type) : 
 	textureType(type),
@@ -27,17 +31,17 @@ NormalEnemy::NormalEnemy(const NormalEnemy& other)
 }
 
 std::shared_ptr<Player> NormalEnemy::getNearestPlayer() {
-
 	std::shared_ptr<Player> nearestPlayer;
-	float nearestDistance = 999999.0f;
+	float nearestDistance = std::numeric_limits<float>::max();
 
 	for (auto& player : InvokerPlaying::getInstance()->players) {
 		float currentDistance = (
 			(player.second->position->x - position->x) * (player.second->position->x - position->x) +
 			(player.second->position->y - position->y) * (player.second->position->y - position->y)
-		);
+			);
 
 		if (currentDistance < nearestDistance) {
+			nearestDistance = currentDistance;
 			nearestPlayer = player.second;
 		}
 	}
@@ -45,24 +49,59 @@ std::shared_ptr<Player> NormalEnemy::getNearestPlayer() {
 	return nearestPlayer;
 }
 
+
 void NormalEnemy::calculateNormalizedLength(std::shared_ptr<Player> nearestPlayer) {
-	float dx = nearestPlayer->position->x - position->x;
-	float dy = nearestPlayer->position->y - position->y;
+	// Get the player position adjusted for background scrolling
+	float playerX = nearestPlayer->position->x + Background::getInstance()->srcRect->x;
+	float playerY = nearestPlayer->position->y + Background::getInstance()->srcRect->y;
 
+	// Calculate the direction vector from the enemy to the player
+	float dx = playerX - position->x;
+	float dy = playerY - position->y;
+
+	// Normalize the direction vector
 	float distance = sqrt(dx * dx + dy * dy);
-
-	*directionX = dx / distance;
-	*directionY = dy / distance;
+	if (distance > 0) { // Avoid division by zero
+		*directionX = dx / distance;
+		*directionY = dy / distance;
+	}
 }
 
+
 void NormalEnemy::move() {
+	// Move the enemy in the direction of the player with its speed
 	position->x += *directionX * *movementSpeed;
 	position->y += *directionY * *movementSpeed;
 }
 
+
+void NormalEnemy::initPos() {
+	static std::random_device dev;
+	static std::mt19937 rng(dev());
+
+	std::uniform_int_distribution<std::mt19937::result_type> distX(
+		BORDER_ALLOWANCE,
+		Background::getInstance()->getDimension().x - BORDER_ALLOWANCE - textureType->dimension.x
+	);
+
+	std::uniform_int_distribution<std::mt19937::result_type> distY(
+		BORDER_ALLOWANCE,
+		Background::getInstance()->getDimension().y - BORDER_ALLOWANCE - textureType->dimension.y
+	);
+
+	position->x = distX(rng);
+	position->y = distY(rng);
+}
+
+
 void NormalEnemy::update() {
 	std::shared_ptr<Player> nearestPlayer = getNearestPlayer();
-	calculateNormalizedLength(nearestPlayer);
+	if (nearestPlayer) {
+		// Calculate the direction the enemy should move
+		calculateNormalizedLength(nearestPlayer);
+		// Move the enemy based on that direction
+		move();
+	}
 }
 
 void NormalEnemy::render() const {
