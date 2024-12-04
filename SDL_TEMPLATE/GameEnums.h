@@ -4,7 +4,6 @@
 
 using Dimension = SDL_Point;
 
-constexpr Dimension ENTITY_DIMENSION = { 45, 65 };
 constexpr int BORDER_ALLOWANCE = 12;
 
 enum class Face_Direction {
@@ -21,7 +20,7 @@ enum class Face_Direction {
 enum class Prototype_Type {
 	PLAYER,
 	BULLET,
-	SMALL_ENEMY,
+	NORMAL_ENEMY
 };
 
 std::string getProtoType_Type_Path(Prototype_Type type);

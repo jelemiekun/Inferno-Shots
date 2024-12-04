@@ -18,6 +18,7 @@ private:
 	constexpr static int FRAME_DURATION = 50;
 
 public:
+	constexpr static Dimension PLAYER_DIMENSION = { 45, 65 };
 	constexpr static int SPEED_AMOUNT = 7;
 	constexpr static int BULLET_SPEED_SCALAR = 10;
 
@@ -34,6 +35,7 @@ public:
 	std::unique_ptr<int> frameCounter;
 	std::unique_ptr<float> directionX;
 	std::unique_ptr<float> directionY;
+	std::unique_ptr<SDL_Point> platformPosition;
 	Face_Direction directionFacing;
 	
 	std::unique_ptr<bool> isMovingLeft;
@@ -48,6 +50,7 @@ public:
 private:
 	void isCommandMove(Command* command);
 	void updateMove();
+	void updatePlatformPosition();
 
 public:
 	std::queue<std::shared_ptr<Command>> commandQueue;

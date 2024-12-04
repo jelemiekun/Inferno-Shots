@@ -126,7 +126,6 @@ void SprintCommand::execute(std::shared_ptr<Player> player) {
 
 void RemoveSprintCommand::execute(std::shared_ptr<Player> player) {
     *player->isSprinting = false;
-    std::cout << *player->isSprinting << '\n';
 }
 
 // Fire
@@ -139,8 +138,8 @@ void FireCommand::execute(std::shared_ptr<Player> player) {
     std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
 
     SDL_Point fixedPos = {
-        player->position->x + (ENTITY_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
-        player->position->y + (ENTITY_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
+        player->position->x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
+        player->position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
     };
 
     bullet->initPos(fixedPos);

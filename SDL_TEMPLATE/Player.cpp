@@ -19,9 +19,9 @@ Player::Player(int heartCount, TextureType* textureType, SDL_Point position, flo
     inCooldown(std::make_unique<bool>(false)),
     isSprinting(std::make_unique<bool>(false)),
     isMoving(std::make_unique<bool>(false)),
+    frameCounter(std::make_unique<int>(0)),
     directionX(std::make_unique<float>()),
     directionY(std::make_unique<float>()),
-    frameCounter(std::make_unique<int>(0)),
     directionFacing(Face_Direction::DOWN),
     isMovingLeft(std::make_unique<bool>(false)), 
     isMovingUpLeft(std::make_unique<bool>(false)), 
@@ -30,7 +30,13 @@ Player::Player(int heartCount, TextureType* textureType, SDL_Point position, flo
     isMovingRight(std::make_unique<bool>(false)), 
     isMovingDownRight(std::make_unique<bool>(false)), 
     isMovingDown(std::make_unique<bool>(false)), 
-    isMovingDownLeft(std::make_unique<bool>(false)) {}
+    isMovingDownLeft(std::make_unique<bool>(false)) {
+
+    platformPosition = std::make_unique<SDL_Point>(SDL_Point{
+        position.x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
+        position.y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
+        });
+}
 
 Player::Player(const Player& other)
     : ID(std::make_unique<int>(playerCounter++)),
@@ -42,9 +48,10 @@ Player::Player(const Player& other)
     inCooldown(std::make_unique<bool>(*other.inCooldown)),
     isSprinting(std::make_unique<bool>(false)),
     isMoving(std::make_unique<bool>(false)),
+    frameCounter(std::make_unique<int>(0)),
     directionX(std::make_unique<float>()),
     directionY(std::make_unique<float>()),
-    frameCounter(std::make_unique<int>(0)),
+    platformPosition(std::make_unique<SDL_Point>(*other.platformPosition)),
     directionFacing(Face_Direction::DOWN),
     isMovingLeft(std::make_unique<bool>(false)),
     isMovingUpLeft(std::make_unique<bool>(false)),
@@ -127,8 +134,8 @@ void Player::updateMove() {
         } else if (Background::getInstance()->isRightEdge()) {
             position->x += static_cast<int>(newMovementSpeed);
 
-            if (position->x > SCREEN_WIDTH - BORDER_ALLOWANCE - ENTITY_DIMENSION.x) {
-                position->x = SCREEN_WIDTH - BORDER_ALLOWANCE - ENTITY_DIMENSION.x;
+            if (position->x > SCREEN_WIDTH - BORDER_ALLOWANCE - Player::PLAYER_DIMENSION.x) {
+                position->x = SCREEN_WIDTH - BORDER_ALLOWANCE - Player::PLAYER_DIMENSION.x;
             }
         } else {
             Background::getInstance()->srcRect->x += static_cast<int>(newMovementSpeed);
@@ -148,14 +155,18 @@ void Player::updateMove() {
         } else if (Background::getInstance()->isDownEdge()) {
             position->y += static_cast<int>(newMovementSpeed);
 
-            if (position->y > SCREEN_HEIGHT - BORDER_ALLOWANCE - ENTITY_DIMENSION.y) {
-                position->y = SCREEN_HEIGHT - BORDER_ALLOWANCE - ENTITY_DIMENSION.y;
+            if (position->y > SCREEN_HEIGHT - BORDER_ALLOWANCE - Player::PLAYER_DIMENSION.y) {
+                position->y = SCREEN_HEIGHT - BORDER_ALLOWANCE - Player::PLAYER_DIMENSION.y;
             }
         } else {
             Background::getInstance()->srcRect->y += static_cast<int>(newMovementSpeed);
         }
     }
+}
 
+void Player::updatePlatformPosition() {
+    platformPosition->x = position->x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x;
+    platformPosition->y = position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y;
 }
 
 
@@ -171,6 +182,7 @@ void Player::update() {
     }
 
     updateMove();
+    updatePlatformPosition();
 }
 
 void Player::render() {
@@ -211,7 +223,7 @@ void Player::render() {
     }
 
 
-    SDL_Rect dstRect = { position->x, position->y, ENTITY_DIMENSION.x, ENTITY_DIMENSION.y };
+    SDL_Rect dstRect = { position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y };
     SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, &dstRect);
 }
 

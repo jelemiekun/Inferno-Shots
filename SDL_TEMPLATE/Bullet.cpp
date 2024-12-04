@@ -47,7 +47,6 @@ void Bullet::update() {
 	checkCollision();
 }
 
-
 void Bullet::render() {
 	float angle = std::atan2(*directionY, *directionX) * (180.0f / M_PI);
 

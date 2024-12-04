@@ -22,7 +22,10 @@ void GamePlaying::input() {
         SDL_GetMouseState(&mousePos.x, &mousePos.y);
 
         for (auto& player : InvokerPlaying::getInstance()->players) {
-            StateVector vector = { mousePos.x - player.second->position->x, mousePos.y - player.second->position->y };
+            StateVector vector = { 
+                mousePos.x - player.second->position->x - (Player::PLAYER_DIMENSION.x / 2), 
+                mousePos.y - player.second->position->y - (Player::PLAYER_DIMENSION.y / 2)
+            };
 
             float magnitude = std::sqrt((vector.x * vector.x) + (vector.y * vector.y));
 
@@ -45,6 +48,10 @@ void GamePlaying::input() {
         }
         if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
         break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (Game::getInstance()->getEvent().button.button == SDL_BUTTON_LEFT) {
+            keyCode = SDLK_x; InvokerPlaying::getInstance()->pressButton(keyCode);
+        }
     case SDL_KEYUP:
         switch (Game::getInstance()->getEvent().key.keysym.sym) {
         case SDLK_LSHIFT: keyCode = SDLK_CAPSLOCK; InvokerPlaying::getInstance()->pressButton(keyCode);
@@ -56,6 +63,7 @@ void GamePlaying::input() {
         case SDLK_c: keyCode = SDLK_g; InvokerPlaying::getInstance()->pressButton(keyCode);
         case SDLK_s: keyCode = SDLK_k; InvokerPlaying::getInstance()->pressButton(keyCode);
         case SDLK_z: keyCode = SDLK_m; InvokerPlaying::getInstance()->pressButton(keyCode);
+        default: break;
         }
     }
 }
