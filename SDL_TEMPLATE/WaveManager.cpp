@@ -26,11 +26,11 @@ Uint32 WaveManager::getCountdownDuration() const {
     if (*waveCount <= 3) {
         duration = 3500;
     } else if (*waveCount <= 7) {
-        duration = 5500;
+        duration = 4500;
     } else if (*waveCount <= 10) {
-        duration = 7500;
+        duration = 6500;
     } else {
-        duration = 13000;
+        duration = 9000;
     }
 
     return duration;
@@ -126,6 +126,10 @@ bool WaveManager::isCountdownFinish() const {
 
 bool WaveManager::hasCountdownStarted() const {
     return countdownTimer->hasStarted();
+}
+
+void WaveManager::setCountdownFinish() {
+    countdownTimer->setFinish();
 }
 
 const int& WaveManager::getWaveCount() const {

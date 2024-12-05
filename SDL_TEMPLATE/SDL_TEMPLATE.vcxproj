@@ -33,6 +33,7 @@
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="NormalEnemy.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerProfile.cpp" />
     <ClCompile Include="PrototypeRegistry.cpp" />
     <ClCompile Include="TextureType.cpp" />
     <ClCompile Include="CountdownTimer.cpp" />
@@ -59,6 +60,7 @@
     <ClInclude Include="Minimap.h" />
     <ClInclude Include="NormalEnemy.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerProfile.h" />
     <ClInclude Include="Prototype.h" />
     <ClInclude Include="PrototypeRegistry.h" />
     <ClInclude Include="TextureType.h" />

@@ -45,6 +45,7 @@ public:
     void startCountdown();
     bool isCountdownFinish() const;
     bool hasCountdownStarted() const;
+    void setCountdownFinish();
 
     const int& getWaveCount() const;
     const std::vector<std::shared_ptr<Enemy>>& getEnemies() const;

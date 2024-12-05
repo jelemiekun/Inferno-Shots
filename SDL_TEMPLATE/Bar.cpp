@@ -19,7 +19,7 @@ void Bar::initTexture() {
 }
 
 float Bar::getPercentageOfCurrentAmount() {
-	return static_cast<float>((mCurrentAmount) / mMaxAmount);
+	return static_cast<float>(mCurrentAmount) / mMaxAmount;
 }
 
 void Bar::calculateSizeRect() {
@@ -50,7 +50,9 @@ void Bar::setProgressBarColor(SDL_Color color) {
 }
 
 void Bar::update(float currentAmount) {
-	mCurrentAmount = currentAmount;
+	if (currentAmount > mMaxAmount) mCurrentAmount = mMaxAmount;
+	else mCurrentAmount = currentAmount;
+
 	calculateSizeRect();
 }
 

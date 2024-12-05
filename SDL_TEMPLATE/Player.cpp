@@ -5,14 +5,18 @@
 #include "Background.h"
 #include "AppInfo.h"
 #include "GameEnums.h"
+#include "PlayerProfile.h"
 
 int Player::playerCounter = 1;
 
 // Constructor for prototype only, will not increment counter
-Player::Player(int heartCount, TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay)
+Player::Player(int heartAmount, int sprintAmount,
+    TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay)
     : ID(std::make_unique<int>(0)),
     textureType(std::make_unique<TextureType>(*textureType)),
-    heartCount(std::make_unique<int>(heartCount)),
+    heartAmount(std::make_unique<int>(heartAmount)),
+    maxSprintAmount(std::make_unique<int>(sprintAmount)),
+    sprintAmount(std::make_unique<int>(sprintAmount)),
     position(std::make_unique<SDL_Point>(position)),
     movementSpeed(std::make_unique<float>(movementSpeed)),
     speedDecay(std::make_unique<float>(speedDecay)),
@@ -41,7 +45,9 @@ Player::Player(int heartCount, TextureType* textureType, SDL_Point position, flo
 Player::Player(const Player& other)
     : ID(std::make_unique<int>(playerCounter++)),
     textureType(std::make_unique<TextureType>(*other.textureType)),
-    heartCount(std::make_unique<int>(*other.heartCount)),
+    heartAmount(std::make_unique<int>(*other.heartAmount)),
+    maxSprintAmount(std::make_unique<int>(*other.sprintAmount)),
+    sprintAmount(std::make_unique<int>(*other.sprintAmount)),
     position(std::make_unique<SDL_Point>(*other.position)),
     movementSpeed(std::make_unique<float>(*other.movementSpeed)),
     speedDecay(std::make_unique<float>(*other.speedDecay)),
@@ -52,6 +58,7 @@ Player::Player(const Player& other)
     directionX(std::make_unique<float>()),
     directionY(std::make_unique<float>()),
     platformPosition(std::make_unique<SDL_Point>(*other.platformPosition)),
+    playerProfile(std::make_unique<PlayerProfile>()),
     directionFacing(Face_Direction::DOWN),
     isMovingLeft(std::make_unique<bool>(false)),
     isMovingUpLeft(std::make_unique<bool>(false)),
@@ -165,6 +172,10 @@ void Player::updatePlatformPosition() {
     platformPosition->y = position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y;
 }
 
+void Player::initProfile() {
+    playerProfile->init(*ID, *heartAmount, *maxSprintAmount);
+}
+
 
 void Player::update() {
     *isMoving = false;
@@ -179,6 +190,8 @@ void Player::update() {
 
     updateMove();
     updatePlatformPosition();
+
+    playerProfile->update(*heartAmount, *maxSprintAmount);
 }
 
 void Player::render() {
@@ -197,6 +210,8 @@ void Player::render() {
     }
     SDL_Rect dstRect = { position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y };
     SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, &dstRect);
+
+    playerProfile->render();
 }
 
 int Player::getID() const {

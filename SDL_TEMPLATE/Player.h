@@ -9,6 +9,7 @@ using Vector = SDL_Point;
 
 class Command;
 class TextureType;
+class PlayerProfile;
 
 class Player : 
 	public Prototype, public std::enable_shared_from_this<Player> {
@@ -16,7 +17,6 @@ private:
 	static int playerCounter;
 	constexpr static int UNIQUE_FRAME_COUNT = 4;
 	constexpr static int FRAME_DURATION = 50;
-
 public:
 	constexpr static Dimension PLAYER_DIMENSION = { 45, 45 };
 	constexpr static int SPEED_AMOUNT = 3;
@@ -25,7 +25,9 @@ public:
 public:
 	std::unique_ptr<int> ID;
 	std::unique_ptr<TextureType> textureType;
-	std::unique_ptr<int> heartCount;
+	std::unique_ptr<int> heartAmount;
+	std::unique_ptr<int> maxSprintAmount;
+	std::unique_ptr<int> sprintAmount;
 	std::unique_ptr<SDL_Point> position;
 	std::unique_ptr<float> movementSpeed;
 	std::unique_ptr<float> speedDecay;
@@ -36,6 +38,7 @@ public:
 	std::unique_ptr<float> directionX;
 	std::unique_ptr<float> directionY;
 	std::unique_ptr<SDL_Point> platformPosition;
+	std::unique_ptr<PlayerProfile> playerProfile;
 	Face_Direction directionFacing;
 	
 	std::unique_ptr<bool> isMovingLeft;
@@ -56,10 +59,11 @@ public:
 	std::queue<std::shared_ptr<Command>> commandQueue;
 
 public:
-	Player(int heartCount, TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay);
+	Player(int heartCount, int sprintAmount, TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay);
 	Player(const Player& other);
 	~Player() = default;
 
+	void initProfile();
 	void update();
 	void render();
 

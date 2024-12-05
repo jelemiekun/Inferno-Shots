@@ -39,6 +39,7 @@ private:
 	void setRunningToTrue();
 	void setRunningToFalse();
 	void initBackground();
+	void initPlayerProfile();
 	void initPlayer();
 	void initBullet();
 	void initEnemy();

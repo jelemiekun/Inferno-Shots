@@ -102,6 +102,7 @@ void GamePlaying::update() {
             WaveManager::getInstance()->startCountdown();
 
         if (WaveManager::getInstance()->isCountdownFinish()) {
+            WaveManager::getInstance()->setCountdownFinish();
             WaveManager::getInstance()->incrementWave();
             WaveManager::getInstance()->initWave();
         }

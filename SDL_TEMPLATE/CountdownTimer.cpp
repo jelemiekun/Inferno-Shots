@@ -15,6 +15,7 @@ void CountdownTimer::start() {
 
 void CountdownTimer::setFinish() {
 	mFinished = true;
+	mStarted = false;
 }
 
 Uint32 CountdownTimer::getElapsedTime() {

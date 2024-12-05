@@ -14,6 +14,7 @@
 #include "NormalEnemy.h"
 #include "Minimap.h"
 #include "WaveManager.h"
+#include "PlayerProfile.h"
 
 
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GamePlaying>()),
@@ -79,11 +80,15 @@ void Game::initBackground() {
 	Background::getInstance()->init();
 }
 
+void Game::initPlayerProfile() {
+	PlayerProfile::loadPlayerProfiles();
+}
+
 void Game::initPlayer() {
 	// Initialize main prototype of Player
 	SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
 	TextureType* playerTexture = new TextureType(Prototype_Type::PLAYER);
-	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(5, playerTexture, position, 4.0f, 30.0f);
+	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(100, 20, playerTexture, position, 4.0f, 30.0f);
 
 	// Add main prototype player to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
@@ -94,15 +99,11 @@ void Game::initPlayer() {
 	std::shared_ptr<Player> player1 = std::dynamic_pointer_cast<Player>(
 		PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::PLAYER)
 	);
+	
+	player1->initProfile();
 
 	// Add player to invoker
 	InvokerPlaying::getInstance()->addPlayer(player1);
-
-	// Clone a player
-	std::shared_ptr<Player> player2 = std::dynamic_pointer_cast<Player>(
-		PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::PLAYER)
-	);
-	InvokerPlaying::getInstance()->addPlayer(player2);
 
 	// Set commands
 	auto moveLeftCommand = std::make_shared<MoveLeftCommand>();
@@ -194,6 +195,7 @@ void Game::init() {
 	initGFont();
 	setRunningToTrue();
 	initBackground();
+	initPlayerProfile();
 	initPlayer();
 	initBullet();
 	initEnemy();
