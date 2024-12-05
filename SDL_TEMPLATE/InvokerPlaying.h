@@ -40,4 +40,5 @@ public:
 	void pressButton(SDL_Keycode keyCode);
 	void updatePlayers();
 	void renderPlayers();
+	void renderPlayerProfiles();
 };

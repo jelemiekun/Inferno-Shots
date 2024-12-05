@@ -118,6 +118,8 @@ void GamePlaying::render() {
     }
 
     WaveManager::getInstance()->render();
+
+    InvokerPlaying::getInstance()->renderPlayerProfiles();
 }
 
 void GamePaused::input() {

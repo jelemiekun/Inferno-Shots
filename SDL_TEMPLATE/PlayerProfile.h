@@ -19,6 +19,8 @@ private:
 	SDL_Rect mDstRectTexture;
 	SDL_Rect mSrcRectProfile;
 	SDL_Rect mDstRectProfile;
+	SDL_Rect mDstRectHealthBar;
+	SDL_Rect mDstRectSprintBar;
 	Bar* healthBar;
 	Bar* sprintBar;
 
@@ -29,6 +31,8 @@ private:
 	void initMDstRectProfile();
 	void initMSrcRectProfile();
 	void initSprintColor();
+	void initMDstRectHeatlhBar();
+	void initMDstRectSprintBar();
 	void initHealthBar(int maxHealth);
 	void initSprintBar(int maxSprint);
 

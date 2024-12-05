@@ -172,7 +172,7 @@ void Player::updatePlatformPosition() {
     platformPosition->y = position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y;
 }
 
-void Player::initProfile() {
+void Player::initProfile() const {
     playerProfile->init(*ID, *heartAmount, *maxSprintAmount);
 }
 
@@ -194,7 +194,7 @@ void Player::update() {
     playerProfile->update(*heartAmount, *maxSprintAmount);
 }
 
-void Player::render() {
+void Player::render() const {
     SDL_Rect srcRect = { 0, 0, textureType->dimension.x, textureType->dimension.y / 8 };
 
     switch (directionFacing) {
@@ -209,8 +209,10 @@ void Player::render() {
     default: break;
     }
     SDL_Rect dstRect = { position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y };
-    SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, &dstRect);
+    SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, &dstRect);   
+}
 
+void Player::renderPlayerProfiles() const {
     playerProfile->render();
 }
 

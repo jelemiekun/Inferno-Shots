@@ -118,6 +118,84 @@ void PlayerProfile::initMDstRectProfile() {
 	};
 }
 
+void PlayerProfile::initMDstRectHeatlhBar() {
+	int count = playerID - 1;
+	switch (playerID) {
+	case 1:
+		mDstRectHealthBar = {
+			(105 * playerID) + (145 * count),
+			55,
+			137,
+			10
+		};
+		break;
+	case 2:
+		mDstRectHealthBar = {
+			(105 * playerID) + (145 * count),
+			55,
+			137,
+			10
+		};
+		break;
+	case 3:
+		mDstRectHealthBar = {
+			(105 * playerID) + (145 * count),
+			55,
+			137,
+			10
+		};
+		break;
+	case 4:
+		mDstRectHealthBar = {
+			(105 * playerID) + (145 * count),
+			55,
+			137,
+			10
+		};
+		break;
+	default: mDstRectHealthBar = { 0, 0, 0, 0 }; break;
+	}
+}
+
+void PlayerProfile::initMDstRectSprintBar() {
+	int count = playerID - 1;
+	switch (playerID) {
+	case 1:
+		mDstRectSprintBar = {
+			(105 * playerID) + (145 * count),
+			75,
+			137,
+			10
+		};
+		break;
+	case 2:
+		mDstRectSprintBar = {
+			(105 * playerID) + (145 * count),
+			75,
+			137,
+			10
+		};
+		break;
+	case 3:
+		mDstRectSprintBar = {
+			(105 * playerID) + (145 * count),
+			75,
+			137,
+			10
+		};
+		break;
+	case 4:
+		mDstRectSprintBar = {
+			(105 * playerID) + (145 * count),
+			75,
+			137,
+			10
+		};
+		break;
+	default: mDstRectSprintBar = { 0, 0, 0, 0 }; break;
+	}
+}
+
 void PlayerProfile::initSprintColor() {
 	switch (playerID) {
 	case 1: SPRINT_COLOR = { 255, 163, 234, 255 };	 break;
@@ -129,18 +207,16 @@ void PlayerProfile::initSprintColor() {
 }
 
 void PlayerProfile::initHealthBar(int maxHealth) {
-	SDL_Rect healthBarRect = { (105 * playerID), 55, 137, 10 };
 	healthBar = new Bar;
-	healthBar->setDstRect(healthBarRect);
+	healthBar->setDstRect(mDstRectHealthBar);
 	healthBar->setBorderThick(BORDER_THICK);
 	healthBar->setMaxAmount(maxHealth);
 	healthBar->setProgressBarColor(HEALTH_COLOR);
 }
 
 void PlayerProfile::initSprintBar(int maxSprint) {
-	SDL_Rect sprintBarRect = { (105 * playerID), 75, 137, 10 };
 	sprintBar = new Bar;
-	sprintBar->setDstRect(sprintBarRect);
+	sprintBar->setDstRect(mDstRectSprintBar);
 	sprintBar->setBorderThick(BORDER_THICK);
 	sprintBar->setMaxAmount(maxSprint);
 	sprintBar->setProgressBarColor(SPRINT_COLOR);
@@ -153,6 +229,8 @@ void PlayerProfile::init(int playerID, int maxHealth, int maxSprint) {
 	initMDstRectProfile();
 	initMSrcRectProfile();
 	initSprintColor();
+	initMDstRectHeatlhBar();
+	initMDstRectSprintBar();
 	initHealthBar(maxHealth);
 	initSprintBar(maxSprint);
 }

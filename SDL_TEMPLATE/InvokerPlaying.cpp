@@ -44,3 +44,9 @@ void InvokerPlaying::renderPlayers() {
 		player.second->render();
 	}
 }
+
+void InvokerPlaying::renderPlayerProfiles() {
+	for (auto& player : players) {
+		player.second->renderPlayerProfiles();
+	}
+}

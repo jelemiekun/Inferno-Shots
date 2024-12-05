@@ -63,9 +63,10 @@ public:
 	Player(const Player& other);
 	~Player() = default;
 
-	void initProfile();
+	void initProfile() const;
 	void update();
-	void render();
+	void render() const;
+	void renderPlayerProfiles() const;
 
 	int getID() const;
 	std::shared_ptr<Prototype> clone() const override;
