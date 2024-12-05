@@ -3,10 +3,15 @@
 #include "NormalEnemy.h"
 #include "PrototypeRegistry.h"
 #include "CountdownTimer.h"
+#include "AppInfo.h"
+#include "Bar.h"
+
+std::unique_ptr<int> WaveManager::waveCount = std::make_unique<int>(0);
 
 std::unique_ptr<CountdownTimer> WaveManager::countdownTimer = std::make_unique<CountdownTimer>();
 
-std::unique_ptr<int> WaveManager::waveCount = std::make_unique<int>(0);
+std::unique_ptr<Bar> WaveManager::countdownBar = std::make_unique<Bar>();
+
 
 WaveManager::WaveManager() {}
 
@@ -29,6 +34,21 @@ Uint32 WaveManager::getCountdownDuration() const {
     }
 
     return duration;
+}
+
+void WaveManager::setCountdownMaxAmount(Uint32 duration) {
+    float maxAmount = static_cast<float>(duration);
+    countdownBar->setMaxAmount(maxAmount);
+}
+
+void WaveManager::initCountdownBar() {
+    constexpr static int Y_ALLOWANCE = 30;
+    static SDL_Rect dstRect = { 0, 0, 500, 40 };
+    dstRect.x = (SCREEN_WIDTH / 2) - (dstRect.w / 2);
+    dstRect.y = SCREEN_HEIGHT - dstRect.h - Y_ALLOWANCE;
+    countdownBar->setDstRect(dstRect);
+    countdownBar->setBorderThick(COUNTDOWN_BAR_BORDER_THICK);
+    countdownBar->setProgressBarColor(COUNTDOWN_BAR_PROGRESS_COLOR);
 }
 
 void WaveManager::initWave() {
@@ -66,12 +86,18 @@ void WaveManager::update() {
                 }),
             enemies.end());
     }
+
+    countdownBar->update(countdownTimer->getDurationTime() - countdownTimer->getElapsedTime());
 }
 
 
 void WaveManager::render() {
     for (auto& enemy : enemies) {
         enemy->render();
+    }
+    
+    if (!isCountdownFinish()) {
+        countdownBar->render();
     }
 }
 
@@ -81,7 +107,6 @@ bool WaveManager::isWaveFinish() const {
 
 void WaveManager::incrementWave() {
     ++(*WaveManager::waveCount);
-    std::cout << *waveCount;
 }
 
 void WaveManager::startCountdown() {
@@ -89,6 +114,7 @@ void WaveManager::startCountdown() {
         countdownTimer->setFinish();
     } else {
         Uint32 duration = getCountdownDuration();
+        setCountdownMaxAmount(duration);
         countdownTimer->setDuration(duration);
         countdownTimer->start();
     }

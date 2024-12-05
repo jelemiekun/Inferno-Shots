@@ -98,6 +98,12 @@ void Game::initPlayer() {
 	// Add player to invoker
 	InvokerPlaying::getInstance()->addPlayer(player1);
 
+	// Clone a player
+	std::shared_ptr<Player> player2 = std::dynamic_pointer_cast<Player>(
+		PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::PLAYER)
+	);
+	InvokerPlaying::getInstance()->addPlayer(player2);
+
 	// Set commands
 	auto moveLeftCommand = std::make_shared<MoveLeftCommand>();
 	auto moveUpCommand = std::make_shared<MoveUpCommand>();
@@ -171,7 +177,7 @@ void Game::initMiniMap() {
 }
 
 void Game::initBars() {
-	//WaveManager::getInstance()->initCountdownBar();
+	WaveManager::getInstance()->initCountdownBar();
 }
 
 Game* Game::getInstance() {

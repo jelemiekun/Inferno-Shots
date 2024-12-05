@@ -21,7 +21,7 @@ public:
 
 private:
     constexpr static int INIT_ENEMY_COUNT = 5;
-    constexpr static int COUNTDOWN_BAR_BORDER_THICK = 2;
+    constexpr static int COUNTDOWN_BAR_BORDER_THICK = 3;
     constexpr static SDL_Color COUNTDOWN_BAR_PROGRESS_COLOR = { 181, 0, 0, 255 };
     static std::unique_ptr<int> waveCount;
     static std::unique_ptr<CountdownTimer> countdownTimer;

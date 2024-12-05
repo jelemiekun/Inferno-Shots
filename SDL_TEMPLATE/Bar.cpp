@@ -19,12 +19,12 @@ void Bar::initTexture() {
 }
 
 float Bar::getPercentageOfCurrentAmount() {
-	return (static_cast<float>(mCurrentAmount) / mMaxAmount) * 100;
+	return static_cast<float>((mCurrentAmount) / mMaxAmount);
 }
 
 void Bar::calculateSizeRect() {
-	int amount = static_cast<int>(getPercentageOfCurrentAmount());
-	sizeRect = { 0, 0, amount, mDstRect.h };
+	float percentage = getPercentageOfCurrentAmount();
+	sizeRect = { 0, 0, static_cast<int>(mDstRect.w * percentage), mDstRect.h };
 }
 
 void Bar::renderBorder(SDL_Renderer*& renderer) {
@@ -57,8 +57,9 @@ void Bar::update(float currentAmount) {
 void Bar::render() {
 	SDL_Renderer* renderer = Game::getInstance()->getRenderer();
 
+	SDL_SetTextureBlendMode(mTexture, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderTarget(renderer, mTexture);
-	SDL_SetRenderDrawColor(renderer, 110, 110, 110, 150);
+	SDL_SetRenderDrawColor(renderer, 110, 110, 110, 120);
 	SDL_RenderClear(renderer);
 
 	SDL_SetRenderDrawColor(renderer, mColor.r, mColor.g, mColor.b, mColor.a);
@@ -66,6 +67,6 @@ void Bar::render() {
 	SDL_RenderFillRect(renderer, &sizeRect);
 
 	SDL_SetRenderTarget(renderer, nullptr);
-	renderBorder(renderer);
 	SDL_RenderCopy(renderer, mTexture, nullptr, &mDstRect);
+	renderBorder(renderer);
 }

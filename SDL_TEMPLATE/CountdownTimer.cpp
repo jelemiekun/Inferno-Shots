@@ -18,13 +18,17 @@ void CountdownTimer::setFinish() {
 }
 
 Uint32 CountdownTimer::getElapsedTime() {
-	return SDL_GetTicks() - mStartTicks;
+	return mElapsedTime;
+}
+
+Uint32 CountdownTimer::getDurationTime() {
+	return mDuration;
 }
 
 const bool CountdownTimer::isFinished() {
 	if (!mFinished) {
-		Uint32 elapsedTime = SDL_GetTicks() - mStartTicks;
-		mFinished = elapsedTime > mDuration;
+		mElapsedTime = SDL_GetTicks() - mStartTicks;
+		mFinished = mElapsedTime > mDuration;
 		if (mFinished) mStarted = false;
 	}
 	return mFinished;
