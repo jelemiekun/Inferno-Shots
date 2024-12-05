@@ -13,5 +13,6 @@ public:
     virtual void update() override;
     virtual void render() const override;
     virtual const bool& isDead() const override;
+    virtual const SDL_Point& getPosition() const override;
     virtual std::shared_ptr<Prototype> clone() const override;
 };

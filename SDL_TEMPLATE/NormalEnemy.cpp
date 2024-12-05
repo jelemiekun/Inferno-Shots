@@ -173,3 +173,7 @@ const bool& NormalEnemy::isDead() const {
 std::shared_ptr<Prototype> NormalEnemy::clone() const {
 	return std::make_shared<NormalEnemy>(*this);
 }
+
+const SDL_Point& NormalEnemy::getPosition() const {
+	return *position.get();
+}

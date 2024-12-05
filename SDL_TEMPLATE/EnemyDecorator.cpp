@@ -24,6 +24,10 @@ const bool& EnemyDecorator::isDead() const {
     return decoratedEnemy->isDead();
 }
 
+const SDL_Point& EnemyDecorator::getPosition() const {
+    return decoratedEnemy->getPosition();
+}
+
 std::shared_ptr<Prototype> EnemyDecorator::clone() const {
     return decoratedEnemy->clone();
 }

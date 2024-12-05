@@ -33,5 +33,6 @@ public:
 	void render() const override;
 	std::shared_ptr<Prototype> clone() const override;
 	const bool& isDead() const override;
+	const SDL_Point& getPosition() const override;
 };
 

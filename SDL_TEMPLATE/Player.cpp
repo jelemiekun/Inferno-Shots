@@ -72,7 +72,6 @@ void Player::isCommandMove(Command* command) {
 }
 
 void Player::updateMove() {
-    std::cout << *isMovingLeft << ", " << *isMovingUp << ", " << *isMovingRight << ", " << *isMovingDown << '\n';
     if (*isMovingLeft) {
         float newMovementSpeed = *movementSpeed;
 
@@ -183,7 +182,7 @@ void Player::update() {
 }
 
 void Player::render() {
-    SDL_Rect srcRect = { 0, 0, textureType->dimension.x / 4, textureType->dimension.y / 8 };
+    SDL_Rect srcRect = { 0, 0, textureType->dimension.x, textureType->dimension.y / 8 };
 
     switch (directionFacing) {
     case Face_Direction::LEFT:      srcRect.y = (textureType->dimension.y / 8) * 2; break;
@@ -196,30 +195,6 @@ void Player::render() {
     case Face_Direction::DOWN_LEFT: srcRect.y = (textureType->dimension.y / 8) * 6; break;
     default: break;
     }
-
-    Uint32 currentTime = SDL_GetTicks();
-
-    static Uint32 lastFrameTime = 0;
-    Uint32 deltaTime = currentTime - lastFrameTime;
-
-    if (deltaTime >= FRAME_DURATION) {
-        lastFrameTime = currentTime;
-
-        if (*frameCounter / FRAME_DURATION >= UNIQUE_FRAME_COUNT) {
-            *frameCounter = 0;
-        } else {
-            *frameCounter += 1;
-        }
-    }
-
-    if (*isMoving) {
-        srcRect.x = (textureType->dimension.x / UNIQUE_FRAME_COUNT) * (*frameCounter);
-    } else {
-        *frameCounter = 0;
-        srcRect.x = 0;
-    }
-
-
     SDL_Rect dstRect = { position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y };
     SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, &dstRect);
 }

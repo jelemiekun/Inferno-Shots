@@ -42,6 +42,7 @@ private:
 	void initPlayer();
 	void initBullet();
 	void initEnemy();
+	void initMiniMap();
 
 public:
 	static Game* getInstance();

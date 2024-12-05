@@ -12,7 +12,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "NormalEnemy.h"
-
+#include "Minimap.h"
 
 
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GamePlaying>()),
@@ -165,6 +165,10 @@ void Game::initEnemy() {
 	);
 }
 
+void Game::initMiniMap() {
+	Minimap::getInstance()->initMinimap();
+}
+
 Game* Game::getInstance() {
 	static Game instance;
 	return &instance;
@@ -182,6 +186,7 @@ void Game::init() {
 	initPlayer();
 	initBullet();
 	initEnemy();
+	initMiniMap();
 }
 
 void Game::input() {
@@ -196,6 +201,7 @@ void Game::input() {
 
 void Game::update() {
 	gameState->update();
+	Minimap::getInstance()->update();
 }
 
 void Game::render() {
@@ -204,6 +210,7 @@ void Game::render() {
 
 	Background::getInstance()->render();
 	gameState->render();
+	Minimap::getInstance()->render();
 
 	SDL_RenderPresent(gRenderer);
 }

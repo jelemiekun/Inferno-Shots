@@ -9,8 +9,8 @@ class TextureType;
 class Bullet : public Prototype {
 public:
 	std::shared_ptr<TextureType> textureType;
-private:
 	std::unique_ptr<SDL_Point> position;
+private:
 	std::unique_ptr<float> directionX;
 	std::unique_ptr<float> directionY;
 	std::unique_ptr<float> movementSpeed;

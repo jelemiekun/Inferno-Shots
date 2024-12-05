@@ -38,4 +38,8 @@ public:
         auto clonedEnemy = decoratedEnemy->clone();
         return std::make_shared<FastEnemy>(clonedEnemy);
     }
+
+    const SDL_Point& getPosition() const override {
+        return EnemyDecorator::getPosition();
+    }
 };

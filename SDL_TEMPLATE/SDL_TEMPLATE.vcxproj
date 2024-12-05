@@ -29,6 +29,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InvokerPlaying.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="NormalEnemy.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PrototypeRegistry.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="GameEnums.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InvokerPlaying.h" />
+    <ClInclude Include="Minimap.h" />
     <ClInclude Include="NormalEnemy.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Prototype.h" />
