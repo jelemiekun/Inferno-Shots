@@ -1,8 +1,11 @@
 #pragma once
+#include "SDL.h"
 #include <memory>
 #include <vector>
 
 class Enemy;
+class CountdownTimer;
+class Bar;
 
 class WaveManager {
 private:
@@ -18,18 +21,30 @@ public:
 
 private:
     constexpr static int INIT_ENEMY_COUNT = 5;
+    constexpr static int COUNTDOWN_BAR_BORDER_THICK = 2;
+    constexpr static SDL_Color COUNTDOWN_BAR_PROGRESS_COLOR = { 181, 0, 0, 255 };
     static std::unique_ptr<int> waveCount;
-
-private:
+    static std::unique_ptr<CountdownTimer> countdownTimer;
+    static std::unique_ptr<Bar> countdownBar;
     std::vector<std::shared_ptr<Enemy>> enemies;
 
+private:
+    Uint32 getCountdownDuration() const;
+    void setCountdownMaxAmount(Uint32 duration);
+
 public:
+    void initCountdownBar();
+
     void initWave();
     void update();
     void render();
 
     bool isWaveFinish() const;
     void incrementWave();
+
+    void startCountdown();
+    bool isCountdownFinish() const;
+    bool hasCountdownStarted() const;
 
     const int& getWaveCount() const;
     const std::vector<std::shared_ptr<Enemy>>& getEnemies() const;

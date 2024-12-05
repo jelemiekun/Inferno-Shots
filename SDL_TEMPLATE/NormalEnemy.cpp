@@ -33,7 +33,7 @@ std::shared_ptr<Player> NormalEnemy::getNearestPlayer() {
 	float nearestDistance = std::numeric_limits<float>::max();
 
 	for (auto& player : InvokerPlaying::getInstance()->players) {
-		float currentDistance = (
+		float currentDistance = static_cast<float>(
 			(player.second->position->x - position->x) * (player.second->position->x - position->x) +
 			(player.second->position->y - position->y) * (player.second->position->y - position->y)
 			);
@@ -49,18 +49,18 @@ std::shared_ptr<Player> NormalEnemy::getNearestPlayer() {
 
 
 void NormalEnemy::calculateNormalizedLength(std::shared_ptr<Player> nearestPlayer) {
-	float dx = (nearestPlayer->position->x + (Player::PLAYER_DIMENSION.x / 2)) - position->x + Background::getInstance()->srcRect->x;
-	float dy = (nearestPlayer->position->y + (Player::PLAYER_DIMENSION.y / 2)) - position->y + Background::getInstance()->srcRect->y;
+	float dx = static_cast<float>(nearestPlayer->position->x + (Player::PLAYER_DIMENSION.x / 2)) - position->x + Background::getInstance()->srcRect->x;
+	float dy = static_cast<float>(nearestPlayer->position->y + (Player::PLAYER_DIMENSION.y / 2)) - position->y + Background::getInstance()->srcRect->y;
 
 	float distance = sqrt(dx * dx + dy * dy);
 
-	*directionX = dx / distance;
-	*directionY = dy / distance;
+	*directionX = static_cast<float>(dx) / distance;
+	*directionY = static_cast<float>(dy) / distance;
 }
 
 void NormalEnemy::move() {
-	position->x += *directionX * *movementSpeed;
-	position->y += *directionY * *movementSpeed;
+	position->x += static_cast<int>(*directionX * *movementSpeed);
+	position->y += static_cast<int>(*directionY * *movementSpeed);
 }
 
 void NormalEnemy::initPos() {
@@ -82,8 +82,8 @@ void NormalEnemy::initPos() {
 }
 
 void NormalEnemy::undoMove() {
-	position->x -= *directionX * *movementSpeed;
-	position->y -= *directionY * *movementSpeed;
+	position->x -= static_cast<int>(*directionX * *movementSpeed);
+	position->y -= static_cast<int>(*directionY * *movementSpeed);
 }
 
 void NormalEnemy::checkCollision() {
@@ -132,14 +132,18 @@ void NormalEnemy::checkCollision() {
 		}
 	}
 
-	if (position->x < BORDER_ALLOWANCE)
-		position->x = BORDER_ALLOWANCE;
-	if (position->x + NORMAL_ENEMY_DIMENSION.x > Background::getInstance()->getDimension().x - BORDER_ALLOWANCE)
-		position->x = Background::getInstance()->getDimension().x - NORMAL_ENEMY_DIMENSION.x - BORDER_ALLOWANCE;
-	if (position->y < BORDER_ALLOWANCE)
-		position->y = BORDER_ALLOWANCE;
-	if (position->y + NORMAL_ENEMY_DIMENSION.y > Background::getInstance()->getDimension().y - BORDER_ALLOWANCE)
-		position->y = Background::getInstance()->getDimension().y - NORMAL_ENEMY_DIMENSION.y - BORDER_ALLOWANCE;
+	if (position->x < static_cast<float>(BORDER_ALLOWANCE))
+		position->x = static_cast<int>(static_cast<float>(BORDER_ALLOWANCE));
+	if (position->x + NORMAL_ENEMY_DIMENSION.x > 
+		Background::getInstance()->getDimension().x - static_cast<float>(BORDER_ALLOWANCE))
+		position->x = static_cast<int>(Background::getInstance()->getDimension().x - 
+			NORMAL_ENEMY_DIMENSION.x - static_cast<float>(BORDER_ALLOWANCE));
+	if (position->y < static_cast<float>(BORDER_ALLOWANCE))
+		position->y = static_cast<int>(static_cast<float>(BORDER_ALLOWANCE));
+	if (position->y + NORMAL_ENEMY_DIMENSION.y > 
+		Background::getInstance()->getDimension().y - static_cast<float>(BORDER_ALLOWANCE))
+		position->y = static_cast<int>(Background::getInstance()->getDimension().y - 
+			NORMAL_ENEMY_DIMENSION.y - static_cast<float>(BORDER_ALLOWANCE));
 }
 
 

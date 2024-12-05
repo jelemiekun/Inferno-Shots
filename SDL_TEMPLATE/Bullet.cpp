@@ -68,7 +68,7 @@ void Bullet::update() {
 }
 
 void Bullet::render() {
-	float angle = std::atan2(*directionY, *directionX) * (180.0f / M_PI);
+	float angle = static_cast<float>(std::atan2(*directionY, *directionX) * (180.0f / M_PI));
 
 	SDL_Rect dstRect = {
 	position->x - Background::getInstance()->srcRect->x,

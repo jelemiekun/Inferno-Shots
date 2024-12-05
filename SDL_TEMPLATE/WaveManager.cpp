@@ -2,6 +2,9 @@
 #include "Enemy.h"
 #include "NormalEnemy.h"
 #include "PrototypeRegistry.h"
+#include "CountdownTimer.h"
+
+std::unique_ptr<CountdownTimer> WaveManager::countdownTimer = std::make_unique<CountdownTimer>();
 
 std::unique_ptr<int> WaveManager::waveCount = std::make_unique<int>(0);
 
@@ -10,6 +13,22 @@ WaveManager::WaveManager() {}
 WaveManager* WaveManager::getInstance() {
     static WaveManager instance;
     return &instance;
+}
+
+Uint32 WaveManager::getCountdownDuration() const {
+    Uint32 duration = 1000;
+
+    if (*waveCount <= 3) {
+        duration = 3500;
+    } else if (*waveCount <= 7) {
+        duration = 5500;
+    } else if (*waveCount <= 10) {
+        duration = 7500;
+    } else {
+        duration = 13000;
+    }
+
+    return duration;
 }
 
 void WaveManager::initWave() {
@@ -62,6 +81,25 @@ bool WaveManager::isWaveFinish() const {
 
 void WaveManager::incrementWave() {
     ++(*WaveManager::waveCount);
+    std::cout << *waveCount;
+}
+
+void WaveManager::startCountdown() {
+    if (*waveCount == 0) {
+        countdownTimer->setFinish();
+    } else {
+        Uint32 duration = getCountdownDuration();
+        countdownTimer->setDuration(duration);
+        countdownTimer->start();
+    }
+}
+
+bool WaveManager::isCountdownFinish() const {
+    return countdownTimer->isFinished();
+}
+
+bool WaveManager::hasCountdownStarted() const {
+    return countdownTimer->hasStarted();
 }
 
 const int& WaveManager::getWaveCount() const {

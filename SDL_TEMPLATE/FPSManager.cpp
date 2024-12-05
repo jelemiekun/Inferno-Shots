@@ -16,7 +16,7 @@ void FPSManager::calculateAverageFPS(int& countFrame, Uint32& startTime) {
 
 void FPSManager::limitFPS(const Uint32& frameStart) {
     constexpr Uint8 FPS = 60; 
-    constexpr float FRAME_DURATION = 1000.0F / FPS; 
+    constexpr Uint32 FRAME_DURATION = static_cast<Uint32>(1000.0F / FPS); 
 
     Uint32 frameDuration = SDL_GetTicks() - frameStart;
 

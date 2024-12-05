@@ -7,8 +7,9 @@
 #include "Bullet.h"
 #include "NormalEnemy.h"
 #include "Enemy.h"
+#include "BorderManager.h"
 
-Minimap::Minimap() {}
+Minimap::Minimap() : minimapTexture(nullptr), dstRectMinimap({ 0, 0, 0, 0 }), scaleX(0), scaleY(0) {}
 
 Minimap* Minimap::getInstance() {
 	static Minimap instance;
@@ -49,19 +50,10 @@ void Minimap::initMinimap() {
 	initScalars();
 }
 
-void Minimap::renderBorder(SDL_Renderer *& renderer) {
+void Minimap::renderBorder(SDL_Renderer*& renderer) {
 	constexpr static int BORDER_THICK = 2;
-	for (int borderCount = 0; borderCount < BORDER_THICK; borderCount++) {
-		SDL_Rect border = {
-			dstRectMinimap.x - borderCount,
-			dstRectMinimap.y - borderCount,
-			dstRectMinimap.w + (borderCount * 2),
-			dstRectMinimap.h + (borderCount * 2)
-		};
-
-		SDL_SetRenderDrawColor(renderer, 10, 10, 10, 120);
-		SDL_RenderDrawRect(renderer, &border);
-	}
+	constexpr static SDL_Color borderColor = { 10, 10, 10, 120 };
+	Border::bRenderBorder(renderer, dstRectMinimap, BORDER_THICK, borderColor);
 }
 
 void Minimap::update() {

@@ -12,8 +12,8 @@ struct StateVector {
 };
 
 void GamePlaying::input() {
-    SDL_Keycode keyCode = SDLK_KP_000;
-    SDL_Point mousePos = { 0, 0 };
+    static SDL_Keycode keyCode = SDLK_KP_000;
+    static SDL_Point mousePos = { 0, 0 };
 
     switch (Game::getInstance()->getEvent().type) {
     case SDL_KEYDOWN:
@@ -42,8 +42,8 @@ void GamePlaying::input() {
 
         for (auto& player : InvokerPlaying::getInstance()->players) {
             StateVector vector = {
-                mousePos.x - player.second->position->x - (Player::PLAYER_DIMENSION.x / 2),
-                mousePos.y - player.second->position->y - (Player::PLAYER_DIMENSION.y / 2)
+                static_cast<float>(mousePos.x - player.second->position->x - (Player::PLAYER_DIMENSION.x / 2)),
+                static_cast<float>(mousePos.y - player.second->position->y - (Player::PLAYER_DIMENSION.y / 2))
             };
 
             float magnitude = std::sqrt((vector.x * vector.x) + (vector.y * vector.y));
@@ -98,8 +98,13 @@ void GamePlaying::update() {
     WaveManager::getInstance()->update();
 
     if (WaveManager::getInstance()->isWaveFinish()) {
-        WaveManager::getInstance()->incrementWave();
-        WaveManager::getInstance()->initWave();
+        if (!WaveManager::getInstance()->hasCountdownStarted())
+            WaveManager::getInstance()->startCountdown();
+
+        if (WaveManager::getInstance()->isCountdownFinish()) {
+            WaveManager::getInstance()->incrementWave();
+            WaveManager::getInstance()->initWave();
+        }
     }
 }
 

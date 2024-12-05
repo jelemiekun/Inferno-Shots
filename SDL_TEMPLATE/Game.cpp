@@ -13,6 +13,7 @@
 #include "Enemy.h"
 #include "NormalEnemy.h"
 #include "Minimap.h"
+#include "WaveManager.h"
 
 
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GamePlaying>()),
@@ -169,6 +170,10 @@ void Game::initMiniMap() {
 	Minimap::getInstance()->initMinimap();
 }
 
+void Game::initBars() {
+	//WaveManager::getInstance()->initCountdownBar();
+}
+
 Game* Game::getInstance() {
 	static Game instance;
 	return &instance;
@@ -187,6 +192,7 @@ void Game::init() {
 	initBullet();
 	initEnemy();
 	initMiniMap();
+	initBars();
 }
 
 void Game::input() {
