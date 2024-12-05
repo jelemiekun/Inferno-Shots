@@ -8,7 +8,7 @@ private:
 	constexpr static SDL_Color HEALTH_COLOR = { 0, 230, 0, 255 };
 	constexpr static int BORDER_THICK = 2;
 	constexpr static int Y_ALLOWANCE = 15;
-	constexpr static SDL_Point DIMENSION = { 235, 80 };
+	constexpr static SDL_Point TEXTURE_DIMENSION = { 235, 80 };
 	constexpr static int X_ALLOWANCE = 15;
 	SDL_Color SPRINT_COLOR;
 	static SDL_Texture* mTextureProfiles;

@@ -2,6 +2,7 @@
 #include "Bar.h"
 #include "Game.h"
 #include "SDL_image.h"
+#include "BorderManager.h"
 #include <iostream>
 
 constexpr const static char* PATH = "assets/images/players_profile.png";
@@ -57,16 +58,36 @@ void PlayerProfile::initMDstRectTexture() {
 
 	switch (playerID) {
 	case 1:
-		mDstRectTexture = { (X_ALLOWANCE * playerID) + (DIMENSION.x * count), Y_ALLOWANCE, DIMENSION.x, DIMENSION.y};
+		mDstRectTexture = { 
+			(X_ALLOWANCE * playerID) + (TEXTURE_DIMENSION.x * count),
+			Y_ALLOWANCE, 
+			TEXTURE_DIMENSION.x, 
+			TEXTURE_DIMENSION.y
+		};
 		break;
 	case 2:
-		mDstRectTexture = { (X_ALLOWANCE * playerID) + (DIMENSION.x * count), Y_ALLOWANCE, DIMENSION.x, DIMENSION.y };
+		mDstRectTexture = { 
+			(X_ALLOWANCE * playerID) + (TEXTURE_DIMENSION.x * count), 
+			Y_ALLOWANCE, 
+			TEXTURE_DIMENSION.x, 
+			TEXTURE_DIMENSION.y 
+		};
 		break;
 	case 3:
-		mDstRectTexture = { (X_ALLOWANCE * playerID) + (DIMENSION.x * count), Y_ALLOWANCE, DIMENSION.x, DIMENSION.y };
+		mDstRectTexture = { 
+			(X_ALLOWANCE * playerID) + (TEXTURE_DIMENSION.x * count), 
+			Y_ALLOWANCE, 
+			TEXTURE_DIMENSION.x, 
+			TEXTURE_DIMENSION.y 
+		};
 		break;
 	case 4:
-		mDstRectTexture = { (X_ALLOWANCE * playerID) + (DIMENSION.x * count), Y_ALLOWANCE, DIMENSION.x, DIMENSION.y };
+		mDstRectTexture = { 
+			(X_ALLOWANCE * playerID) + (TEXTURE_DIMENSION.x * count), 
+			Y_ALLOWANCE, 
+			TEXTURE_DIMENSION.x, 
+			TEXTURE_DIMENSION.y 
+		};
 		break;
 	default: mDstRectTexture = { 0, 0, 0, 0 }; break;
 	}
@@ -106,19 +127,20 @@ void PlayerProfile::initSprintColor() {
 	default: SPRINT_COLOR = { 0, 0, 0, 255 }; break;
 	}
 }
-static SDL_Rect temp = { 0, 0, 400, 200 }; //TODO
+
 void PlayerProfile::initHealthBar(int maxHealth) {
+	SDL_Rect healthBarRect = { (105 * playerID), 55, 137, 10 };
 	healthBar = new Bar;
-	
-	healthBar->setDstRect(temp);
+	healthBar->setDstRect(healthBarRect);
 	healthBar->setBorderThick(BORDER_THICK);
 	healthBar->setMaxAmount(maxHealth);
 	healthBar->setProgressBarColor(HEALTH_COLOR);
 }
 
 void PlayerProfile::initSprintBar(int maxSprint) {
+	SDL_Rect sprintBarRect = { (105 * playerID), 75, 137, 10 };
 	sprintBar = new Bar;
-	sprintBar->setDstRect(temp);
+	sprintBar->setDstRect(sprintBarRect);
 	sprintBar->setBorderThick(BORDER_THICK);
 	sprintBar->setMaxAmount(maxSprint);
 	sprintBar->setProgressBarColor(SPRINT_COLOR);
@@ -145,13 +167,18 @@ void PlayerProfile::render() const {
 
 	SDL_SetTextureBlendMode(mTexture, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderTarget(renderer, mTexture);
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 120);
 	SDL_RenderClear(renderer);
 
 	SDL_RenderCopy(renderer, mTextureProfiles, &mSrcRectProfile, &mDstRectProfile);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderDrawLine(renderer, mDstRectProfile.w, 0, mDstRectProfile.w - 1, mDstRectProfile.h);
 
 	SDL_SetRenderTarget(renderer, nullptr);
 	SDL_RenderCopy(renderer, mTexture, nullptr, &mDstRectTexture);
 
 	healthBar->render();
+	sprintBar->render();
+
+	Border::bRenderBorder(renderer, mDstRectTexture, BORDER_THICK, { 0, 0, 0, 255 });
 }
