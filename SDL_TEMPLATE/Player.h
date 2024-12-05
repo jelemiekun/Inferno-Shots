@@ -64,7 +64,6 @@ public:
 	void render();
 
 	int getID() const;
-
 	std::shared_ptr<Prototype> clone() const override;
 };
 

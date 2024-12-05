@@ -64,18 +64,15 @@ Player::Player(const Player& other)
 
 void Player::isCommandMove(Command* command) {
     if (dynamic_cast<MoveLeftCommand*>(command) ||
-        dynamic_cast<MoveUpLeftCommand*>(command) ||
         dynamic_cast<MoveUpCommand*>(command) ||
-        dynamic_cast<MoveUpRightCommand*>(command) ||
         dynamic_cast<MoveRightCommand*>(command) ||
-        dynamic_cast<MoveDownRightCommand*>(command) ||
-        dynamic_cast<MoveDownCommand*>(command) ||
-        dynamic_cast<MoveDownLeftCommand*>(command)) {
+        dynamic_cast<MoveDownCommand*>(command)) {
         *isMoving = true;
     }
 }
 
 void Player::updateMove() {
+    std::cout << *isMovingLeft << ", " << *isMovingUp << ", " << *isMovingRight << ", " << *isMovingDown << '\n';
     if (*isMovingLeft) {
         float newMovementSpeed = *movementSpeed;
 

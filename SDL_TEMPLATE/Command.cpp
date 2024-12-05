@@ -13,37 +13,21 @@ void MoveLeftCommand::execute(std::shared_ptr<Player> player) {
     *player->isMovingLeft = true;
 }
 
-void MoveUpLeftCommand::execute(std::shared_ptr<Player> player) {
-    *player->isMovingLeft = true;
-    *player->isMovingUp = true;
-}
 
 void MoveUpCommand::execute(std::shared_ptr<Player> player) {
     *player->isMovingUp = true;
 }
 
-void MoveUpRightCommand::execute(std::shared_ptr<Player> player) {
-    *player->isMovingUp = true;
-    *player->isMovingRight = true;
-}
 
 void MoveRightCommand::execute(std::shared_ptr<Player> player) {
     *player->isMovingRight = true;
 }
 
-void MoveDownRightCommand::execute(std::shared_ptr<Player> player) {
-    *player->isMovingDown = true;
-    *player->isMovingRight = true;
-}
 
 void MoveDownCommand::execute(std::shared_ptr<Player> player) {
     *player->isMovingDown = true;
 }
 
-void MoveDownLeftCommand::execute(std::shared_ptr<Player> player) {
-    *player->isMovingDown = true;
-    *player->isMovingLeft = true;
-}
 
 // KeyUp Move Commands
 
@@ -51,37 +35,21 @@ void KeyUpMoveLeftCommand::execute(std::shared_ptr<Player> player) {
     *player->isMovingLeft = false;
 }
 
-void KeyUpMoveUpLeftCommand::execute(std::shared_ptr<Player> player) {
-    *player->isMovingUp = false;
-    *player->isMovingLeft = false;
-}
 
 void KeyUpMoveUpCommand::execute(std::shared_ptr<Player> player) {
     *player->isMovingUp = false;
 }
 
-void KeyUpMoveUpRightCommand::execute(std::shared_ptr<Player> player) {
-    *player->isMovingUp = false;
-    *player->isMovingRight = false;
-}
 
 void KeyUpMoveRightCommand::execute(std::shared_ptr<Player> player) {
     *player->isMovingRight = false;
 }
 
-void KeyUpMoveDownRightCommand::execute(std::shared_ptr<Player> player) {
-    *player->isMovingDown = false;
-    *player->isMovingRight = false;
-}
 
 void KeyUpMoveDownCommand::execute(std::shared_ptr<Player> player) {
     *player->isMovingDown = false;
 }
 
-void KeyUpMoveDownLeftCommand::execute(std::shared_ptr<Player> player) {
-    *player->isMovingDown = false;
-    *player->isMovingLeft = false;
-}
 
 
 // Face Direction Commands
