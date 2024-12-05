@@ -112,9 +112,11 @@ void GamePlaying::update() {
 
 void GamePlaying::render() {
     InvokerPlaying::getInstance()->renderPlayers();
+
     for (const auto& bullet : Bullet::bullets) {
         bullet->render();
     }
+
     WaveManager::getInstance()->render();
 }
 
