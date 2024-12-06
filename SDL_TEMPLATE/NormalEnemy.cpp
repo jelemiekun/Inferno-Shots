@@ -17,7 +17,8 @@ NormalEnemy::NormalEnemy(std::shared_ptr<TextureType> type) :
 	movementSpeed(std::make_unique<float>(NORMAL_ENEMY_SPED)),
 	directionX(std::make_unique<float>(0.0F)),
 	directionY(std::make_unique<float>(0.0F)),
-	dead(std::make_unique<bool>(false)) {}
+	dead(std::make_unique<bool>(false)),
+	inflicted(std::make_unique<bool>(false)) {}
 
 NormalEnemy::NormalEnemy(const NormalEnemy& other)
 	: textureType(other.textureType),
@@ -25,7 +26,8 @@ NormalEnemy::NormalEnemy(const NormalEnemy& other)
 	movementSpeed(std::make_unique<float>(*other.movementSpeed)),
 	directionX(std::make_unique<float>()),
 	directionY(std::make_unique<float>()),
-	dead(std::make_unique<bool>(false)) {
+	dead(std::make_unique<bool>(false)),
+	inflicted(std::make_unique<bool>(false)) {
 }
 
 std::shared_ptr<Player> NormalEnemy::getNearestPlayer() {
@@ -81,6 +83,10 @@ void NormalEnemy::initPos() {
 	position->y = distY(rng);
 }
 
+void NormalEnemy::inflictDamage(Player& player) {
+	*player.heartAmount -= NORMAL_ENEMY_DAMAGE;
+}
+
 void NormalEnemy::undoMove() {
 	position->x -= static_cast<int>(*directionX * *movementSpeed);
 	position->y -= static_cast<int>(*directionY * *movementSpeed);
@@ -106,28 +112,34 @@ void NormalEnemy::checkCollision() {
 		}
 	}
 
-	for (const auto& enemy : WaveManager::getInstance()->getEnemies()) {
-		NormalEnemy* normalEnemyPtr = dynamic_cast<NormalEnemy*>(enemy.get());
-		if (!normalEnemyPtr) continue;
+	for (auto& enemy : WaveManager::getInstance()->getEnemies()) {
+		NormalEnemy* normalEnemyPtr = nullptr;
 
-		for (const auto& player : InvokerPlaying::getInstance()->players) {
-			SDL_Point enemyPos = *normalEnemyPtr->position;
-			SDL_Point playerPos = *player.second->position;
-			SDL_Rect enemyRect = { 
-				enemyPos.x, 
-				enemyPos.y, 
-				NORMAL_ENEMY_DIMENSION.x, 
-				NORMAL_ENEMY_DIMENSION.y 
-			};
-			SDL_Rect playerRect = { 
-				playerPos.x + Background::getInstance()->srcRect->x,
-				playerPos.y + Background::getInstance()->srcRect->y,
-				Player::PLAYER_DIMENSION.x, 
-				Player::PLAYER_DIMENSION.y 
-			};
+		if (normalEnemyPtr = dynamic_cast<NormalEnemy*>(enemy.get())) {
+			for (const auto& player : InvokerPlaying::getInstance()->players) {
+				SDL_Point enemyPos = *normalEnemyPtr->position;
+				SDL_Point playerPos = *player.second->position;
+				SDL_Rect enemyRect = {
+					enemyPos.x,
+					enemyPos.y,
+					NORMAL_ENEMY_DIMENSION.x,
+					NORMAL_ENEMY_DIMENSION.y
+				};
+				SDL_Rect playerRect = {
+					playerPos.x + Background::getInstance()->srcRect->x,
+					playerPos.y + Background::getInstance()->srcRect->y,
+					Player::PLAYER_DIMENSION.x,
+					Player::PLAYER_DIMENSION.y
+				};
 
-			if (SDL_HasIntersection(&enemyRect, &playerRect)) {
-				*normalEnemyPtr->dead = true;
+				if (SDL_HasIntersection(&enemyRect, &playerRect)) {
+					if (!(*normalEnemyPtr->inflicted)) {
+						inflictDamage(*player.second);
+						*normalEnemyPtr->inflicted = true;
+					}
+
+					*normalEnemyPtr->dead = true;
+				}
 			}
 		}
 	}

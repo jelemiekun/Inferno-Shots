@@ -31,7 +31,8 @@ PlayerProfile::PlayerProfile() :
 	playerID(0),
 	mTexture(nullptr), 
 	healthBar(nullptr),
-	sprintBar(nullptr) {}
+	sprintBar(nullptr),
+	alive(true) {}
 
 PlayerProfile::~PlayerProfile() {
 	SDL_DestroyTexture(mTexture);
@@ -56,42 +57,18 @@ void PlayerProfile::initMTexture() {
 void PlayerProfile::initMDstRectTexture() {
 	int count = playerID - 1;
 
-	switch (playerID) {
-	case 1:
-		mDstRectTexture = { 
+	if (playerID >= 1 && playerID <= 4) {
+		mDstRectTexture = {
 			(X_ALLOWANCE * playerID) + (TEXTURE_DIMENSION.x * count),
-			Y_ALLOWANCE, 
-			TEXTURE_DIMENSION.x, 
+			Y_ALLOWANCE,
+			TEXTURE_DIMENSION.x,
 			TEXTURE_DIMENSION.y
 		};
-		break;
-	case 2:
-		mDstRectTexture = { 
-			(X_ALLOWANCE * playerID) + (TEXTURE_DIMENSION.x * count), 
-			Y_ALLOWANCE, 
-			TEXTURE_DIMENSION.x, 
-			TEXTURE_DIMENSION.y 
-		};
-		break;
-	case 3:
-		mDstRectTexture = { 
-			(X_ALLOWANCE * playerID) + (TEXTURE_DIMENSION.x * count), 
-			Y_ALLOWANCE, 
-			TEXTURE_DIMENSION.x, 
-			TEXTURE_DIMENSION.y 
-		};
-		break;
-	case 4:
-		mDstRectTexture = { 
-			(X_ALLOWANCE * playerID) + (TEXTURE_DIMENSION.x * count), 
-			Y_ALLOWANCE, 
-			TEXTURE_DIMENSION.x, 
-			TEXTURE_DIMENSION.y 
-		};
-		break;
-	default: mDstRectTexture = { 0, 0, 0, 0 }; break;
+	} else {
+		mDstRectTexture = { 0, 0, 0, 0 };
 	}
 }
+
 
 void PlayerProfile::initMSrcRectProfile() {
 	int pos = playerID - 1;
@@ -101,100 +78,34 @@ void PlayerProfile::initMSrcRectProfile() {
 
 	SDL_QueryTexture(mTextureProfiles, nullptr, nullptr, &profileW, &profileH);
 
-	mSrcRectProfile = {
-		(profileW / 5) * pos,
-		0,
-		(profileW / 5),
-		profileH
-	};
+	mSrcRectProfile = { (profileW / 5) * pos, 0, (profileW / 5), profileH };
 }
 
 void PlayerProfile::initMDstRectProfile() {
-	mDstRectProfile = {
-		0,
-		0,
-		35,
-		30,
-	};
+	mDstRectProfile = { 0, 0, 35, 30, };
 }
 
 void PlayerProfile::initMDstRectHeatlhBar() {
 	int count = playerID - 1;
-	switch (playerID) {
-	case 1:
-		mDstRectHealthBar = {
-			(105 * playerID) + (145 * count),
-			55,
-			137,
-			10
-		};
-		break;
-	case 2:
-		mDstRectHealthBar = {
-			(105 * playerID) + (145 * count),
-			55,
-			137,
-			10
-		};
-		break;
-	case 3:
-		mDstRectHealthBar = {
-			(105 * playerID) + (145 * count),
-			55,
-			137,
-			10
-		};
-		break;
-	case 4:
-		mDstRectHealthBar = {
-			(105 * playerID) + (145 * count),
-			55,
-			137,
-			10
-		};
-		break;
-	default: mDstRectHealthBar = { 0, 0, 0, 0 }; break;
+
+	if (playerID >= 1 && playerID <= 4) {
+		mDstRectHealthBar = { (105 * playerID) + (145 * count), 55, 137, 10 };
+	} else {
+		mDstRectHealthBar = { 0, 0, 0, 0 };
 	}
 }
 
+
 void PlayerProfile::initMDstRectSprintBar() {
 	int count = playerID - 1;
-	switch (playerID) {
-	case 1:
-		mDstRectSprintBar = {
-			(105 * playerID) + (145 * count),
-			75,
-			137,
-			10
-		};
-		break;
-	case 2:
-		mDstRectSprintBar = {
-			(105 * playerID) + (145 * count),
-			75,
-			137,
-			10
-		};
-		break;
-	case 3:
-		mDstRectSprintBar = {
-			(105 * playerID) + (145 * count),
-			75,
-			137,
-			10
-		};
-		break;
-	case 4:
-		mDstRectSprintBar = {
-			(105 * playerID) + (145 * count),
-			75,
-			137,
-			10
-		};
-		break;
-	default: mDstRectSprintBar = { 0, 0, 0, 0 }; break;
+
+	if (playerID >= 1 && playerID <= 4) {
+		mDstRectSprintBar = { (105 * playerID) + (145 * count), 75, 137, 10 };
+	} else {
+		mDstRectSprintBar = { 0, 0, 0, 0 };
 	}
 }
+
 
 void PlayerProfile::initSprintColor() {
 	switch (playerID) {
@@ -210,7 +121,7 @@ void PlayerProfile::initHealthBar(int maxHealth) {
 	healthBar = new Bar;
 	healthBar->setDstRect(mDstRectHealthBar);
 	healthBar->setBorderThick(BORDER_THICK);
-	healthBar->setMaxAmount(maxHealth);
+	healthBar->setMaxAmount(static_cast<float>(maxHealth));
 	healthBar->setProgressBarColor(HEALTH_COLOR);
 }
 
@@ -218,8 +129,15 @@ void PlayerProfile::initSprintBar(int maxSprint) {
 	sprintBar = new Bar;
 	sprintBar->setDstRect(mDstRectSprintBar);
 	sprintBar->setBorderThick(BORDER_THICK);
-	sprintBar->setMaxAmount(maxSprint);
+	sprintBar->setMaxAmount(static_cast<float>(maxSprint));
 	sprintBar->setProgressBarColor(SPRINT_COLOR);
+}
+
+void PlayerProfile::checkHealth(const int& healthAmount) {
+	if (healthAmount < 1) {
+		alive = false;
+		mSrcRectProfile.x = mSrcRectProfile.w * 4;
+	}
 }
 
 void PlayerProfile::init(int playerID, int maxHealth, int maxSprint) {
@@ -236,8 +154,9 @@ void PlayerProfile::init(int playerID, int maxHealth, int maxSprint) {
 }
 
 void PlayerProfile::update(int healthAmount, int sprintAmount) {
-	healthBar->update(healthAmount);
-	sprintBar->update(sprintAmount);
+	healthBar->update(static_cast<float>(healthAmount));
+	sprintBar->update(static_cast<float>(sprintAmount));
+	checkHealth(healthAmount);
 }
 
 void PlayerProfile::render() const {

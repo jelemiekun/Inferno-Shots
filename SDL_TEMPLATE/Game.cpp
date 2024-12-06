@@ -105,6 +105,38 @@ void Game::initPlayer() {
 	// Add player to invoker
 	InvokerPlaying::getInstance()->addPlayer(player1);
 
+	//{
+	//	// Clone a player
+	//	std::shared_ptr<Player> player2 = std::dynamic_pointer_cast<Player>(
+	//		PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::PLAYER)
+	//	);
+
+	//	player2->initProfile();
+
+	//	// Add player to invoker
+	//	InvokerPlaying::getInstance()->addPlayer(player2);
+
+	//	// Clone a player
+	//	std::shared_ptr<Player> player3 = std::dynamic_pointer_cast<Player>(
+	//		PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::PLAYER)
+	//	);
+
+	//	player3->initProfile();
+
+	//	// Add player to invoker
+	//	InvokerPlaying::getInstance()->addPlayer(player3);
+
+	//	// Clone a player
+	//	std::shared_ptr<Player> player4 = std::dynamic_pointer_cast<Player>(
+	//		PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::PLAYER)
+	//	);
+
+	//	player4->initProfile();
+
+	//	// Add player to invoker
+	//	InvokerPlaying::getInstance()->addPlayer(player4);
+	//}
+
 	// Set commands
 	auto moveLeftCommand = std::make_shared<MoveLeftCommand>();
 	auto moveUpCommand = std::make_shared<MoveUpCommand>();

@@ -87,7 +87,7 @@ void WaveManager::update() {
             enemies.end());
     }
 
-    countdownBar->update(countdownTimer->getDurationTime() - countdownTimer->getElapsedTime());
+    countdownBar->update(static_cast<float>(countdownTimer->getDurationTime() - countdownTimer->getElapsedTime()));
 }
 
 

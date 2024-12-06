@@ -39,7 +39,9 @@ public:
 	std::unique_ptr<float> directionY;
 	std::unique_ptr<SDL_Point> platformPosition;
 	std::unique_ptr<PlayerProfile> playerProfile;
+	std::unique_ptr<bool> alive;
 	Face_Direction directionFacing;
+	std::unique_ptr<SDL_Texture*> deadColorTexture;
 	
 	std::unique_ptr<bool> isMovingLeft;
 	std::unique_ptr<bool> isMovingUpLeft;
@@ -54,6 +56,8 @@ private:
 	void isCommandMove(Command* command);
 	void updateMove();
 	void updatePlatformPosition();
+	void checkHealth();
+	void setDeadColor();
 
 public:
 	std::queue<std::shared_ptr<Command>> commandQueue;
@@ -65,7 +69,7 @@ public:
 
 	void initProfile() const;
 	void update();
-	void render() const;
+	void render();
 	void renderPlayerProfiles() const;
 
 	int getID() const;

@@ -9,17 +9,18 @@ class TextureType;
 class NormalEnemy : public Enemy, public std::enable_shared_from_this<NormalEnemy> {
 public:
 	constexpr static SDL_Point NORMAL_ENEMY_DIMENSION = { 30, 30 };
+	constexpr static int NORMAL_ENEMY_DAMAGE = 7;
 	std::shared_ptr<TextureType> textureType;
 	std::unique_ptr<SDL_Point> position;
 	std::unique_ptr<float> movementSpeed;
 	std::unique_ptr<float> directionX;
 	std::unique_ptr<float> directionY;
 	std::unique_ptr<bool> dead;
+	std::unique_ptr<bool> inflicted;
 
 private:
 	std::shared_ptr<Player> getNearestPlayer();
 	void calculateNormalizedLength(std::shared_ptr<Player> nearestPlayer);
-	
 	void move();
 
 public:
@@ -27,6 +28,7 @@ public:
 	NormalEnemy(const NormalEnemy& other);
 
 	void initPos() override;
+	void inflictDamage(Player& player);
 	void undoMove() override;
 	void checkCollision() override;
 	void update() override;

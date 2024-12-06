@@ -6,6 +6,10 @@ void EnemyDecorator::initPos() {
     decoratedEnemy->initPos();
 }
 
+void EnemyDecorator::inflictDamage(Player& player) {
+    decoratedEnemy->inflictDamage(player);
+}
+
 void EnemyDecorator::undoMove() {
     decoratedEnemy->undoMove();
 }

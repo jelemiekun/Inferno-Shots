@@ -23,6 +23,7 @@ private:
 	SDL_Rect mDstRectSprintBar;
 	Bar* healthBar;
 	Bar* sprintBar;
+	bool alive;
 
 private:
 	void initPlayerID(int playerID);
@@ -35,6 +36,8 @@ private:
 	void initMDstRectSprintBar();
 	void initHealthBar(int maxHealth);
 	void initSprintBar(int maxSprint);
+
+	void checkHealth(const int& healthAmount);
 
 public:
 	static void loadPlayerProfiles();
