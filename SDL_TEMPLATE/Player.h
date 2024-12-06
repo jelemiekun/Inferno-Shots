@@ -43,6 +43,10 @@ public:
 	std::unique_ptr<bool> alive;
 	Face_Direction directionFacing;
 	std::unique_ptr<SDL_Texture*> deadColorTexture;
+	std::unique_ptr<Text> textPlayerName;
+	std::unique_ptr<Text> textPlayerPosition;
+	std::unique_ptr<std::string> stringPlayerName;
+	std::unique_ptr<SDL_Rect> dstRectPlatform;
 	
 	std::unique_ptr<bool> isMovingLeft;
 	std::unique_ptr<bool> isMovingUpLeft;
@@ -59,6 +63,7 @@ private:
 	void updatePlatformPosition();
 	void checkHealth();
 	void setDeadColor();
+	SDL_Rect getSrcRectDirectionFacing();
 
 public:
 	std::queue<std::shared_ptr<Command>> commandQueue;

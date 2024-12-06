@@ -6,6 +6,8 @@
 #include "AppInfo.h"
 #include "GameEnums.h"
 #include "PlayerProfile.h"
+#include "Text.h"
+#include <string>
 
 int Player::playerCounter = 1;
 
@@ -47,6 +49,10 @@ Player::Player(const Player& other)
     alive(std::make_unique<bool>(true)),
     directionFacing(Face_Direction::DOWN),
     deadColorTexture(std::make_unique<SDL_Texture*>()),
+    textPlayerName(std::make_unique<Text>()),
+    textPlayerPosition(std::make_unique<Text>()),
+    stringPlayerName(std::make_unique<std::string>("Player")), //TODO
+    dstRectPlatform(std::make_unique<SDL_Rect>()),
     isMovingLeft(std::make_unique<bool>(false)),
     isMovingUpLeft(std::make_unique<bool>(false)),
     isMovingUp(std::make_unique<bool>(false)),
@@ -65,7 +71,7 @@ void Player::isCommandMove(Command* command) {
     }
 }
 
-void Player::updateMove() {
+void Player::updateMove() { // TODO: SHORTEN THIS
     if (*isMovingLeft) {
         float newMovementSpeed = *movementSpeed;
 
@@ -193,13 +199,41 @@ void Player::setDeadColor() {
     SDL_DestroyTexture(tempTexture);
 }
 
+SDL_Rect Player::getSrcRectDirectionFacing() {
+    SDL_Rect srcRect = { 0, 0, textureType->dimension.x, textureType->dimension.y / 8 };
+    switch (directionFacing) {
+    case Face_Direction::LEFT:      srcRect.y = (textureType->dimension.y / 8) * 2; break;
+    case Face_Direction::UP_LEFT:   srcRect.y = (textureType->dimension.y / 8) * 4; break;
+    case Face_Direction::UP:        srcRect.y = (textureType->dimension.y / 8) * 0; break;
+    case Face_Direction::UP_RIGHT:  srcRect.y = (textureType->dimension.y / 8) * 5; break;
+    case Face_Direction::RIGHT:     srcRect.y = (textureType->dimension.y / 8) * 3; break;
+    case Face_Direction::DOWN_RIGHT:srcRect.y = (textureType->dimension.y / 8) * 7; break;
+    case Face_Direction::DOWN:      srcRect.y = (textureType->dimension.y / 8) * 1; break;
+    case Face_Direction::DOWN_LEFT: srcRect.y = (textureType->dimension.y / 8) * 6; break;
+    default: break;
+    }
+    return srcRect;
+}
+
 void Player::initProfile() const {
     playerProfile->init(*ID, *heartAmount, *maxSprintAmount);
+
+    textPlayerName->setFont(Font::MOTION_CONTROL_BOLD);
+    textPlayerName->setText("Player 1");
+    textPlayerName->setDstRect({105, 15, 90, 35}); // TODO: make this calculateable
+    textPlayerName->setColor({ 255, 255, 255, 255 });
+    textPlayerName->loadText();
+
+    textPlayerPosition->setFont(Font::MOTION_CONTROL_BOLD);
+    textPlayerPosition->setDstRect({ 1080, 160, 85, 30 });
+    textPlayerPosition->setColor({ 255, 255, 255, 255 });
 }
 
 void Player::update() {
     if (*alive) {
         checkHealth();
+
+        if (!(*alive)) setDeadColor();
 
         *isMoving = false;
 
@@ -213,37 +247,30 @@ void Player::update() {
 
         updateMove();
         updatePlatformPosition();
+
+        textPlayerPosition->setText(
+            " x:" + std::to_string(platformPosition->x - 34) + 
+            "  y:" + std::to_string(platformPosition->y - 34) + " "
+        );
+        textPlayerPosition->loadText();
     }
+
+    *dstRectPlatform = {position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y};
+
     playerProfile->update(*heartAmount, *maxSprintAmount);
 }
 
 void Player::render() {
-    SDL_Rect srcRect = { 0, 0, textureType->dimension.x, textureType->dimension.y / 8 };
+    SDL_Rect srcRect = getSrcRectDirectionFacing();
 
-    switch (directionFacing) {
-    case Face_Direction::LEFT:      srcRect.y = (textureType->dimension.y / 8) * 2; break;
-    case Face_Direction::UP_LEFT:   srcRect.y = (textureType->dimension.y / 8) * 4; break;
-    case Face_Direction::UP:        srcRect.y = (textureType->dimension.y / 8) * 0; break;
-    case Face_Direction::UP_RIGHT:  srcRect.y = (textureType->dimension.y / 8) * 5; break;
-    case Face_Direction::RIGHT:     srcRect.y = (textureType->dimension.y / 8) * 3; break;
-    case Face_Direction::DOWN_RIGHT:srcRect.y = (textureType->dimension.y / 8) * 7; break;
-    case Face_Direction::DOWN:      srcRect.y = (textureType->dimension.y / 8) * 1; break;
-    case Face_Direction::DOWN_LEFT: srcRect.y = (textureType->dimension.y / 8) * 6; break;
-    default: break;
-    }
-
-    if (!(*alive)) {
-        setDeadColor();
-    }
-
-    SDL_Rect dstRect = { position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y };
-    
-    if (*alive) SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, &dstRect);   
-    else SDL_RenderCopy(Game::getInstance()->getRenderer(), *deadColorTexture.get(), &srcRect, &dstRect);
+    if (*alive) SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, dstRectPlatform.get());   
+    else SDL_RenderCopy(Game::getInstance()->getRenderer(), *deadColorTexture.get(), &srcRect, dstRectPlatform.get());
 }
 
 void Player::renderPlayerProfiles() const {
     playerProfile->render();
+    textPlayerName->render();
+    textPlayerPosition->render();
 }
 
 int Player::getID() const {
