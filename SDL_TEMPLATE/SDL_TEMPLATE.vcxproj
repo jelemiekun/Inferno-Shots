@@ -35,6 +35,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerProfile.cpp" />
     <ClCompile Include="PrototypeRegistry.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureType.cpp" />
     <ClCompile Include="CountdownTimer.cpp" />
     <ClCompile Include="WaveManager.cpp" />
@@ -63,6 +64,7 @@
     <ClInclude Include="PlayerProfile.h" />
     <ClInclude Include="Prototype.h" />
     <ClInclude Include="PrototypeRegistry.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="TextureType.h" />
     <ClInclude Include="CountdownTimer.h" />
     <ClInclude Include="WaveManager.h" />
