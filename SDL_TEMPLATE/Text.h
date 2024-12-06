@@ -21,7 +21,7 @@ public:
 	static std::string getPath(Font font);
 
 private:
-	std::unique_ptr<SDL_Texture> mTexture;
+	std::unique_ptr<SDL_Texture*> mTexture;
 	std::string mText;
 	std::shared_ptr<TTF_Font> fontUsing;
 	SDL_Rect mDstRect;
@@ -38,6 +38,7 @@ public:
 	void setText(std::string text);
 	void setDstRect(SDL_Rect dstRect);
 	void setColor(SDL_Color color);
-	void render();
+	void loadText();
+	void render() const;
 };
 
