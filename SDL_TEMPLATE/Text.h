@@ -8,7 +8,8 @@
 
 enum class Font {
 	// Update getAllFonts and getPath when updating this
-	MENU 
+	MOTION_CONTROL_BOLD,
+	MOTION_CONTROL_ITALLIC
 };
 
 class Text {
@@ -16,19 +17,20 @@ private:
 	static std::unordered_map<std::string, std::shared_ptr<TTF_Font>> fonts;
 	static std::vector<Font> getAllFonts();
 
-public:
-	static void initFonts();
+private:
 	static std::string getPath(Font font);
 
+public:
+	static void initFonts();
+
 private:
-	std::unique_ptr<SDL_Texture*> mTexture;
+	std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> mTexture{ nullptr, SDL_DestroyTexture };
 	std::string mText;
 	std::shared_ptr<TTF_Font> fontUsing;
 	SDL_Rect mDstRect;
 	SDL_Color mColor;
 
 private:
-	void free();
 
 public:
 	Text();

@@ -6,6 +6,7 @@
 class Enemy;
 class CountdownTimer;
 class Bar;
+class Text;
 
 class WaveManager {
 private:
@@ -26,7 +27,12 @@ private:
     static std::unique_ptr<int> waveCount;
     static std::unique_ptr<CountdownTimer> countdownTimer;
     static std::unique_ptr<Bar> countdownBar;
+    static std::unique_ptr<Text> countdownText;
     std::vector<std::shared_ptr<Enemy>> enemies;
+
+public:
+    static SDL_Rect getTextDstRect();
+    static void initTexts();
 
 private:
     Uint32 getCountdownDuration() const;

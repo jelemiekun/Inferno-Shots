@@ -5,6 +5,7 @@
 #include "CountdownTimer.h"
 #include "AppInfo.h"
 #include "Bar.h"
+#include "Text.h"
 
 std::unique_ptr<int> WaveManager::waveCount = std::make_unique<int>(0);
 
@@ -12,8 +13,25 @@ std::unique_ptr<CountdownTimer> WaveManager::countdownTimer = std::make_unique<C
 
 std::unique_ptr<Bar> WaveManager::countdownBar = std::make_unique<Bar>();
 
+std::unique_ptr<Text> WaveManager::countdownText = std::make_unique<Text>();
+
 
 WaveManager::WaveManager() {}
+
+SDL_Rect WaveManager::getTextDstRect() {
+    SDL_Rect dstRect{ 0, 0, 300, 35 };
+    dstRect.x = (SCREEN_WIDTH / 2) - (dstRect.w / 2);
+    dstRect.y = SCREEN_HEIGHT - dstRect.h - 80;
+    return dstRect;
+}
+
+void WaveManager::initTexts() {
+    countdownText->setFont(Font::MOTION_CONTROL_BOLD);
+    countdownText->setText("Time Until Next Wave:");
+    countdownText->setDstRect(getTextDstRect());
+    countdownText->setColor({ 255, 255, 255, 255 });
+    countdownText->loadText();
+}
 
 WaveManager* WaveManager::getInstance() {
     static WaveManager instance;
@@ -97,6 +115,7 @@ void WaveManager::render() {
     }
     
     if (!isCountdownFinish()) {
+        countdownText->render();
         countdownBar->render();
     }
 }

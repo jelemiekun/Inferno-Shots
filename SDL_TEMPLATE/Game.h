@@ -27,15 +27,13 @@ public:
 	SDL_Renderer* gRenderer;
 	bool running;
 
-	TTF_Font* gFont;
-
 private:
 	void initSDLSubsystems();
 	void initWindowCreation();
 	void initRendererCreation();
 	void initSDL_image();
 	void initSDL_ttf();
-	void initGFont();
+	void initFonts();
 	void setRunningToTrue();
 	void setRunningToFalse();
 	void initBackground();

@@ -10,6 +10,7 @@ using Vector = SDL_Point;
 class Command;
 class TextureType;
 class PlayerProfile;
+class Text;
 
 class Player : 
 	public Prototype, public std::enable_shared_from_this<Player> {

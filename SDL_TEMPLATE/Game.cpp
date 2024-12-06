@@ -15,10 +15,10 @@
 #include "Minimap.h"
 #include "WaveManager.h"
 #include "PlayerProfile.h"
-
+#include "Text.h"
 
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GamePlaying>()),
-				running(false), gFont(nullptr) {}
+				running(false) {}
 
 void Game::initSDLSubsystems() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -60,12 +60,9 @@ void Game::initSDL_ttf() {
 	else std::cout << "SDL_TTF initialized." << '\n';
 }
 
-void Game::initGFont() {
-	//TODO
-	gFont = TTF_OpenFont("path", 28);
-
-	if (!gFont) std::cout << "Failed to load font: " << TTF_GetError() << '\n';
-	else std::cout << "Font loaded." << '\n';
+void Game::initFonts() {
+	Text::initFonts();
+	WaveManager::initTexts();
 }
 
 void Game::setRunningToTrue() {
@@ -224,7 +221,7 @@ void Game::init() {
 	initRendererCreation();
 	initSDL_image();
 	initSDL_ttf();
-	initGFont();
+	initFonts();
 	setRunningToTrue();
 	initBackground();
 	initPlayerProfile();
