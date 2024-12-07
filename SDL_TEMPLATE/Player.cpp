@@ -3,12 +3,14 @@
 #include "TextureType.h"
 #include "Game.h"
 #include "Background.h"
+#include "Enemy.h"
 #include "AppInfo.h"
 #include "GameEnums.h"
 #include "PlayerProfile.h"
 #include "Text.h"
 #include "Bullet.h"
 #include "PrototypeRegistry.h"
+#include "WaveManager.h"
 #include <string>
 
 int Player::playerCounter = 1;
@@ -44,6 +46,7 @@ Player::Player(const Player& other)
     isSprinting(std::make_unique<bool>(false)),
     isMoving(std::make_unique<bool>(false)),
     isFiring(std::make_unique<bool>(false)),
+    firingCooldown(std::make_unique<Uint32>(1060)),
     score(std::make_unique<int>(0)),
     frameCounter(std::make_unique<int>(0)),
     directionX(std::make_unique<float>()),
@@ -170,6 +173,29 @@ void Player::checkHealth() {
     }
 }
 
+void Player::checkCollisionWithEnemies() {
+    for (auto& enemy : WaveManager::getInstance()->getEnemies()) {
+        SDL_Rect enemyRect = {
+            enemy->getPosition().x,
+            enemy->getPosition().y,
+            enemy->getDimension().x,
+            enemy->getDimension().y
+        };
+        SDL_Rect playerRect = {
+            platformPosition->x - (Player::PLAYER_DIMENSION.x / 2),
+            platformPosition->y - (Player::PLAYER_DIMENSION.y / 2),
+            Player::PLAYER_DIMENSION.x,
+            Player::PLAYER_DIMENSION.y
+        };
+
+        if (SDL_HasIntersection(&enemyRect, &playerRect)) {
+            *heartAmount -= enemy->getDamage();
+            *score += enemy->getEnemyScore();
+            enemy->setDead();
+        }
+    }
+}
+
 void Player::setDeadColor() {
     SDL_Renderer* renderer = Game::getInstance()->getRenderer();
 
@@ -203,22 +229,28 @@ void Player::firing() {
         PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::BULLET)
     );
 
-    std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
+    static Uint32 startTime = SDL_GetTicks();
 
-    SDL_Point fixedPos = {
-        position->x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
-        position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
-    };
+    if (SDL_GetTicks() - startTime > *firingCooldown) {
+        std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
 
-    bullet->initPlayer(shared_from_this());
-    bullet->initPos(fixedPos);
-    bullet->initDirections(*directionX, *directionY);
-    bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
+        SDL_Point fixedPos = {
+            position->x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
+            position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
+        };
 
-    static std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
-    bullet->initTexture(bulletTexture);
+        bullet->initPlayer(shared_from_this());
+        bullet->initPos(fixedPos);
+        bullet->initDirections(*directionX, *directionY);
+        bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
 
-    Bullet::bullets.push_back(std::move(bullet));
+        static std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
+        bullet->initTexture(bulletTexture);
+
+        Bullet::bullets.push_back(std::move(bullet));
+
+        startTime = SDL_GetTicks();
+    }
 }
 
 SDL_Rect Player::getDstRectTextPlayerName() {
@@ -262,7 +294,10 @@ void Player::update() {
     if (*alive) {
         checkHealth();
 
+
         if (!(*alive)) setDeadColor();
+
+        checkCollisionWithEnemies();
 
         if (*isFiring) firing();
 
@@ -292,8 +327,6 @@ void Player::update() {
         );
         textPlayerPosition->loadText();
     }
-
-    std::cout << *score << '\n';
 
     *dstRectPlatform = {position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y};
 

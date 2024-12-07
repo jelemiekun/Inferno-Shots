@@ -21,6 +21,8 @@ public:
     static WaveManager* getInstance();
 
 private:
+    constexpr static int PLAYER_FIRING_COOLDOWN_DECREASER = 60;
+    constexpr static int PLAYER_FIRING_COOLDOWN_LIMIT = 10;
     constexpr static int INIT_ENEMY_COUNT = 5;
     constexpr static int COUNTDOWN_BAR_BORDER_THICK = 3;
     constexpr static SDL_Color COUNTDOWN_BAR_PROGRESS_COLOR = { 181, 0, 0, 255 };
@@ -52,6 +54,8 @@ public:
     bool isCountdownFinish() const;
     bool hasCountdownStarted() const;
     void setCountdownFinish();
+
+    void decreasePlayersFiringCooldown();
 
     const int& getWaveCount() const;
     const std::vector<std::shared_ptr<Enemy>>& getEnemies() const;

@@ -5,7 +5,6 @@
 // TODO: player name input
 // TODO: save game state of the game such as player name, player position, and wave number
 // TODO: load saved game state
-// TODO: cooldown in firing, higher wave, shorter cooldown
 // TODO: enemy difficulty, add fast enemies beyond wave 3
 // TODO: subtract random number in total enemies then using that random number, generate amount of fast enemies
 // TODO: big boss in every 5 rounds

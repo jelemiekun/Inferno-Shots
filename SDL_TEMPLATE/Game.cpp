@@ -16,6 +16,7 @@
 #include "WaveManager.h"
 #include "PlayerProfile.h"
 #include "Text.h"
+#include "FastEnemy.h"
 
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GamePlaying>()),
 				running(false) {}
@@ -196,13 +197,20 @@ void Game::initBullet() {
 }
 
 void Game::initEnemy() {
-	std::shared_ptr<TextureType> normalEnemyTexture = std::make_shared<TextureType>(Prototype_Type::NORMAL_ENEMY);
-	std::shared_ptr<NormalEnemy> normalEnemyPrototype = std::make_shared<NormalEnemy>(normalEnemyTexture);
+    std::shared_ptr<TextureType> normalEnemyTexture = std::make_shared<TextureType>(Prototype_Type::NORMAL_ENEMY);
+    std::shared_ptr<NormalEnemy> normalEnemyPrototype = std::make_shared<NormalEnemy>(normalEnemyTexture);
+    PrototypeRegistry::getInstance()->addPrototype(
+        Prototype_Type::NORMAL_ENEMY, std::static_pointer_cast<Prototype>(normalEnemyPrototype)
+    );
 
-	PrototypeRegistry::getInstance()->addPrototype(
-		Prototype_Type::NORMAL_ENEMY, std::static_pointer_cast<Prototype>(normalEnemyPrototype)
-	);
+    std::shared_ptr<Enemy> clonedNormalEnemy = std::static_pointer_cast<Enemy>(normalEnemyPrototype->clone());
+    std::shared_ptr<FastEnemy> fastEnemyPrototype = std::make_shared<FastEnemy>(clonedNormalEnemy);
+
+    PrototypeRegistry::getInstance()->addPrototype(
+        Prototype_Type::NORMAL_ENEMY_FAST, std::static_pointer_cast<Prototype>(fastEnemyPrototype)
+    );
 }
+
 
 void Game::initMiniMap() {
 	Minimap::getInstance()->initMinimap();

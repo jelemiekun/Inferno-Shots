@@ -4,42 +4,42 @@
 
 class FastEnemy : public EnemyDecorator {
 private:
-    constexpr static float MOVEMENT_ENHANCE_SCALE = 2.5;
-    std::unique_ptr<bool> enhanced;
+    constexpr static int SCORE_ADDER = 2;
+    constexpr static float MOVEMENT_ENHANCE_SCALE = 3.0;
+    bool enhanced = false;
 
 public:
-    FastEnemy(std::shared_ptr<Enemy> enemy) : EnemyDecorator(enemy),
-        enhanced(std::make_unique<bool>(false)) {
-    }
+    FastEnemy(std::shared_ptr<Enemy> enemy) : EnemyDecorator(enemy) {}
 
     void enhance() {
-        auto normalEnemy = std::dynamic_pointer_cast<NormalEnemy>(decoratedEnemy);
-        if (normalEnemy) {
-            *normalEnemy->movementSpeed *= MOVEMENT_ENHANCE_SCALE;
+        if (!enhanced) {
+            auto normalEnemy = std::dynamic_pointer_cast<NormalEnemy>(decoratedEnemy);
+            if (normalEnemy) {
+                *normalEnemy->movementSpeed *= MOVEMENT_ENHANCE_SCALE;
+                enhanced = true;
+            }
         }
-        *enhanced = true;
-    }
-
-    void isEnhanced() {
-        if (!(*enhanced))
-            enhance();
     }
 
     void update() override {
-        isEnhanced();
+        enhance();
         EnemyDecorator::update();
+    }
+
+    std::shared_ptr<Prototype> clone() const override {
+        auto clonedEnemy = decoratedEnemy->clone();
+        return std::make_shared<FastEnemy>(std::static_pointer_cast<Enemy>(clonedEnemy));
     }
 
     void render() const override {
         EnemyDecorator::render();
     }
 
-    std::shared_ptr<Prototype> clone() const override {
-        auto clonedEnemy = decoratedEnemy->clone();
-        return std::make_shared<FastEnemy>(clonedEnemy);
-    }
-
     const SDL_Point& getPosition() const override {
         return EnemyDecorator::getPosition();
+    }
+
+    int getEnemyScore() override {
+        return EnemyDecorator::getEnemyScore() + SCORE_ADDER;
     }
 };

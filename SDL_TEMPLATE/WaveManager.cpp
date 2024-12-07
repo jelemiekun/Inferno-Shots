@@ -4,8 +4,10 @@
 #include "PrototypeRegistry.h"
 #include "CountdownTimer.h"
 #include "AppInfo.h"
+#include "InvokerPlaying.h"
 #include "Bar.h"
 #include "Text.h"
+#include "FastEnemy.h"
 
 std::unique_ptr<int> WaveManager::waveCount = std::make_unique<int>(0);
 
@@ -79,6 +81,12 @@ void WaveManager::initWave() {
         enemy->initPos();
         enemies.push_back(enemy);
     }
+    std::shared_ptr<FastEnemy> fastEnemy = std::dynamic_pointer_cast<FastEnemy>(
+        PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::NORMAL_ENEMY_FAST)
+    );
+
+    fastEnemy->initPos();
+    enemies.push_back(fastEnemy);
 }
 
 void WaveManager::update() {
@@ -150,6 +158,17 @@ bool WaveManager::hasCountdownStarted() const {
 void WaveManager::setCountdownFinish() {
     countdownTimer->setFinish();
 }
+
+void WaveManager::decreasePlayersFiringCooldown() {
+    for (auto& player : InvokerPlaying::getInstance()->players) {
+        if (*player.second->firingCooldown > PLAYER_FIRING_COOLDOWN_DECREASER + PLAYER_FIRING_COOLDOWN_LIMIT) {
+            *player.second->firingCooldown -= PLAYER_FIRING_COOLDOWN_DECREASER;
+        } else {
+            *player.second->firingCooldown = PLAYER_FIRING_COOLDOWN_LIMIT;
+        }
+    }
+}
+
 
 const int& WaveManager::getWaveCount() const {
     return *WaveManager::waveCount;

@@ -6,10 +6,6 @@ void EnemyDecorator::initPos() {
     decoratedEnemy->initPos();
 }
 
-void EnemyDecorator::inflictDamage(Player& player) {
-    decoratedEnemy->inflictDamage(player);
-}
-
 int EnemyDecorator::getEnemyScore() {
     return decoratedEnemy->getEnemyScore();
 }
@@ -34,6 +30,18 @@ const bool& EnemyDecorator::isDead() const {
 
 const SDL_Point& EnemyDecorator::getPosition() const {
     return decoratedEnemy->getPosition();
+}
+
+const SDL_Point& EnemyDecorator::getDimension() const {
+    return decoratedEnemy->getDimension();
+}
+
+const int EnemyDecorator::getDamage() const {
+    return decoratedEnemy->getDamage();
+}
+
+void EnemyDecorator::setDead() {
+    decoratedEnemy->setDead();
 }
 
 std::shared_ptr<Prototype> EnemyDecorator::clone() const {

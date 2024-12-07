@@ -83,10 +83,6 @@ void NormalEnemy::initPos() {
 	position->y = distY(rng);
 }
 
-void NormalEnemy::inflictDamage(Player& player) {
-	*player.heartAmount -= NORMAL_ENEMY_DAMAGE;
-}
-
 int NormalEnemy::getEnemyScore() {
 	static int NORMAL_ENEMY_SCORE = 3;
 	return NORMAL_ENEMY_SCORE;
@@ -114,38 +110,6 @@ void NormalEnemy::checkCollision() {
 			undoMove();
 			undoMove();
 			undoMove();
-		}
-	}
-
-	for (auto& enemy : WaveManager::getInstance()->getEnemies()) {
-		NormalEnemy* normalEnemyPtr = nullptr;
-
-		if (normalEnemyPtr = dynamic_cast<NormalEnemy*>(enemy.get())) {
-			for (auto& player : InvokerPlaying::getInstance()->players) {
-				SDL_Point enemyPos = *normalEnemyPtr->position;
-				SDL_Point playerPos = *player.second->position;
-				SDL_Rect enemyRect = {
-					enemyPos.x,
-					enemyPos.y,
-					NORMAL_ENEMY_DIMENSION.x,
-					NORMAL_ENEMY_DIMENSION.y
-				};
-				SDL_Rect playerRect = {
-					playerPos.x + Background::getInstance()->srcRect->x,
-					playerPos.y + Background::getInstance()->srcRect->y,
-					Player::PLAYER_DIMENSION.x,
-					Player::PLAYER_DIMENSION.y
-				};
-
-				if (SDL_HasIntersection(&enemyRect, &playerRect)) {
-					if (!(*normalEnemyPtr->inflicted)) {
-						inflictDamage(*player.second);
-						*normalEnemyPtr->inflicted = true;
-					}
-					*player.second->score += normalEnemyPtr->getEnemyScore();
-					*normalEnemyPtr->dead = true;
-				}
-			}
 		}
 	}
 
@@ -190,6 +154,9 @@ const bool& NormalEnemy::isDead() const {
 	return *dead;
 }
 
+void NormalEnemy::setDead() {
+	*dead = true;
+}
 
 std::shared_ptr<Prototype> NormalEnemy::clone() const {
 	return std::make_shared<NormalEnemy>(*this);
@@ -197,4 +164,11 @@ std::shared_ptr<Prototype> NormalEnemy::clone() const {
 
 const SDL_Point& NormalEnemy::getPosition() const {
 	return *position.get();
+}
+const SDL_Point& NormalEnemy::getDimension() const {
+	return NORMAL_ENEMY_DIMENSION;
+}
+
+const int NormalEnemy::getDamage() const {
+	return NORMAL_ENEMY_DAMAGE;
 }

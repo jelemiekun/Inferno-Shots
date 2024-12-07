@@ -6,6 +6,7 @@
 #include "TextureType.h"
 #include "WaveManager.h"
 #include "NormalEnemy.h"
+#include "FastEnemy.h"
 #include "Player.h"
 
 std::vector<std::unique_ptr<Bullet>> Bullet::bullets;
@@ -48,19 +49,16 @@ void Bullet::checkCollision() {
 
 	SDL_Rect bulletRect = { position->x, position->y, BULLET_DIMENSION.x ,BULLET_DIMENSION.y };
 	for (auto& enemy : WaveManager::getInstance()->getEnemies()) {
-		NormalEnemy* normalEnemyPtr = dynamic_cast<NormalEnemy*>(enemy.get());
-		if (!normalEnemyPtr) continue;
-
 		SDL_Rect enemyRect = {
-			normalEnemyPtr->position->x,
-			normalEnemyPtr->position->y,
+			enemy->getPosition().x,
+			enemy->getPosition().y,
 			NormalEnemy::NORMAL_ENEMY_DIMENSION.x,
 			NormalEnemy::NORMAL_ENEMY_DIMENSION.y
 		};
 
 		if (SDL_HasIntersection(&bulletRect, &enemyRect)) {
 			*player->score += enemy->getEnemyScore();
-			*normalEnemyPtr->dead = true;
+			enemy->setDead();
 			*remove = true;
 		}
 	}

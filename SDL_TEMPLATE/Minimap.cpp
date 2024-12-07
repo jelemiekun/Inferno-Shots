@@ -8,6 +8,7 @@
 #include "NormalEnemy.h"
 #include "Enemy.h"
 #include "BorderManager.h"
+#include "FastEnemy.h"
 
 Minimap::Minimap() : minimapTexture(nullptr), dstRectMinimap({ 0, 0, 0, 0 }), scaleX(0), scaleY(0) {}
 
@@ -94,6 +95,15 @@ void Minimap::update() {
 				NORMAL_ENEMY_DIMENSION.y
 			};	
 		}
+		if (dynamic_cast<FastEnemy*>(enemy.get())) {
+			enemyPos = {
+				static_cast<int>((enemy->getPosition().x - (NORMAL_ENEMY_DIMENSION.x / 2)) * scaleX),
+				static_cast<int>((enemy->getPosition().y - (NORMAL_ENEMY_DIMENSION.y / 2)) * scaleY),
+				NORMAL_ENEMY_DIMENSION.x,
+				NORMAL_ENEMY_DIMENSION.y
+			};
+		}
+
 
 		if (enemyPos.w != 0 && enemyPos.h != 0) enemies.push_back(enemyPos);
 	}

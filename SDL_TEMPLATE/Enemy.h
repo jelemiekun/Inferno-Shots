@@ -7,7 +7,6 @@ class Player;
 class Enemy : public Prototype {
 public:
     virtual ~Enemy() = default;
-    virtual void inflictDamage(Player& player) = 0;
     virtual int getEnemyScore() = 0;
     virtual void undoMove() = 0;
     virtual void checkCollision() = 0;
@@ -16,4 +15,7 @@ public:
     virtual void render() const = 0;
     virtual const bool& isDead() const = 0;
     virtual const SDL_Point& getPosition() const = 0;
+    virtual const SDL_Point& getDimension() const = 0;
+    virtual const int getDamage() const = 0;
+    virtual void setDead() = 0;
 };

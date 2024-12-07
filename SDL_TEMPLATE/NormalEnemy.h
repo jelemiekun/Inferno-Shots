@@ -28,7 +28,6 @@ public:
 	NormalEnemy(const NormalEnemy& other);
 
 	void initPos() override;
-	void inflictDamage(Player& player);
 	int getEnemyScore() override;
 	void undoMove() override;
 	void checkCollision() override;
@@ -36,6 +35,9 @@ public:
 	void render() const override;
 	std::shared_ptr<Prototype> clone() const override;
 	const bool& isDead() const override;
+	void setDead() override;
 	const SDL_Point& getPosition() const override;
+	const SDL_Point& getDimension() const override;
+	const int getDamage() const override;
 };
 

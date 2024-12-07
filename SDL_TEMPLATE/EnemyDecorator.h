@@ -8,7 +8,6 @@ protected:
 public:
     EnemyDecorator(std::shared_ptr<Enemy> enemy);
     virtual void initPos() override;
-    virtual void inflictDamage(Player& player);
     virtual int getEnemyScore() override;
     virtual void undoMove() override;
     virtual void checkCollision() override;
@@ -16,5 +15,8 @@ public:
     virtual void render() const override;
     virtual const bool& isDead() const override;
     virtual const SDL_Point& getPosition() const override;
+    virtual const SDL_Point& getDimension() const override;
+    virtual const int getDamage() const override;
+    virtual void setDead() override;
     virtual std::shared_ptr<Prototype> clone() const override;
 };

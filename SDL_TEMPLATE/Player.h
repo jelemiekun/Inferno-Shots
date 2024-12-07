@@ -36,6 +36,7 @@ public:
 	std::unique_ptr<bool> isSprinting;
 	std::unique_ptr<bool> isMoving;
 	std::unique_ptr<bool> isFiring;
+	std::unique_ptr<Uint32> firingCooldown;
 	std::unique_ptr<int> score;
 	std::unique_ptr<int> frameCounter;
 	std::unique_ptr<float> directionX;
@@ -64,6 +65,7 @@ private:
 	void updateMove();
 	void updatePlatformPosition();
 	void checkHealth();
+	void checkCollisionWithEnemies();
 	void setDeadColor();
 	void firing();
 	SDL_Rect getDstRectTextPlayerName();

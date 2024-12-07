@@ -20,7 +20,8 @@ enum class Face_Direction {
 enum class Prototype_Type {
 	PLAYER,
 	BULLET,
-	NORMAL_ENEMY
+	NORMAL_ENEMY,
+	NORMAL_ENEMY_FAST
 };
 
 std::string getProtoType_Type_Path(Prototype_Type type);
