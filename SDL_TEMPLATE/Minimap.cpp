@@ -5,7 +5,7 @@
 #include "WaveManager.h"
 #include "InvokerPlaying.h"
 #include "Bullet.h"
-#include "NormalEnemy.h"
+#include "EnemyType.h"
 #include "Enemy.h"
 #include "BorderManager.h"
 #include "FastEnemy.h"
@@ -60,7 +60,7 @@ void Minimap::renderBorder(SDL_Renderer*& renderer) {
 void Minimap::update() {
 	constexpr static SDL_Point PLAYER_DIMENSION = { 4, 4 };
 	constexpr static SDL_Point BULLET_DIMENSION = { 2, 2 };
-	constexpr static SDL_Point NORMAL_ENEMY_DIMENSION = { 4, 4 };
+	constexpr static SDL_Point NORMAL_ENEMY_DIMENSION = { 4, 4 }; // TODO: GET DIMENSION()
 
 	clearVectors();
 
@@ -87,7 +87,7 @@ void Minimap::update() {
 	for (const auto& enemy : WaveManager::getInstance()->getEnemies()) {
 		SDL_Rect enemyPos = { 0, 0, 0, 0 };
 
-		if (dynamic_cast<NormalEnemy*>(enemy.get())) {
+		if (dynamic_cast<EnemyType*>(enemy.get())) {
 			enemyPos = {
 				static_cast<int>((enemy->getPosition().x - (NORMAL_ENEMY_DIMENSION.x / 2)) * scaleX),
 				static_cast<int>((enemy->getPosition().y - (NORMAL_ENEMY_DIMENSION.y / 2)) * scaleY),

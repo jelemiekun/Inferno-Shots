@@ -31,7 +31,7 @@
     <ClCompile Include="InvokerPlaying.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Minimap.cpp" />
-    <ClCompile Include="NormalEnemy.cpp" />
+    <ClCompile Include="EnemyType.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerProfile.cpp" />
     <ClCompile Include="PrototypeRegistry.cpp" />
@@ -59,7 +59,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InvokerPlaying.h" />
     <ClInclude Include="Minimap.h" />
-    <ClInclude Include="NormalEnemy.h" />
+    <ClInclude Include="EnemyType.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerProfile.h" />
     <ClInclude Include="Prototype.h" />

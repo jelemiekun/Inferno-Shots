@@ -1,6 +1,6 @@
 #include "WaveManager.h"
 #include "Enemy.h"
-#include "NormalEnemy.h"
+#include "EnemyType.h"
 #include "PrototypeRegistry.h"
 #include "CountdownTimer.h"
 #include "AppInfo.h"
@@ -8,6 +8,7 @@
 #include "Bar.h"
 #include "Text.h"
 #include "FastEnemy.h"
+#include <random>
 
 std::unique_ptr<int> WaveManager::waveCount = std::make_unique<int>(0);
 
@@ -71,37 +72,61 @@ void WaveManager::initCountdownBar() {
     countdownBar->setProgressBarColor(COUNTDOWN_BAR_PROGRESS_COLOR);
 }
 
-void WaveManager::initWave() {
-    int enemyCount = *waveCount * WaveManager::INIT_ENEMY_COUNT;
+int WaveManager::getEnemyCountToinit() {
+    return *waveCount * WaveManager::INIT_ENEMY_COUNT;
+}
 
-    for (int enemyIndex = 0; enemyIndex < enemyCount; enemyIndex++) {
-        std::shared_ptr<NormalEnemy> enemy = std::dynamic_pointer_cast<NormalEnemy>(
+int WaveManager::getRandomNumber(const int& max) {
+    int threeFourthOfMax = (max / 4) * 3;
+
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(1, threeFourthOfMax);
+
+    return dist6(rng);
+}
+
+void WaveManager::initWave() {
+    int enemyCount = getEnemyCountToinit();
+    int normalEnemyCount = enemyCount;
+
+    if (*waveCount > 3) {
+        int fastEnemyCount = getRandomNumber(enemyCount);
+        normalEnemyCount -= fastEnemyCount;
+
+        for (int enemyIndex = 0; enemyIndex < fastEnemyCount; enemyIndex++) {
+            std::shared_ptr<FastEnemy> fastEnemy = std::dynamic_pointer_cast<FastEnemy>(
+                PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::NORMAL_ENEMY_FAST)
+            );
+
+            fastEnemy->initPos();
+            enemies.push_back(fastEnemy);
+        }
+    }
+
+    for (int enemyIndex = 0; enemyIndex < normalEnemyCount; enemyIndex++) {
+        std::shared_ptr<EnemyType> enemy = std::dynamic_pointer_cast<EnemyType>(
             PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::NORMAL_ENEMY)
         );
         enemy->initPos();
         enemies.push_back(enemy);
     }
-    std::shared_ptr<FastEnemy> fastEnemy = std::dynamic_pointer_cast<FastEnemy>(
-        PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::NORMAL_ENEMY_FAST)
-    );
-
-    fastEnemy->initPos();
-    enemies.push_back(fastEnemy);
+    
 }
 
-void WaveManager::update() {
+void WaveManager::updateEnemies() {
     std::vector<std::shared_ptr<Enemy>> enemiesToRemove;
 
     for (auto& enemy : enemies) {
         enemy->update();
-
         enemy->checkCollision();
-
-        if (enemy->isDead()) {
-            enemiesToRemove.push_back(enemy);
-        }
+        if (enemy->isDead()) enemiesToRemove.push_back(enemy);
     }
 
+    removeEnemies(enemiesToRemove);
+}
+
+void WaveManager::removeEnemies(const std::vector<std::shared_ptr<Enemy>>& enemiesToRemove) {
     for (const auto& enemy : enemiesToRemove) {
         enemies.erase(
             std::remove_if(
@@ -112,7 +137,10 @@ void WaveManager::update() {
                 }),
             enemies.end());
     }
+}
 
+void WaveManager::update() {
+    updateEnemies();
     countdownBar->update(static_cast<float>(countdownTimer->getDurationTime() - countdownTimer->getElapsedTime()));
 }
 

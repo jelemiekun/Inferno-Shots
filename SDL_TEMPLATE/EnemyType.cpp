@@ -1,4 +1,4 @@
-#include "NormalEnemy.h"
+#include "EnemyType.h"
 #include "TextureType.h"
 #include "InvokerPlaying.h"
 #include "GameEnums.h"
@@ -9,28 +9,34 @@
 #include <cmath>
 #include <random>
 
-constexpr static float NORMAL_ENEMY_SPED = 3.0F;
+// TODO: normal enemy 30,30 3 7 3
 
-NormalEnemy::NormalEnemy(std::shared_ptr<TextureType> type) : 
+EnemyType::EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, float speed, int damage, int score) :
 	textureType(type),
+	dimension(std::make_unique<SDL_Point>(dimension)),
+	damage(std::make_unique<int>(damage)),
+	score(std::make_unique<int>(score)),
 	position(std::make_unique<SDL_Point>()),
-	movementSpeed(std::make_unique<float>(NORMAL_ENEMY_SPED)),
+	movementSpeed(std::make_unique<float>(speed)),
 	directionX(std::make_unique<float>(0.0F)),
 	directionY(std::make_unique<float>(0.0F)),
 	dead(std::make_unique<bool>(false)),
 	inflicted(std::make_unique<bool>(false)) {}
 
-NormalEnemy::NormalEnemy(const NormalEnemy& other)
+EnemyType::EnemyType(const EnemyType& other)
 	: textureType(other.textureType),
-	position(std::make_unique<SDL_Point>()),
+	dimension(std::make_unique<SDL_Point>(*other.dimension)),
+	damage(std::make_unique<int>(*other.damage)),
+	score(std::make_unique<int>(*other.score)),
+	position(std::make_unique<SDL_Point>(*other.position)),
 	movementSpeed(std::make_unique<float>(*other.movementSpeed)),
-	directionX(std::make_unique<float>()),
-	directionY(std::make_unique<float>()),
-	dead(std::make_unique<bool>(false)),
-	inflicted(std::make_unique<bool>(false)) {
+	directionX(std::make_unique<float>(*other.directionX)),
+	directionY(std::make_unique<float>(*other.directionY)),
+	dead(std::make_unique<bool>(*other.dead)),
+	inflicted(std::make_unique<bool>(*other.inflicted)) {
 }
 
-std::shared_ptr<Player> NormalEnemy::getNearestPlayer() {
+std::shared_ptr<Player> EnemyType::getNearestPlayer() {
 	std::shared_ptr<Player> nearestPlayer;
 	float nearestDistance = std::numeric_limits<float>::max();
 
@@ -50,7 +56,7 @@ std::shared_ptr<Player> NormalEnemy::getNearestPlayer() {
 }
 
 
-void NormalEnemy::calculateNormalizedLength(std::shared_ptr<Player> nearestPlayer) {
+void EnemyType::calculateNormalizedLength(std::shared_ptr<Player> nearestPlayer) {
 	float dx = static_cast<float>(nearestPlayer->position->x + (Player::PLAYER_DIMENSION.x / 2)) - position->x + Background::getInstance()->srcRect->x;
 	float dy = static_cast<float>(nearestPlayer->position->y + (Player::PLAYER_DIMENSION.y / 2)) - position->y + Background::getInstance()->srcRect->y;
 
@@ -60,12 +66,12 @@ void NormalEnemy::calculateNormalizedLength(std::shared_ptr<Player> nearestPlaye
 	*directionY = static_cast<float>(dy) / distance;
 }
 
-void NormalEnemy::move() {
+void EnemyType::move() {
 	position->x += static_cast<int>(*directionX * *movementSpeed);
 	position->y += static_cast<int>(*directionY * *movementSpeed);
 }
 
-void NormalEnemy::initPos() {
+void EnemyType::initPos() {
 	static std::random_device dev;
 	static std::mt19937 rng(dev());
 
@@ -83,30 +89,29 @@ void NormalEnemy::initPos() {
 	position->y = distY(rng);
 }
 
-int NormalEnemy::getEnemyScore() {
-	static int NORMAL_ENEMY_SCORE = 3;
-	return NORMAL_ENEMY_SCORE;
+int EnemyType::getEnemyScore() {
+	return *score;
 }
 
-void NormalEnemy::undoMove() {
+void EnemyType::undoMove() {
 	position->x -= static_cast<int>(*directionX * *movementSpeed);
 	position->y -= static_cast<int>(*directionY * *movementSpeed);
 }
 
-void NormalEnemy::checkCollision() {
+void EnemyType::checkCollision() {
 	for (const auto& otherEnemy : WaveManager::getInstance()->getEnemies()) {
-		NormalEnemy* normalEnemyPtr = dynamic_cast<NormalEnemy*>(otherEnemy.get());
-		if (!normalEnemyPtr || otherEnemy == shared_from_this()) {
+		EnemyType* EnemyTypePtr = dynamic_cast<EnemyType*>(otherEnemy.get());
+		if (!EnemyTypePtr || otherEnemy == shared_from_this()) {
 			continue;
 		}
 
 		SDL_Point pos1 = *position;
-		SDL_Point pos2 = *normalEnemyPtr->position;
+		SDL_Point pos2 = *EnemyTypePtr->position;
 
-		if (pos1.x < pos2.x + NORMAL_ENEMY_DIMENSION.x &&
-			pos1.x + NORMAL_ENEMY_DIMENSION.x > pos2.x &&
-			pos1.y < pos2.y + NORMAL_ENEMY_DIMENSION.y &&
-			pos1.y + NORMAL_ENEMY_DIMENSION.y > pos2.y) {
+		if (pos1.x < pos2.x + dimension->x &&
+			pos1.x + dimension->x > pos2.x &&
+			pos1.y < pos2.y + dimension->y &&
+			pos1.y + dimension->y > pos2.y) {
 			undoMove();
 			undoMove();
 			undoMove();
@@ -115,21 +120,21 @@ void NormalEnemy::checkCollision() {
 
 	if (position->x < static_cast<float>(BORDER_ALLOWANCE))
 		position->x = static_cast<int>(static_cast<float>(BORDER_ALLOWANCE));
-	if (position->x + NORMAL_ENEMY_DIMENSION.x > 
+	if (position->x + dimension->x >
 		Background::getInstance()->getDimension().x - static_cast<float>(BORDER_ALLOWANCE))
 		position->x = static_cast<int>(Background::getInstance()->getDimension().x - 
-			NORMAL_ENEMY_DIMENSION.x - static_cast<float>(BORDER_ALLOWANCE));
+			dimension->x - static_cast<float>(BORDER_ALLOWANCE));
 	if (position->y < static_cast<float>(BORDER_ALLOWANCE))
 		position->y = static_cast<int>(static_cast<float>(BORDER_ALLOWANCE));
-	if (position->y + NORMAL_ENEMY_DIMENSION.y > 
+	if (position->y + dimension->y >
 		Background::getInstance()->getDimension().y - static_cast<float>(BORDER_ALLOWANCE))
 		position->y = static_cast<int>(Background::getInstance()->getDimension().y - 
-			NORMAL_ENEMY_DIMENSION.y - static_cast<float>(BORDER_ALLOWANCE));
+			dimension->y - static_cast<float>(BORDER_ALLOWANCE));
 }
 
 
 
-void NormalEnemy::update() {
+void EnemyType::update() {
 	std::shared_ptr<Player> nearestPlayer = getNearestPlayer();
 	if (nearestPlayer) {
 		calculateNormalizedLength(nearestPlayer);
@@ -137,12 +142,12 @@ void NormalEnemy::update() {
 	}
 }
 
-void NormalEnemy::render() const {
+void EnemyType::render() const {
 	SDL_Rect dstRect = { 
 		position->x - Background::getInstance()->srcRect->x,
 		position->y - Background::getInstance()->srcRect->y,
-		NORMAL_ENEMY_DIMENSION.x, 
-		NORMAL_ENEMY_DIMENSION.y 
+		dimension->x,
+		dimension->y
 	};
 	
 	SDL_SetRenderTarget(Game::getInstance()->getRenderer(), Background::getInstance()->background);
@@ -150,25 +155,25 @@ void NormalEnemy::render() const {
 	SDL_SetRenderTarget(Game::getInstance()->getRenderer(), nullptr);
 }
 
-const bool& NormalEnemy::isDead() const {
+const bool& EnemyType::isDead() const {
 	return *dead;
 }
 
-void NormalEnemy::setDead() {
+void EnemyType::setDead() {
 	*dead = true;
 }
 
-std::shared_ptr<Prototype> NormalEnemy::clone() const {
-	return std::make_shared<NormalEnemy>(*this);
+std::shared_ptr<Prototype> EnemyType::clone() const {
+	return std::make_shared<EnemyType>(*this);
 }
 
-const SDL_Point& NormalEnemy::getPosition() const {
+const SDL_Point& EnemyType::getPosition() const {
 	return *position.get();
 }
-const SDL_Point& NormalEnemy::getDimension() const {
-	return NORMAL_ENEMY_DIMENSION;
+const SDL_Point& EnemyType::getDimension() const {
+	return *dimension;
 }
 
-const int NormalEnemy::getDamage() const {
-	return NORMAL_ENEMY_DAMAGE;
+const int EnemyType::getDamage() const {
+	return *damage;
 }

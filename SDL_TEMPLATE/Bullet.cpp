@@ -5,7 +5,7 @@
 #include "Game.h"
 #include "TextureType.h"
 #include "WaveManager.h"
-#include "NormalEnemy.h"
+#include "EnemyType.h"
 #include "FastEnemy.h"
 #include "Player.h"
 
@@ -52,8 +52,8 @@ void Bullet::checkCollision() {
 		SDL_Rect enemyRect = {
 			enemy->getPosition().x,
 			enemy->getPosition().y,
-			NormalEnemy::NORMAL_ENEMY_DIMENSION.x,
-			NormalEnemy::NORMAL_ENEMY_DIMENSION.y
+			enemy->getDimension().x,
+			enemy->getDimension().y
 		};
 
 		if (SDL_HasIntersection(&bulletRect, &enemyRect)) {

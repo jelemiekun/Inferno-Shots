@@ -51,7 +51,7 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NormalEnemy.cpp">
+    <ClCompile Include="EnemyType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EnemyDecorator.cpp">
@@ -124,7 +124,7 @@
     <ClInclude Include="Enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NormalEnemy.h">
+    <ClInclude Include="EnemyType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnemyDecorator.h">

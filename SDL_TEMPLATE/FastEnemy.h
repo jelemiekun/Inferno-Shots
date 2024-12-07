@@ -1,6 +1,6 @@
 #pragma once
 #include "EnemyDecorator.h"
-#include "NormalEnemy.h"
+#include "EnemyType.h"
 
 class FastEnemy : public EnemyDecorator {
 private:
@@ -13,9 +13,9 @@ public:
 
     void enhance() {
         if (!enhanced) {
-            auto normalEnemy = std::dynamic_pointer_cast<NormalEnemy>(decoratedEnemy);
-            if (normalEnemy) {
-                *normalEnemy->movementSpeed *= MOVEMENT_ENHANCE_SCALE;
+            auto enemyType = std::dynamic_pointer_cast<EnemyType>(decoratedEnemy);
+            if (enemyType) {
+                *enemyType->movementSpeed *= MOVEMENT_ENHANCE_SCALE;
                 enhanced = true;
             }
         }

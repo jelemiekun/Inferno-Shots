@@ -6,11 +6,12 @@
 class Player;
 class TextureType;
 
-class NormalEnemy : public Enemy, public std::enable_shared_from_this<NormalEnemy> {
+class EnemyType : public Enemy, public std::enable_shared_from_this<EnemyType> {
 public:
-	constexpr static SDL_Point NORMAL_ENEMY_DIMENSION = { 30, 30 };
-	constexpr static int NORMAL_ENEMY_DAMAGE = 7;
 	std::shared_ptr<TextureType> textureType;
+	std::unique_ptr<SDL_Point> dimension;
+	std::unique_ptr<int> damage;
+	std::unique_ptr<int> score;
 	std::unique_ptr<SDL_Point> position;
 	std::unique_ptr<float> movementSpeed;
 	std::unique_ptr<float> directionX;
@@ -24,8 +25,8 @@ private:
 	void move();
 
 public:
-	NormalEnemy(std::shared_ptr<TextureType> type);
-	NormalEnemy(const NormalEnemy& other);
+	EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, float speed, int damage, int score);
+	EnemyType(const EnemyType& other);
 
 	void initPos() override;
 	int getEnemyScore() override;

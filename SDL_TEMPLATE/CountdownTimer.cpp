@@ -30,8 +30,10 @@ const bool CountdownTimer::isFinished() {
 	if (!mFinished) {
 		mElapsedTime = SDL_GetTicks() - mStartTicks;
 		mFinished = mElapsedTime > mDuration;
-		if (mFinished) mStarted = false;
+	} else {
+		mStarted = false;
 	}
+
 	return mFinished;
 }
 

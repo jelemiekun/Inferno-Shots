@@ -21,7 +21,11 @@ enum class Prototype_Type {
 	PLAYER,
 	BULLET,
 	NORMAL_ENEMY,
-	NORMAL_ENEMY_FAST
+	NORMAL_ENEMY_FAST,
+	MEDIUM_ENEMY,
+	MEDIUM_ENEMY_FAST,
+	LARGE_ENEMY,
+	LARGE_ENEMY_FAST
 };
 
 std::string getProtoType_Type_Path(Prototype_Type type);
