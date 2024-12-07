@@ -12,13 +12,13 @@
 int Player::playerCounter = 1;
 
 // Constructor for prototype only, will not increment counter
-Player::Player(int heartAmount, int sprintAmount,
+Player::Player(int heartAmount, int maxSprintAmount,
     TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay)
     : ID(std::make_unique<int>(0)),
     textureType(std::make_unique<TextureType>(*textureType)),
     heartAmount(std::make_unique<int>(heartAmount)),
-    maxSprintAmount(std::make_unique<int>(sprintAmount)),
-    sprintAmount(std::make_unique<int>(sprintAmount)),
+    maxSprintAmount(std::make_unique<int>(maxSprintAmount)),
+    sprintAmount(std::make_unique<int>(maxSprintAmount)),
     position(std::make_unique<SDL_Point>(position)),
     movementSpeed(std::make_unique<float>(movementSpeed)),
     speedDecay(std::make_unique<float>(speedDecay)){
@@ -33,7 +33,7 @@ Player::Player(const Player& other)
     : ID(std::make_unique<int>(playerCounter++)),
     textureType(std::make_unique<TextureType>(*other.textureType)),
     heartAmount(std::make_unique<int>(*other.heartAmount)),
-    maxSprintAmount(std::make_unique<int>(*other.sprintAmount)),
+    maxSprintAmount(std::make_unique<int>(*other.maxSprintAmount)),
     sprintAmount(std::make_unique<int>(*other.sprintAmount)),
     position(std::make_unique<SDL_Point>(*other.position)),
     movementSpeed(std::make_unique<float>(*other.movementSpeed)),
@@ -71,12 +71,18 @@ void Player::isCommandMove(Command* command) {
     }
 }
 
-void Player::updateMove() { // TODO: SHORTEN THIS
+void Player::updateMove() {
+    float newMovementSpeed = *movementSpeed;
+    if (*isSprinting) {
+        if (*sprintAmount < 0) {
+            *sprintAmount = 0;
+        } else {
+            newMovementSpeed += Player::SPEED_AMOUNT;
+            *sprintAmount -= 6;
+        }
+    }
+
     if (*isMovingLeft) {
-        float newMovementSpeed = *movementSpeed;
-
-        if (*isSprinting) newMovementSpeed += Player::SPEED_AMOUNT;
-
         if (Background::getInstance()->isRightEdge()) {
             position->x -= static_cast<int>(newMovementSpeed);
 
@@ -95,10 +101,6 @@ void Player::updateMove() { // TODO: SHORTEN THIS
         }
     }
     if (*isMovingUp) {
-        float newMovementSpeed = *movementSpeed;
-
-        if (*isSprinting) newMovementSpeed += Player::SPEED_AMOUNT;
-
         if (Background::getInstance()->isDownEdge()) {
             position->y -= static_cast<int>(newMovementSpeed);
 
@@ -117,10 +119,6 @@ void Player::updateMove() { // TODO: SHORTEN THIS
         }
     }
     if (*isMovingRight) {
-        float newMovementSpeed = *movementSpeed;
-
-        if (*isSprinting) newMovementSpeed += Player::SPEED_AMOUNT;
-
         if (Background::getInstance()->isLeftEdge()) {
             position->x += static_cast<int>(newMovementSpeed);
 
@@ -138,10 +136,6 @@ void Player::updateMove() { // TODO: SHORTEN THIS
         }
     }
     if (*isMovingDown) {
-        float newMovementSpeed = *movementSpeed;
-
-        if (*isSprinting) newMovementSpeed += Player::SPEED_AMOUNT;
-
         if (Background::getInstance()->isUpEdge()) {
             position->y += static_cast<int>(newMovementSpeed);
 
@@ -199,6 +193,13 @@ void Player::setDeadColor() {
     SDL_DestroyTexture(tempTexture);
 }
 
+SDL_Rect Player::getDstRectTextPlayerName() {
+    SDL_Rect dstRect = { 0, 15, 110, 35 }; // 105
+    dstRect.x = 105 * *ID + ((dstRect.w + 35) * (*ID - 1));
+
+    return dstRect;
+}
+
 SDL_Rect Player::getSrcRectDirectionFacing() {
     SDL_Rect srcRect = { 0, 0, textureType->dimension.x, textureType->dimension.y / 8 };
     switch (directionFacing) {
@@ -215,12 +216,12 @@ SDL_Rect Player::getSrcRectDirectionFacing() {
     return srcRect;
 }
 
-void Player::initProfile() const {
+void Player::initProfile() {
     playerProfile->init(*ID, *heartAmount, *maxSprintAmount);
 
     textPlayerName->setFont(Font::MOTION_CONTROL_BOLD);
     textPlayerName->setText("Player 1");
-    textPlayerName->setDstRect({105, 15, 90, 35}); // TODO: make this calculateable
+    textPlayerName->setDstRect(getDstRectTextPlayerName());
     textPlayerName->setColor({ 255, 255, 255, 255 });
     textPlayerName->loadText();
 
@@ -248,6 +249,16 @@ void Player::update() {
         updateMove();
         updatePlatformPosition();
 
+
+        if (*sprintAmount < *maxSprintAmount) {
+            *sprintAmount += 3;
+
+            if (*sprintAmount > *maxSprintAmount)
+                *sprintAmount = *maxSprintAmount;
+        }
+
+
+
         textPlayerPosition->setText(
             " x:" + std::to_string(platformPosition->x - 34) + 
             "  y:" + std::to_string(platformPosition->y - 34) + " "
@@ -257,7 +268,7 @@ void Player::update() {
 
     *dstRectPlatform = {position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y};
 
-    playerProfile->update(*heartAmount, *maxSprintAmount);
+    playerProfile->update(*heartAmount, *sprintAmount);
 }
 
 void Player::render() {

@@ -49,7 +49,7 @@ void PlayerProfile::initMTexture() {
 		Game::getInstance()->getRenderer(),
 		SDL_PIXELFORMAT_RGBA8888,
 		SDL_TEXTUREACCESS_TARGET,
-		100, //TODO
+		100,
 		30
 	);
 }

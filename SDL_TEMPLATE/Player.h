@@ -63,6 +63,7 @@ private:
 	void updatePlatformPosition();
 	void checkHealth();
 	void setDeadColor();
+	SDL_Rect getDstRectTextPlayerName();
 	SDL_Rect getSrcRectDirectionFacing();
 
 public:
@@ -73,7 +74,7 @@ public:
 	Player(const Player& other);
 	~Player() = default;
 
-	void initProfile() const;
+	void initProfile();
 	void update();
 	void render();
 	void renderPlayerProfiles() const;
