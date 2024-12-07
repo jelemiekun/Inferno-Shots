@@ -9,9 +9,11 @@
 #include <cmath>
 #include <random>
 
-EnemyType::EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, float speed, int damage, int score) :
+EnemyType::EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, int healthCount,
+	float speed, int damage, int score, int minimapSize) :
 	textureType(type),
 	dimension(std::make_unique<SDL_Point>(dimension)),
+	healthCount(std::make_unique<int>(healthCount)),
 	damage(std::make_unique<int>(damage)),
 	score(std::make_unique<int>(score)),
 	position(std::make_unique<SDL_Point>()),
@@ -19,11 +21,13 @@ EnemyType::EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, flo
 	directionX(std::make_unique<float>(0.0F)),
 	directionY(std::make_unique<float>(0.0F)),
 	dead(std::make_unique<bool>(false)),
-	inflicted(std::make_unique<bool>(false)) {}
+	inflicted(std::make_unique<bool>(false)),
+	minimapSize(std::make_unique<int>(minimapSize)) {}
 
 EnemyType::EnemyType(const EnemyType& other)
 	: textureType(other.textureType),
 	dimension(std::make_unique<SDL_Point>(*other.dimension)),
+	healthCount(std::make_unique<int>(*other.healthCount)),
 	damage(std::make_unique<int>(*other.damage)),
 	score(std::make_unique<int>(*other.score)),
 	position(std::make_unique<SDL_Point>(*other.position)),
@@ -31,8 +35,8 @@ EnemyType::EnemyType(const EnemyType& other)
 	directionX(std::make_unique<float>(*other.directionX)),
 	directionY(std::make_unique<float>(*other.directionY)),
 	dead(std::make_unique<bool>(*other.dead)),
-	inflicted(std::make_unique<bool>(*other.inflicted)) {
-}
+	inflicted(std::make_unique<bool>(*other.inflicted)) ,
+	minimapSize(std::make_unique<int>(*other.minimapSize)){}
 
 std::shared_ptr<Player> EnemyType::getNearestPlayer() {
 	std::shared_ptr<Player> nearestPlayer;
@@ -161,6 +165,12 @@ void EnemyType::setDead() {
 	*dead = true;
 }
 
+void EnemyType::decreaseHealth() {
+	--*healthCount;
+	if (*healthCount == 0)
+		setDead();
+}
+
 std::shared_ptr<Prototype> EnemyType::clone() const {
 	return std::make_shared<EnemyType>(*this);
 }
@@ -168,6 +178,11 @@ std::shared_ptr<Prototype> EnemyType::clone() const {
 const SDL_Point& EnemyType::getPosition() const {
 	return *position.get();
 }
+
+int EnemyType::getMinimapPixelSize() {
+	return *minimapSize;
+}
+
 const SDL_Point& EnemyType::getDimension() const {
 	return *dimension;
 }

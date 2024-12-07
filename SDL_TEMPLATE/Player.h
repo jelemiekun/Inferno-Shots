@@ -28,6 +28,7 @@ public:
 public:
 	std::unique_ptr<int> ID;
 	std::unique_ptr<TextureType> textureType;
+	std::unique_ptr<int> maxHeartAmount;
 	std::unique_ptr<int> heartAmount;
 	std::unique_ptr<int> maxSprintAmount;
 	std::unique_ptr<int> sprintAmount;

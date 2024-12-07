@@ -17,8 +17,9 @@
 #include "PlayerProfile.h"
 #include "Text.h"
 #include "FastEnemy.h"
+#include "Menu.h"
 
-Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GamePlaying>()),
+Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GameMenu>()),
 				running(false) {}
 
 void Game::initSDLSubsystems() {
@@ -74,6 +75,10 @@ void Game::setRunningToFalse() {
 	running = false;
 }
 
+void Game::initMenu() {
+	Menu::getInstance()->initMenu();
+}
+
 void Game::initBackground() {
 	Background::getInstance()->init();
 }
@@ -86,7 +91,7 @@ void Game::initPlayer() {
 	// Initialize main prototype of Player
 	SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
 	TextureType* playerTexture = new TextureType(Prototype_Type::PLAYER);
-	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(100, 650, playerTexture, position, 4.0f, 30.0f);
+	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(150, 650, playerTexture, position, 4.0f, 30.0f);
 
 	// Add main prototype player to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
@@ -201,7 +206,7 @@ void Game::initEnemy() {
 	{
 		// Normal Enemy
 		std::shared_ptr<TextureType> normalEnemyTexture = std::make_shared<TextureType>(Prototype_Type::NORMAL_ENEMY);
-		std::shared_ptr<EnemyType> normalEnemyPrototype = std::make_shared<EnemyType>(normalEnemyTexture, SDL_Point{ 30, 30 }, 3.0F, 7, 3);
+		std::shared_ptr<EnemyType> normalEnemyPrototype = std::make_shared<EnemyType>(normalEnemyTexture, SDL_Point{ 30, 30 }, 1, 3.0F, 7, 3, 3);
 		PrototypeRegistry::getInstance()->addPrototype(
 			Prototype_Type::NORMAL_ENEMY, std::static_pointer_cast<Prototype>(normalEnemyPrototype)
 		);
@@ -219,7 +224,7 @@ void Game::initEnemy() {
 	{
 		// Medium Enemy
 		std::shared_ptr<TextureType> mediumEnemyTexture = std::make_shared<TextureType>(Prototype_Type::MEDIUM_ENEMY);
-		std::shared_ptr<EnemyType> mediumEnemyPrototype = std::make_shared<EnemyType>(mediumEnemyTexture, SDL_Point{ 78, 78 }, 5.0F, 16, 11);
+		std::shared_ptr<EnemyType> mediumEnemyPrototype = std::make_shared<EnemyType>(mediumEnemyTexture, SDL_Point{ 78, 78 }, 4, 5.0F, 16, 11, 5);
 		PrototypeRegistry::getInstance()->addPrototype(
 			Prototype_Type::MEDIUM_ENEMY, std::static_pointer_cast<Prototype>(mediumEnemyPrototype) 
 		);
@@ -237,7 +242,7 @@ void Game::initEnemy() {
 	{
 		// Large Enemy
 		std::shared_ptr<TextureType> largeEnemyTexture = std::make_shared<TextureType>(Prototype_Type::LARGE_ENEMY);
-		std::shared_ptr<EnemyType> largeEnemyPrototype = std::make_shared<EnemyType>(largeEnemyTexture, SDL_Point{ 112, 112 }, 2.0F, 30, 37);
+		std::shared_ptr<EnemyType> largeEnemyPrototype = std::make_shared<EnemyType>(largeEnemyTexture, SDL_Point{ 112, 112 }, 10, 2.0F, 30, 37, 7);
 		PrototypeRegistry::getInstance()->addPrototype(
 			Prototype_Type::LARGE_ENEMY, std::static_pointer_cast<Prototype>(largeEnemyPrototype)
 		);
@@ -266,6 +271,10 @@ Game* Game::getInstance() {
 	return &instance;
 }
 
+void Game::setState(std::unique_ptr<GameState> state) {
+	gameState = std::move(state);
+}
+
 void Game::init() {
 	initSDLSubsystems();
 	initWindowCreation();
@@ -274,6 +283,7 @@ void Game::init() {
 	initSDL_ttf();
 	initFonts();
 	setRunningToTrue();
+	initMenu();
 	initBackground();
 	initPlayerProfile();
 	initPlayer();
@@ -295,16 +305,13 @@ void Game::input() {
 
 void Game::update() {
 	gameState->update();
-	Minimap::getInstance()->update();
 }
 
 void Game::render() {
 	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
 	SDL_RenderClear(gRenderer);
 
-	Background::getInstance()->render();
 	gameState->render();
-	Minimap::getInstance()->render();
 
 	SDL_RenderPresent(gRenderer);
 }

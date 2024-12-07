@@ -58,7 +58,7 @@ void Bullet::checkCollision() {
 
 		if (SDL_HasIntersection(&bulletRect, &enemyRect)) {
 			*player->score += enemy->getEnemyScore();
-			enemy->setDead();
+			enemy->decreaseHealth();
 			*remove = true;
 		}
 	}

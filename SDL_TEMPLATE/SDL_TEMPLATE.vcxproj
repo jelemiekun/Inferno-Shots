@@ -30,6 +30,8 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InvokerPlaying.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="EnemyType.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -58,6 +60,8 @@
     <ClInclude Include="GameEnums.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InvokerPlaying.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Minimap.h" />
     <ClInclude Include="EnemyType.h" />
     <ClInclude Include="Player.h" />

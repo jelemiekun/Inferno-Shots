@@ -77,7 +77,7 @@ int WaveManager::getEnemyCountToinit() {
 }
 
 int WaveManager::getRandomNumber(const int& max) {
-    int threeFourthOfMax = (max / 4) * 3;
+    int threeFourthOfMax = (max / 8) * 7;
 
     std::random_device dev;
     std::mt19937 rng(dev());
@@ -104,7 +104,7 @@ void WaveManager::initWave() {
     }
 
     // Medium Enemies
-    if (*waveCount > 6) {
+    if (*waveCount > 7) {
         int mediumEnemyCount = getRandomNumber(enemyCount / 2);
 
         for (int enemyIndex = 0; enemyIndex < mediumEnemyCount; enemyIndex++) {
@@ -117,7 +117,7 @@ void WaveManager::initWave() {
         }
 
         // Fast Medium Enemies
-        if (*waveCount > 9) {
+        if (*waveCount > 11) {
             int fastMediumEnemyCount = getRandomNumber(mediumEnemyCount / 2);
 
             for (int enemyIndex = 0; enemyIndex < fastMediumEnemyCount; enemyIndex++) {

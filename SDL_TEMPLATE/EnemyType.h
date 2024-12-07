@@ -10,6 +10,7 @@ class EnemyType : public Enemy, public std::enable_shared_from_this<EnemyType> {
 public:
 	std::shared_ptr<TextureType> textureType;
 	std::unique_ptr<SDL_Point> dimension;
+	std::unique_ptr<int> healthCount;
 	std::unique_ptr<int> damage;
 	std::unique_ptr<int> score;
 	std::unique_ptr<SDL_Point> position;
@@ -18,6 +19,7 @@ public:
 	std::unique_ptr<float> directionY;
 	std::unique_ptr<bool> dead;
 	std::unique_ptr<bool> inflicted;
+	std::unique_ptr<int> minimapSize;
 
 private:
 	std::shared_ptr<Player> getNearestPlayer();
@@ -25,7 +27,7 @@ private:
 	void move();
 
 public:
-	EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, float speed, int damage, int score);
+	EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, int healthCount, float speed, int damage, int score, int minimampSize);
 	EnemyType(const EnemyType& other);
 
 	void initPos() override;
@@ -37,8 +39,10 @@ public:
 	std::shared_ptr<Prototype> clone() const override;
 	const bool& isDead() const override;
 	void setDead() override;
+	void decreaseHealth() override;
 	const SDL_Point& getPosition() const override;
 	const SDL_Point& getDimension() const override;
+	int getMinimapPixelSize() override;
 	const int getDamage() const override;
 };
 

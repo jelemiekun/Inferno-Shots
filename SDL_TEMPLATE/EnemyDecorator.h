@@ -18,5 +18,7 @@ public:
     virtual const SDL_Point& getDimension() const override;
     virtual const int getDamage() const override;
     virtual void setDead() override;
+    virtual void decreaseHealth() override;
+    virtual int getMinimapPixelSize() override;
     virtual std::shared_ptr<Prototype> clone() const override;
 };

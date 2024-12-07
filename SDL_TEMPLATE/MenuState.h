@@ -1,42 +1,33 @@
 #pragma once
-class GameState {
+class MenuState {
 public:
-	virtual ~GameState() = default;
-
 	virtual void input() = 0;
 	virtual void update() = 0;
-	virtual void render() = 0;
+	virtual void render();
 };
 
-class GameMenu : public GameState {
+class MainMenu : public MenuState {
 public:
 	void input() override;
 	void update() override;
 	void render() override;
 };
 
-class GameTextInput : public GameState {
+class TextInputMenu : public MenuState {
 public:
 	void input() override;
 	void update() override;
 	void render() override;
 };
 
-class GamePlaying : public GameState {
+class PausedMenu : public MenuState {
 public:
 	void input() override;
 	void update() override;
 	void render() override;
 };
 
-class GamePaused : public GameState {
-public:
-	void input() override;
-	void update() override;
-	void render() override;
-};
-
-class GameOver : public GameState {
+class GameOverMenu : public MenuState {
 public:
 	void input() override;
 	void update() override;

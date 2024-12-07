@@ -20,6 +20,7 @@ Player::Player(int heartAmount, int maxSprintAmount,
     TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay)
     : ID(std::make_unique<int>(0)),
     textureType(std::make_unique<TextureType>(*textureType)),
+    maxHeartAmount(std::make_unique<int>(heartAmount)),
     heartAmount(std::make_unique<int>(heartAmount)),
     maxSprintAmount(std::make_unique<int>(maxSprintAmount)),
     sprintAmount(std::make_unique<int>(maxSprintAmount)),
@@ -36,6 +37,7 @@ Player::Player(int heartAmount, int maxSprintAmount,
 Player::Player(const Player& other)
     : ID(std::make_unique<int>(playerCounter++)),
     textureType(std::make_unique<TextureType>(*other.textureType)),
+    maxHeartAmount(std::make_unique<int>(*other.maxHeartAmount)),
     heartAmount(std::make_unique<int>(*other.heartAmount)),
     maxSprintAmount(std::make_unique<int>(*other.maxSprintAmount)),
     sprintAmount(std::make_unique<int>(*other.sprintAmount)),
@@ -173,6 +175,9 @@ void Player::updateMonitorPosition() {
 
 void Player::heal() {
     *heartAmount += HEALTH_ADDER;
+
+    if (*heartAmount > *maxHeartAmount)
+        *heartAmount = *maxHeartAmount;
 }
 
 void Player::checkHealth() {

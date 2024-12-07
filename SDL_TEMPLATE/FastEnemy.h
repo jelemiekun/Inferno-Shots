@@ -16,6 +16,7 @@ public:
             auto enemyType = std::dynamic_pointer_cast<EnemyType>(decoratedEnemy);
             if (enemyType) {
                 *enemyType->movementSpeed *= MOVEMENT_ENHANCE_SCALE;
+                ++*enemyType->healthCount;
                 enhanced = true;
             }
         }

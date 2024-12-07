@@ -44,6 +44,15 @@ void EnemyDecorator::setDead() {
     decoratedEnemy->setDead();
 }
 
+void EnemyDecorator::decreaseHealth() {
+    decoratedEnemy->decreaseHealth();
+}
+
+
+int EnemyDecorator::getMinimapPixelSize() {
+    return decoratedEnemy->getMinimapPixelSize();
+}
+
 std::shared_ptr<Prototype> EnemyDecorator::clone() const {
     return decoratedEnemy->clone();
 }

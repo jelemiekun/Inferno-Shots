@@ -5,6 +5,33 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "WaveManager.h"
+#include "Menu.h"
+#include "Minimap.h"
+#include "Background.h"
+
+void GameMenu::input() {
+    Menu::getInstance()->input();
+}
+
+void GameMenu::update() {
+    Menu::getInstance()->update();
+}
+
+void GameMenu::render() {
+    Menu::getInstance()->render();
+}
+
+void GameTextInput::input() {
+    Menu::getInstance()->input();
+}
+
+void GameTextInput::update() {
+    Menu::getInstance()->update();
+}
+
+void GameTextInput::render() {
+    Menu::getInstance()->render();
+}
 
 struct StateVector {
     float x;
@@ -122,10 +149,13 @@ void GamePlaying::update() {
             WaveManager::getInstance()->initWave();
         }
     }
+
+    Minimap::getInstance()->update();
 }
 
 
 void GamePlaying::render() {
+    Background::getInstance()->render();
     InvokerPlaying::getInstance()->renderPlayers();
 
     for (const auto& bullet : Bullet::bullets) {
@@ -133,30 +163,30 @@ void GamePlaying::render() {
     }
 
     WaveManager::getInstance()->render();
-
     InvokerPlaying::getInstance()->renderPlayerProfiles();
+    Minimap::getInstance()->render();
 }
 
 void GamePaused::input() {
-
+    Menu::getInstance()->input();
 }
 
 void GamePaused::update() {
-
+    Menu::getInstance()->update();
 }
 
 void GamePaused::render() {
-
+    Menu::getInstance()->render();
 }
 
 void GameOver::input() {
-
+    Menu::getInstance()->input();
 }
 
 void GameOver::update() {
-
+    Menu::getInstance()->update();
 }
 
 void GameOver::render() {
-
+    Menu::getInstance()->render();
 }

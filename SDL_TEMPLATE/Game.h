@@ -36,6 +36,7 @@ private:
 	void initFonts();
 	void setRunningToTrue();
 	void setRunningToFalse();
+	void initMenu();
 	void initBackground();
 	void initPlayerProfile();
 	void initPlayer();
@@ -46,6 +47,9 @@ private:
 
 public:
 	static Game* getInstance();
+
+public:
+	void setState(std::unique_ptr<GameState> state);
 
 	void init();
 	void input();

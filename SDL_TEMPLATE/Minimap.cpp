@@ -60,7 +60,6 @@ void Minimap::renderBorder(SDL_Renderer*& renderer) {
 void Minimap::update() {
 	constexpr static SDL_Point PLAYER_DIMENSION = { 4, 4 };
 	constexpr static SDL_Point BULLET_DIMENSION = { 2, 2 };
-	constexpr static SDL_Point NORMAL_ENEMY_DIMENSION = { 4, 4 }; // TODO: GET DIMENSION()
 
 	clearVectors();
 
@@ -85,24 +84,14 @@ void Minimap::update() {
 	}
 
 	for (const auto& enemy : WaveManager::getInstance()->getEnemies()) {
-		SDL_Rect enemyPos = { 0, 0, 0, 0 };
+		SDL_Rect enemyPos = { 
+			static_cast<int>((enemy->getPosition().x - (enemy->getMinimapPixelSize() / 2)) * scaleX),
+			static_cast<int>((enemy->getPosition().y - (enemy->getMinimapPixelSize() / 2)) * scaleY),
+			enemy->getMinimapPixelSize(),
+			enemy->getMinimapPixelSize()
+		};
 
-		if (dynamic_cast<EnemyType*>(enemy.get())) {
-			enemyPos = {
-				static_cast<int>((enemy->getPosition().x - (NORMAL_ENEMY_DIMENSION.x / 2)) * scaleX),
-				static_cast<int>((enemy->getPosition().y - (NORMAL_ENEMY_DIMENSION.y / 2)) * scaleY),
-				NORMAL_ENEMY_DIMENSION.x,
-				NORMAL_ENEMY_DIMENSION.y
-			};	
-		}
-		if (dynamic_cast<FastEnemy*>(enemy.get())) {
-			enemyPos = {
-				static_cast<int>((enemy->getPosition().x - (NORMAL_ENEMY_DIMENSION.x / 2)) * scaleX),
-				static_cast<int>((enemy->getPosition().y - (NORMAL_ENEMY_DIMENSION.y / 2)) * scaleY),
-				NORMAL_ENEMY_DIMENSION.x,
-				NORMAL_ENEMY_DIMENSION.y
-			};
-		}
+		
 
 
 		if (enemyPos.w != 0 && enemyPos.h != 0) enemies.push_back(enemyPos);
