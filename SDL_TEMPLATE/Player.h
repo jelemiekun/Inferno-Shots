@@ -11,6 +11,8 @@ class Command;
 class TextureType;
 class PlayerProfile;
 class Text;
+class Enemy;
+class Bullet;
 
 class Player : 
 	public Prototype, public std::enable_shared_from_this<Player> {
@@ -49,7 +51,7 @@ public:
 	std::unique_ptr<Text> textPlayerName;
 	std::unique_ptr<Text> textPlayerPosition;
 	std::unique_ptr<std::string> stringPlayerName;
-	std::unique_ptr<SDL_Rect> dstRectPlatform;
+	std::unique_ptr<SDL_Rect> dstRectMonitor;
 	
 	std::unique_ptr<bool> isMovingLeft;
 	std::unique_ptr<bool> isMovingUpLeft;
@@ -62,14 +64,28 @@ public:
 
 private:
 	void isCommandMove(Command* command);
-	void updateMove();
-	void updatePlatformPosition();
-	void checkHealth();
-	void checkCollisionWithEnemies();
 	void setDeadColor();
 	void firing();
+	void takeDamage(int damage);
+	void addScore(int score);
+	std::unique_ptr<Bullet> getBulletPrototype();
+	bool canFire() const;
+	SDL_Point getBulletPosition() const;
+	SDL_Rect getEnemyRect(Enemy& enemy);
+	SDL_Rect getPlayerRectPlatform();
 	SDL_Rect getDstRectTextPlayerName();
 	SDL_Rect getSrcRectDirectionFacing();
+
+	void checkSprint();
+	void checkFiring();
+	void updateCommandQueue();
+	void updateMove();
+	void updatePlatformPosition();
+	void updateMonitorPosition();
+	void checkCollisionWithEnemies();
+	void checkHealth();
+	void updateTextPlayerPosition();
+
 
 public:
 	std::queue<std::shared_ptr<Command>> commandQueue;

@@ -59,7 +59,7 @@ Player::Player(const Player& other)
     textPlayerName(std::make_unique<Text>()),
     textPlayerPosition(std::make_unique<Text>()),
     stringPlayerName(std::make_unique<std::string>("Player")), //TODO
-    dstRectPlatform(std::make_unique<SDL_Rect>()),
+    dstRectMonitor(std::make_unique<SDL_Rect>()),
     isMovingLeft(std::make_unique<bool>(false)),
     isMovingUpLeft(std::make_unique<bool>(false)),
     isMovingUp(std::make_unique<bool>(false)),
@@ -167,33 +167,63 @@ void Player::updatePlatformPosition() {
     platformPosition->y = position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y;
 }
 
+void Player::updateMonitorPosition() {
+    *dstRectMonitor = { position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y };
+}
+
 void Player::checkHealth() {
-    if (*heartAmount < 1) {
-        *alive = false;
+    if (*alive) {
+        if (*heartAmount < 1) {
+            *alive = false;
+        }
+        if (!(*alive)) setDeadColor();
     }
+    
 }
 
 void Player::checkCollisionWithEnemies() {
     for (auto& enemy : WaveManager::getInstance()->getEnemies()) {
-        SDL_Rect enemyRect = {
-            enemy->getPosition().x,
-            enemy->getPosition().y,
-            enemy->getDimension().x,
-            enemy->getDimension().y
-        };
-        SDL_Rect playerRect = {
-            platformPosition->x - (Player::PLAYER_DIMENSION.x / 2),
-            platformPosition->y - (Player::PLAYER_DIMENSION.y / 2),
-            Player::PLAYER_DIMENSION.x,
-            Player::PLAYER_DIMENSION.y
-        };
+        SDL_Rect enemyRect = getEnemyRect(*enemy);
+        SDL_Rect playerRect = getPlayerRectPlatform();
 
         if (SDL_HasIntersection(&enemyRect, &playerRect)) {
-            *heartAmount -= enemy->getDamage();
-            *score += enemy->getEnemyScore();
+            takeDamage(enemy->getDamage());
+            addScore(enemy->getEnemyScore());
             enemy->setDead();
         }
     }
+}
+
+void Player::checkFiring() {
+    if (*isFiring) firing();
+}
+
+void Player::checkSprint() {
+    if (*sprintAmount < *maxSprintAmount) {
+        *sprintAmount += static_cast<int>(0.9 * 2);
+
+        if (*sprintAmount > *maxSprintAmount)
+            *sprintAmount = *maxSprintAmount;
+    }
+}
+
+void Player::updateCommandQueue() {
+    *isMoving = false;
+    while (!commandQueue.empty()) {
+        auto command = std::move(commandQueue.front());
+        commandQueue.pop();
+        command->execute(shared_from_this());
+
+        isCommandMove(command.get());
+    }
+}
+
+void Player::updateTextPlayerPosition() {
+    textPlayerPosition->setText(
+        " x:" + std::to_string(platformPosition->x - 34) +
+        "  y:" + std::to_string(platformPosition->y - 34) + " "
+    );
+    textPlayerPosition->loadText();
 }
 
 void Player::setDeadColor() {
@@ -224,33 +254,76 @@ void Player::setDeadColor() {
     SDL_DestroyTexture(tempTexture);
 }
 
+std::unique_ptr<Bullet> Player::getBulletPrototype() {
+    static std::shared_ptr<Bullet> sharedBullet = std::dynamic_pointer_cast<Bullet>(
+        PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::BULLET)
+    );
+    static std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
+
+    std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
+    bullet->initPlayer(shared_from_this());
+    bullet->initDirections(*directionX, *directionY);
+    bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
+    bullet->initTexture(bulletTexture);
+
+    return bullet;
+}
+
+bool Player::canFire() const {
+    static Uint32 startTime = SDL_GetTicks();
+
+    if (SDL_GetTicks() - startTime > *firingCooldown) {
+        startTime = SDL_GetTicks();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+SDL_Point Player::getBulletPosition() const {
+    return {
+            position->x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
+            position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
+    };
+}
+
 void Player::firing() {
     static std::shared_ptr<Bullet> sharedBullet = std::dynamic_pointer_cast<Bullet>(
         PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::BULLET)
     );
 
-    static Uint32 startTime = SDL_GetTicks();
-
-    if (SDL_GetTicks() - startTime > *firingCooldown) {
-        std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
-
-        SDL_Point fixedPos = {
-            position->x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
-            position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
-        };
-
-        bullet->initPlayer(shared_from_this());
-        bullet->initPos(fixedPos);
-        bullet->initDirections(*directionX, *directionY);
-        bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
-
-        static std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
-        bullet->initTexture(bulletTexture);
-
+    if (canFire()) {
+        auto bullet = getBulletPrototype();
+        bullet->initPos(getBulletPosition());
         Bullet::bullets.push_back(std::move(bullet));
 
-        startTime = SDL_GetTicks();
     }
+}
+
+void Player::takeDamage(int damage) {
+    *heartAmount -= damage;
+}
+
+void Player::addScore(int score) {
+    *this->score += score;
+}
+
+SDL_Rect Player::getEnemyRect(Enemy& enemy) {
+    return {
+        enemy.getPosition().x,
+        enemy.getPosition().y,
+        enemy.getDimension().x,
+        enemy.getDimension().y
+    };
+}
+
+SDL_Rect Player::getPlayerRectPlatform() {
+    return {
+        platformPosition->x - (Player::PLAYER_DIMENSION.x / 2),
+        platformPosition->y - (Player::PLAYER_DIMENSION.y / 2),
+        Player::PLAYER_DIMENSION.x,
+        Player::PLAYER_DIMENSION.y
+    };
 }
 
 SDL_Rect Player::getDstRectTextPlayerName() {
@@ -291,53 +364,23 @@ void Player::initProfile() {
 }
 
 void Player::update() {
-    if (*alive) {
-        checkHealth();
-
-
-        if (!(*alive)) setDeadColor();
-
-        checkCollisionWithEnemies();
-
-        if (*isFiring) firing();
-
-        *isMoving = false;
-
-        while (!commandQueue.empty()) {
-            auto command = std::move(commandQueue.front());
-            commandQueue.pop();
-            command->execute(shared_from_this());
-
-            isCommandMove(command.get());
-        }
-
-        updateMove();
-        updatePlatformPosition();
-
-        if (*sprintAmount < *maxSprintAmount) {
-            *sprintAmount += static_cast<int>(0.9 * 2);
-
-            if (*sprintAmount > *maxSprintAmount)
-                *sprintAmount = *maxSprintAmount;
-        }
-
-        textPlayerPosition->setText(
-            " x:" + std::to_string(platformPosition->x - 34) + 
-            "  y:" + std::to_string(platformPosition->y - 34) + " "
-        );
-        textPlayerPosition->loadText();
-    }
-
-    *dstRectPlatform = {position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y};
-
+    checkSprint();
+    checkFiring();
+    updateCommandQueue();
+    updateMove();
+    updatePlatformPosition();
+    updateMonitorPosition();
+    checkCollisionWithEnemies();
+    checkHealth();
+    updateTextPlayerPosition();
     playerProfile->update(*heartAmount, *sprintAmount);
 }
 
 void Player::render() {
     SDL_Rect srcRect = getSrcRectDirectionFacing();
-
-    if (*alive) SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, dstRectPlatform.get());   
-    else SDL_RenderCopy(Game::getInstance()->getRenderer(), *deadColorTexture.get(), &srcRect, dstRectPlatform.get());
+    
+    if (*alive) SDL_RenderCopy(Game::getInstance()->getRenderer(), textureType->texture, &srcRect, dstRectMonitor.get());
+    else SDL_RenderCopy(Game::getInstance()->getRenderer(), *deadColorTexture.get(), &srcRect, dstRectMonitor.get());
 }
 
 void Player::renderPlayerProfiles() const {

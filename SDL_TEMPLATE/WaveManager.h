@@ -31,6 +31,7 @@ private:
     static std::unique_ptr<Bar> countdownBar;
     static std::unique_ptr<Text> countdownText;
     std::vector<std::shared_ptr<Enemy>> enemies;
+    bool countdownStarted = false;
 
 public:
     static SDL_Rect getTextDstRect();
