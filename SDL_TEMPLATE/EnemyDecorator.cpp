@@ -10,6 +10,10 @@ void EnemyDecorator::inflictDamage(Player& player) {
     decoratedEnemy->inflictDamage(player);
 }
 
+int EnemyDecorator::getEnemyScore() {
+    return decoratedEnemy->getEnemyScore();
+}
+
 void EnemyDecorator::undoMove() {
     decoratedEnemy->undoMove();
 }

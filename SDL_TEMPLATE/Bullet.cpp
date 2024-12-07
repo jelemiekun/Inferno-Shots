@@ -6,6 +6,7 @@
 #include "TextureType.h"
 #include "WaveManager.h"
 #include "NormalEnemy.h"
+#include "Player.h"
 
 std::vector<std::unique_ptr<Bullet>> Bullet::bullets;
 
@@ -15,6 +16,10 @@ Bullet::Bullet(const Bullet& other)
 	: remove(std::make_unique<bool>(*other.remove)) {}
 
 Bullet::~Bullet() {}
+
+void Bullet::initPlayer(std::shared_ptr<Player> player) {
+	this->player = player;
+}
 
 void Bullet::initPos(SDL_Point pos) {
 	position = std::make_unique<SDL_Point>(pos);
@@ -54,6 +59,7 @@ void Bullet::checkCollision() {
 		};
 
 		if (SDL_HasIntersection(&bulletRect, &enemyRect)) {
+			*player->score += enemy->getEnemyScore();
 			*normalEnemyPtr->dead = true;
 			*remove = true;
 		}

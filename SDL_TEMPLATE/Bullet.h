@@ -5,6 +5,7 @@
 #include "Prototype.h"
 
 class TextureType;
+class Player;
 
 class Bullet : public Prototype {
 public:
@@ -14,6 +15,7 @@ private:
 	std::unique_ptr<float> directionX;
 	std::unique_ptr<float> directionY;
 	std::unique_ptr<float> movementSpeed;
+	std::shared_ptr<Player> player;
 
 public:
 	std::unique_ptr<bool> remove;
@@ -30,6 +32,7 @@ public:
 	Bullet(const Bullet& other);
 	~Bullet();
 
+	void initPlayer(std::shared_ptr<Player> player);
 	void initPos(SDL_Point initPos);
 	void initDirections(float x, float y);
 	void initMovementSpeed(float movementSpeed);

@@ -29,6 +29,7 @@ public:
 
 	void initPos() override;
 	void inflictDamage(Player& player);
+	int getEnemyScore() override;
 	void undoMove() override;
 	void checkCollision() override;
 	void update() override;

@@ -14,16 +14,16 @@ void InvokerPlaying::addPlayer(std::shared_ptr<Player> player) {
 }
 
 void InvokerPlaying::assignKeyToCommand (
-	SDL_Keycode keyCode,
+	Command_Actions commandAction,
 	std::shared_ptr<Command> command,
 	std::shared_ptr<Player> player
 	) {
-	keyBindings[keyCode] = std::make_pair(command, player);
+	commandBindings[commandAction] = std::make_pair(command, player);
 }
 
-void InvokerPlaying::pressButton(SDL_Keycode keyCode) {
-	auto it = keyBindings.find(keyCode);
-	if (it != keyBindings.end()) {
+void InvokerPlaying::pressButton(Command_Actions commandAction) {
+	auto it = commandBindings.find(commandAction);
+	if (it != commandBindings.end()) {
 		auto& pair = it->second;
 		auto command = pair.first;
 		auto player = pair.second;

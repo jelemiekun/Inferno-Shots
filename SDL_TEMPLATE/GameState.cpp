@@ -12,32 +12,43 @@ struct StateVector {
 };
 
 void GamePlaying::input() {
-    static SDL_Keycode keyCode = SDLK_KP_000;
-    static SDL_Point mousePos = { 0, 0 };
-
     switch (Game::getInstance()->getEvent().type) {
     case SDL_KEYDOWN:
-        keyCode = Game::getInstance()->getEvent().key.keysym.sym;
-        if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
-        break;
-    case SDL_MOUSEBUTTONDOWN:
-        if (Game::getInstance()->getEvent().button.button == SDL_BUTTON_LEFT) {
-            keyCode = SDLK_x; InvokerPlaying::getInstance()->pressButton(keyCode);
+        switch (Game::getInstance()->getEvent().key.keysym.sym) {
+        case SDLK_LSHIFT: InvokerPlaying::getInstance()->pressButton(Command_Actions::sprint); break;
+        case SDLK_a: InvokerPlaying::getInstance()->pressButton(Command_Actions::moveLeft); break;
+        case SDLK_w: InvokerPlaying::getInstance()->pressButton(Command_Actions::moveUp); break;
+        case SDLK_d: InvokerPlaying::getInstance()->pressButton(Command_Actions::moveRight); break;
+        case SDLK_s: InvokerPlaying::getInstance()->pressButton(Command_Actions::moveDown); break;
+        default: break;
         }
         break;
     case SDL_KEYUP:
         switch (Game::getInstance()->getEvent().key.keysym.sym) {
-        case SDLK_LSHIFT: keyCode = SDLK_CAPSLOCK; InvokerPlaying::getInstance()->pressButton(keyCode);
-        case SDLK_a: keyCode = SDLK_j; InvokerPlaying::getInstance()->pressButton(keyCode);
-        case SDLK_w: keyCode = SDLK_i; InvokerPlaying::getInstance()->pressButton(keyCode);
-        case SDLK_d: keyCode = SDLK_l; InvokerPlaying::getInstance()->pressButton(keyCode);
-        case SDLK_s: keyCode = SDLK_k; InvokerPlaying::getInstance()->pressButton(keyCode);
+        case SDLK_LSHIFT: InvokerPlaying::getInstance()->pressButton(Command_Actions::unsprint); break;
+        case SDLK_a: InvokerPlaying::getInstance()->pressButton(Command_Actions::keyUpMoveLeft); break;
+        case SDLK_w: InvokerPlaying::getInstance()->pressButton(Command_Actions::keyUpMoveUp); break;
+        case SDLK_d: InvokerPlaying::getInstance()->pressButton(Command_Actions::keyUpMoveRight); break;
+        case SDLK_s: InvokerPlaying::getInstance()->pressButton(Command_Actions::keyUpMoveDown); break;
         default: break;
+        }
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (Game::getInstance()->getEvent().button.button == SDL_BUTTON_LEFT) {
+            InvokerPlaying::getInstance()->pressButton(Command_Actions::fire);
+        }
+        break;
+    case SDL_MOUSEBUTTONUP:
+        if (Game::getInstance()->getEvent().button.button == SDL_BUTTON_LEFT) {
+            InvokerPlaying::getInstance()->pressButton(Command_Actions::unfire);
         }
         break;
     }
 
     {
+        static Command_Actions commandAction = Command_Actions::none;
+        static SDL_Point mousePos = { 0, 0 };
+
         SDL_GetMouseState(&mousePos.x, &mousePos.y);
 
         for (auto& player : InvokerPlaying::getInstance()->players) {
@@ -53,26 +64,28 @@ void GamePlaying::input() {
                 normalizedVector = { vector.x / magnitude, vector.y / magnitude };
 
                 if (normalizedVector.x < -0.5f && normalizedVector.y > 0.5f) {
-                    keyCode = SDLK_v;
+                    commandAction = Command_Actions::faceDownLeft;
                 } else if (normalizedVector.x > 0.5f && normalizedVector.y > 0.5f) {
-                    keyCode = SDLK_n;
+                    commandAction = Command_Actions::faceDownRight;
                 } else if (normalizedVector.x < -0.5f && normalizedVector.y < -0.5f) {
-                    keyCode = SDLK_r;
+                    commandAction = Command_Actions::faceUpLeft;
                 } else if (normalizedVector.x > 0.5f && normalizedVector.y < -0.5f) {
-                    keyCode = SDLK_y;
-                } else if (normalizedVector.x > 0.0f && std::abs(normalizedVector.y) <= 0.5f) {
-                    keyCode = SDLK_h;
-                } else if (normalizedVector.x < 0.0f && std::abs(normalizedVector.y) <= 0.5f) {
-                    keyCode = SDLK_f;
-                } else if (normalizedVector.y > 0.0f && std::abs(normalizedVector.x) <= 0.5f) {
-                    keyCode = SDLK_b;
-                } else if (normalizedVector.y < 0.0f && std::abs(normalizedVector.x) <= 0.5f) { keyCode = SDLK_t; }
+                    commandAction = Command_Actions::faceUpRight;
+                } else if (normalizedVector.x > 0.5f && std::abs(normalizedVector.y) <= 0.5f) {
+                    commandAction = Command_Actions::faceRight;
+                } else if (normalizedVector.x < -0.5f && std::abs(normalizedVector.y) <= 0.5f) {
+                    commandAction = Command_Actions::faceLeft;
+                } else if (normalizedVector.y > 0.5f && std::abs(normalizedVector.x) <= 0.5f) {
+                    commandAction = Command_Actions::faceDown;
+                } else if (normalizedVector.y < -0.5f && std::abs(normalizedVector.x) <= 0.5f) {
+                    commandAction = Command_Actions::faceUp;
+                }
 
                 *player.second->directionX = normalizedVector.x;
                 *player.second->directionY = normalizedVector.y;
             }
         }
-        if (keyCode != SDLK_KP_000) InvokerPlaying::getInstance()->pressButton(keyCode);
+        if (commandAction != Command_Actions::none) InvokerPlaying::getInstance()->pressButton(commandAction);
     }
 }
 

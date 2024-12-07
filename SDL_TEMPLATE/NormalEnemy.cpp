@@ -87,6 +87,11 @@ void NormalEnemy::inflictDamage(Player& player) {
 	*player.heartAmount -= NORMAL_ENEMY_DAMAGE;
 }
 
+int NormalEnemy::getEnemyScore() {
+	static int NORMAL_ENEMY_SCORE = 3;
+	return NORMAL_ENEMY_SCORE;
+}
+
 void NormalEnemy::undoMove() {
 	position->x -= static_cast<int>(*directionX * *movementSpeed);
 	position->y -= static_cast<int>(*directionY * *movementSpeed);
@@ -116,7 +121,7 @@ void NormalEnemy::checkCollision() {
 		NormalEnemy* normalEnemyPtr = nullptr;
 
 		if (normalEnemyPtr = dynamic_cast<NormalEnemy*>(enemy.get())) {
-			for (const auto& player : InvokerPlaying::getInstance()->players) {
+			for (auto& player : InvokerPlaying::getInstance()->players) {
 				SDL_Point enemyPos = *normalEnemyPtr->position;
 				SDL_Point playerPos = *player.second->position;
 				SDL_Rect enemyRect = {
@@ -137,7 +142,7 @@ void NormalEnemy::checkCollision() {
 						inflictDamage(*player.second);
 						*normalEnemyPtr->inflicted = true;
 					}
-
+					*player.second->score += normalEnemyPtr->getEnemyScore();
 					*normalEnemyPtr->dead = true;
 				}
 			}

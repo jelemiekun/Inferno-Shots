@@ -9,6 +9,7 @@ public:
     EnemyDecorator(std::shared_ptr<Enemy> enemy);
     virtual void initPos() override;
     virtual void inflictDamage(Player& player);
+    virtual int getEnemyScore() override;
     virtual void undoMove() override;
     virtual void checkCollision() override;
     virtual void update() override;

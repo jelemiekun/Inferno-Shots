@@ -1,11 +1,5 @@
 #include "Command.h"
 #include "Player.h"
-#include "TextureType.h"
-#include "Background.h"
-#include "AppInfo.h"
-#include "GameEnums.h"
-#include "Bullet.h"
-#include "PrototypeRegistry.h"
 
 // Move Commands
 
@@ -99,23 +93,9 @@ void RemoveSprintCommand::execute(std::shared_ptr<Player> player) {
 // Fire
 
 void FireCommand::execute(std::shared_ptr<Player> player) {
-    std::shared_ptr<Bullet> sharedBullet = std::dynamic_pointer_cast<Bullet>(
-        PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::BULLET)
-    );
+    *player->isFiring = true;
+}
 
-    std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
-
-    SDL_Point fixedPos = {
-        player->position->x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
-        player->position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
-    };
-
-    bullet->initPos(fixedPos);
-    bullet->initDirections( *player->directionX, *player->directionY);
-    bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
-
-    static std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
-    bullet->initTexture(bulletTexture);
-
-    Bullet::bullets.push_back(std::move(bullet));
+void UnfireCommand::execute(std::shared_ptr<Player> player) {
+    *player->isFiring = false;
 }

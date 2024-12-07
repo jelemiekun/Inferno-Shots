@@ -85,7 +85,7 @@ void Game::initPlayer() {
 	// Initialize main prototype of Player
 	SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
 	TextureType* playerTexture = new TextureType(Prototype_Type::PLAYER);
-	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(100, 200, playerTexture, position, 4.0f, 30.0f);
+	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(100, 300, playerTexture, position, 4.0f, 30.0f);
 
 	// Add main prototype player to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
@@ -159,30 +159,32 @@ void Game::initPlayer() {
 	auto removeSprintCommand = std::make_shared<RemoveSprintCommand>();
 
 	auto fireCommand = std::make_shared<FireCommand>();
+	auto unfireCommand = std::make_shared<UnfireCommand>();
 
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_a, moveLeftCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_w, moveUpCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_d, moveRightCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_s, moveDownCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::moveLeft, moveLeftCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::moveUp, moveUpCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::moveRight, moveRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::moveDown, moveDownCommand, player1);
 
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_f, faceLeftCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_r, faceUpLeftCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_t, faceUpCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_y, faceUpRightCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_h, faceRightCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_n, faceDownRightCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_b, faceDownCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_v, faceDownLeftCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::faceLeft, faceLeftCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::faceUpLeft, faceUpLeftCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::faceUp, faceUpCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::faceUpRight, faceUpRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::faceRight, faceRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::faceDownRight, faceDownRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::faceDown, faceDownCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::faceDownLeft, faceDownLeftCommand, player1);
 
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_j, keyUpMoveLeftCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_i, keyUpMoveUpCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_l, keyUpMoveRightCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_k, keyUpMoveDownCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::keyUpMoveLeft, keyUpMoveLeftCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::keyUpMoveUp, keyUpMoveUpCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::keyUpMoveRight, keyUpMoveRightCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::keyUpMoveDown, keyUpMoveDownCommand, player1);
 
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_LSHIFT, sprintCommand, player1);
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_CAPSLOCK, removeSprintCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::sprint, sprintCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::unsprint, removeSprintCommand, player1);
 	
-	InvokerPlaying::getInstance()->assignKeyToCommand(SDLK_x, fireCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::fire, fireCommand, player1);
+	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::unfire, unfireCommand, player1);
 }
 
 void Game::initBullet() {

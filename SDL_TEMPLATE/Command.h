@@ -118,3 +118,8 @@ class FireCommand : public Command {
 public:
     void execute(std::shared_ptr<Player> player) override;
 };
+
+class UnfireCommand : public Command {
+public:
+    void execute(std::shared_ptr<Player> player) override;
+};

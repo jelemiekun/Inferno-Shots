@@ -6,6 +6,30 @@
 
 class Command;
 
+enum class Command_Actions {
+	moveLeft,
+	moveUp,
+	moveRight,
+	moveDown,
+	keyUpMoveLeft,
+	keyUpMoveUp,
+	keyUpMoveRight,
+	keyUpMoveDown,
+	faceLeft,
+	faceUpLeft,
+	faceUp,
+	faceUpRight,
+	faceRight,
+	faceDownRight,
+	faceDown,
+	faceDownLeft,
+	sprint,
+	unsprint,
+	fire,
+	unfire,
+	none
+};
+
 class InvokerPlaying{
 private:
 	InvokerPlaying();
@@ -20,9 +44,9 @@ public:
 
 private:
 	std::unordered_map<
-		SDL_Keycode,
+		Command_Actions,
 		std::pair<std::shared_ptr<Command>, std::shared_ptr<Player>>> 
-		keyBindings;
+		commandBindings;
 
 public:
 	std::unordered_map<int, std::shared_ptr<Player>> players;
@@ -32,12 +56,12 @@ public:
 	void addPlayer(std::shared_ptr<Player> player);
 
 	void assignKeyToCommand(
-		SDL_Keycode keyCode,
+		Command_Actions commandAction,
 		std::shared_ptr<Command> command,
 		std::shared_ptr<Player> player
 	);
 
-	void pressButton(SDL_Keycode keyCode);
+	void pressButton(Command_Actions commandAction);
 	void updatePlayers();
 	void renderPlayers();
 	void renderPlayerProfiles();

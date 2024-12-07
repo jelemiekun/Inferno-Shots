@@ -7,6 +7,8 @@
 #include "GameEnums.h"
 #include "PlayerProfile.h"
 #include "Text.h"
+#include "Bullet.h"
+#include "PrototypeRegistry.h"
 #include <string>
 
 int Player::playerCounter = 1;
@@ -41,6 +43,8 @@ Player::Player(const Player& other)
     inCooldown(std::make_unique<bool>(false)),
     isSprinting(std::make_unique<bool>(false)),
     isMoving(std::make_unique<bool>(false)),
+    isFiring(std::make_unique<bool>(false)),
+    score(std::make_unique<int>(0)),
     frameCounter(std::make_unique<int>(0)),
     directionX(std::make_unique<float>()),
     directionY(std::make_unique<float>()),
@@ -73,14 +77,15 @@ void Player::isCommandMove(Command* command) {
 
 void Player::updateMove() {
     float newMovementSpeed = *movementSpeed;
-    if (*isSprinting) {
-        if (*sprintAmount < 0) {
-            *sprintAmount = 0;
-        } else {
+    if (*isSprinting && *sprintAmount > 0) {
+        if (*sprintAmount > 6) {
             newMovementSpeed += Player::SPEED_AMOUNT;
             *sprintAmount -= 6;
+        } else {
+            *sprintAmount = 0;
         }
     }
+
 
     if (*isMovingLeft) {
         if (Background::getInstance()->isRightEdge()) {
@@ -193,6 +198,29 @@ void Player::setDeadColor() {
     SDL_DestroyTexture(tempTexture);
 }
 
+void Player::firing() {
+    static std::shared_ptr<Bullet> sharedBullet = std::dynamic_pointer_cast<Bullet>(
+        PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::BULLET)
+    );
+
+    std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(*sharedBullet);
+
+    SDL_Point fixedPos = {
+        position->x + (Player::PLAYER_DIMENSION.x / 2) + Background::getInstance()->srcRect->x,
+        position->y + (Player::PLAYER_DIMENSION.y / 2) + Background::getInstance()->srcRect->y
+    };
+
+    bullet->initPlayer(shared_from_this());
+    bullet->initPos(fixedPos);
+    bullet->initDirections(*directionX, *directionY);
+    bullet->initMovementSpeed(Player::BULLET_SPEED_SCALAR);
+
+    static std::shared_ptr<TextureType> bulletTexture = std::make_shared<TextureType>(Prototype_Type::BULLET);
+    bullet->initTexture(bulletTexture);
+
+    Bullet::bullets.push_back(std::move(bullet));
+}
+
 SDL_Rect Player::getDstRectTextPlayerName() {
     SDL_Rect dstRect = { 0, 15, 110, 35 }; // 105
     dstRect.x = 105 * *ID + ((dstRect.w + 35) * (*ID - 1));
@@ -236,6 +264,8 @@ void Player::update() {
 
         if (!(*alive)) setDeadColor();
 
+        if (*isFiring) firing();
+
         *isMoving = false;
 
         while (!commandQueue.empty()) {
@@ -249,15 +279,12 @@ void Player::update() {
         updateMove();
         updatePlatformPosition();
 
-
         if (*sprintAmount < *maxSprintAmount) {
-            *sprintAmount += 3;
+            *sprintAmount += static_cast<int>(0.9 * 2);
 
             if (*sprintAmount > *maxSprintAmount)
                 *sprintAmount = *maxSprintAmount;
         }
-
-
 
         textPlayerPosition->setText(
             " x:" + std::to_string(platformPosition->x - 34) + 
@@ -265,6 +292,8 @@ void Player::update() {
         );
         textPlayerPosition->loadText();
     }
+
+    std::cout << *score << '\n';
 
     *dstRectPlatform = {position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y};
 

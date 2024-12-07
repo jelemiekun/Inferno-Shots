@@ -8,6 +8,7 @@ class Enemy : public Prototype {
 public:
     virtual ~Enemy() = default;
     virtual void inflictDamage(Player& player) = 0;
+    virtual int getEnemyScore() = 0;
     virtual void undoMove() = 0;
     virtual void checkCollision() = 0;
     virtual void initPos() = 0;
