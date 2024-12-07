@@ -88,28 +88,81 @@ int WaveManager::getRandomNumber(const int& max) {
 
 void WaveManager::initWave() {
     int enemyCount = getEnemyCountToinit();
-    int normalEnemyCount = enemyCount;
 
-    if (*waveCount > 3) {
+    // Normal Enemies Fast
+    if (*waveCount > 2) {
         int fastEnemyCount = getRandomNumber(enemyCount);
-        normalEnemyCount -= fastEnemyCount;
 
         for (int enemyIndex = 0; enemyIndex < fastEnemyCount; enemyIndex++) {
-            std::shared_ptr<FastEnemy> fastEnemy = std::dynamic_pointer_cast<FastEnemy>(
+            std::shared_ptr<FastEnemy> fastNormalEnemy = std::dynamic_pointer_cast<FastEnemy>(
                 PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::NORMAL_ENEMY_FAST)
             );
 
-            fastEnemy->initPos();
-            enemies.push_back(fastEnemy);
+            fastNormalEnemy->initPos();
+            enemies.push_back(fastNormalEnemy);
         }
     }
 
-    for (int enemyIndex = 0; enemyIndex < normalEnemyCount; enemyIndex++) {
-        std::shared_ptr<EnemyType> enemy = std::dynamic_pointer_cast<EnemyType>(
+    // Medium Enemies
+    if (*waveCount > 6) {
+        int mediumEnemyCount = getRandomNumber(enemyCount / 2);
+
+        for (int enemyIndex = 0; enemyIndex < mediumEnemyCount; enemyIndex++) {
+            std::shared_ptr<EnemyType> mediumEnemy = std::dynamic_pointer_cast<EnemyType>(
+                PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::MEDIUM_ENEMY)
+            );
+
+            mediumEnemy->initPos();
+            enemies.push_back(mediumEnemy);
+        }
+
+        // Fast Medium Enemies
+        if (*waveCount > 9) {
+            int fastMediumEnemyCount = getRandomNumber(mediumEnemyCount / 2);
+
+            for (int enemyIndex = 0; enemyIndex < fastMediumEnemyCount; enemyIndex++) {
+                std::shared_ptr<FastEnemy> fastMediumEnemy = std::dynamic_pointer_cast<FastEnemy>(
+                    PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::MEDIUM_ENEMY_FAST)
+                );
+
+                fastMediumEnemy->initPos();
+                enemies.push_back(fastMediumEnemy);
+            }
+        }
+    }
+
+    // Large Enemies
+    if (*waveCount % 5 == 0) {
+        int largeEnemyCount = 1;
+
+        std::shared_ptr<EnemyType> largeEnemy = std::dynamic_pointer_cast<EnemyType>(
+            PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::LARGE_ENEMY)
+        );
+
+        largeEnemy->initPos();
+        enemies.push_back(largeEnemy);
+        // Fast Large Enemies
+        if (*waveCount > 14) {
+            int fastLargeEnemyCount = getRandomNumber(enemyCount / 10);
+
+            for (int enemyIndex = 0; enemyIndex < fastLargeEnemyCount; enemyIndex++) {
+                std::shared_ptr<FastEnemy> fastLargeEnemy = std::dynamic_pointer_cast<FastEnemy>(
+                    PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::LARGE_ENEMY_FAST)
+                );
+
+                fastLargeEnemy->initPos();
+                enemies.push_back(fastLargeEnemy);
+            }
+        }
+    }
+
+    // Normal Enemies
+    for (int enemyIndex = 0; enemyIndex < enemyCount; enemyIndex++) {
+        std::shared_ptr<EnemyType> normalEnemy = std::dynamic_pointer_cast<EnemyType>(
             PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::NORMAL_ENEMY)
         );
-        enemy->initPos();
-        enemies.push_back(enemy);
+        normalEnemy->initPos();
+        enemies.push_back(normalEnemy);
     }
     
 }

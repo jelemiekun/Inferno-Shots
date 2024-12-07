@@ -9,8 +9,6 @@
 #include <cmath>
 #include <random>
 
-// TODO: normal enemy 30,30 3 7 3
-
 EnemyType::EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, float speed, int damage, int score) :
 	textureType(type),
 	dimension(std::make_unique<SDL_Point>(dimension)),

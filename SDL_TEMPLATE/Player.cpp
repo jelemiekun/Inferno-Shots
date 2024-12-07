@@ -171,14 +171,16 @@ void Player::updateMonitorPosition() {
     *dstRectMonitor = { position->x, position->y, Player::PLAYER_DIMENSION.x, Player::PLAYER_DIMENSION.y };
 }
 
+void Player::heal() {
+    *heartAmount += HEALTH_ADDER;
+}
+
 void Player::checkHealth() {
-    if (*alive) {
-        if (*heartAmount < 1) {
-            *alive = false;
-        }
-        if (!(*alive)) setDeadColor();
+    if (*alive && *heartAmount < 1) {
+        *alive = false;
+    } else {
+        setDeadColor();
     }
-    
 }
 
 void Player::checkCollisionWithEnemies() {
@@ -270,7 +272,7 @@ std::unique_ptr<Bullet> Player::getBulletPrototype() {
 }
 
 bool Player::canFire() const {
-    static Uint32 startTime = SDL_GetTicks();
+    static Uint32 startTime = SDL_GetTicks() + 1100;
 
     if (SDL_GetTicks() - startTime > *firingCooldown) {
         startTime = SDL_GetTicks();
@@ -349,6 +351,17 @@ SDL_Rect Player::getSrcRectDirectionFacing() {
     return srcRect;
 }
 
+bool Player::canHeal() const {
+    static Uint32 startTime = SDL_GetTicks() + 1100;
+
+    if (SDL_GetTicks() - startTime > HEALTH_ADDER_COOLDOWN) {
+        startTime = SDL_GetTicks();
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void Player::initProfile() {
     playerProfile->init(*ID, *heartAmount, *maxSprintAmount);
 
@@ -366,11 +379,12 @@ void Player::initProfile() {
 void Player::update() {
     checkSprint();
     checkFiring();
-    updateCommandQueue();
+    if (*alive) updateCommandQueue();
     updateMove();
     updatePlatformPosition();
     updateMonitorPosition();
     checkCollisionWithEnemies();
+    if (canHeal()) heal();
     checkHealth();
     updateTextPlayerPosition();
     playerProfile->update(*heartAmount, *sprintAmount);

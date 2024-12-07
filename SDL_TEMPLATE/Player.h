@@ -18,8 +18,8 @@ class Player :
 	public Prototype, public std::enable_shared_from_this<Player> {
 private:
 	static int playerCounter;
-	constexpr static int UNIQUE_FRAME_COUNT = 4;
-	constexpr static int FRAME_DURATION = 50;
+	constexpr static int HEALTH_ADDER_COOLDOWN = 700;
+	constexpr static int HEALTH_ADDER = 1;
 public:
 	constexpr static Dimension PLAYER_DIMENSION = { 45, 45 };
 	constexpr static int SPEED_AMOUNT = 3;
@@ -75,6 +75,7 @@ private:
 	SDL_Rect getPlayerRectPlatform();
 	SDL_Rect getDstRectTextPlayerName();
 	SDL_Rect getSrcRectDirectionFacing();
+	void heal();
 
 	void checkSprint();
 	void checkFiring();
@@ -83,6 +84,7 @@ private:
 	void updatePlatformPosition();
 	void updateMonitorPosition();
 	void checkCollisionWithEnemies();
+	bool canHeal() const;
 	void checkHealth();
 	void updateTextPlayerPosition();
 
