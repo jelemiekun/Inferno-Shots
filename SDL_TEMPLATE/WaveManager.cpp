@@ -132,7 +132,7 @@ void WaveManager::initWave() {
     }
 
     // Large Enemies
-    if (*waveCount % 5 == 0) {
+    if (*waveCount % 5 == 0 && *waveCount > 9) {
         int largeEnemyCount = 1;
 
         std::shared_ptr<EnemyType> largeEnemy = std::dynamic_pointer_cast<EnemyType>(

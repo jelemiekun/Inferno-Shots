@@ -3,7 +3,7 @@ class MenuState {
 public:
 	virtual void input() = 0;
 	virtual void update() = 0;
-	virtual void render();
+	virtual void render() = 0;
 };
 
 class MainMenu : public MenuState {

@@ -18,6 +18,7 @@
 #include "Text.h"
 #include "FastEnemy.h"
 #include "Menu.h"
+#include "Selector.h"
 
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GameMenu>()),
 				running(false) {}
@@ -77,6 +78,10 @@ void Game::setRunningToFalse() {
 
 void Game::initMenu() {
 	Menu::getInstance()->initMenu();
+}
+
+void Game::initSelector() {
+	Selector::getInstance()->init();
 }
 
 void Game::initBackground() {
@@ -272,6 +277,7 @@ Game* Game::getInstance() {
 }
 
 void Game::setState(std::unique_ptr<GameState> state) {
+	Menu::getInstance()->resetFlags();
 	gameState = std::move(state);
 }
 
@@ -284,6 +290,7 @@ void Game::init() {
 	initFonts();
 	setRunningToTrue();
 	initMenu();
+	initSelector();
 	initBackground();
 	initPlayerProfile();
 	initPlayer();

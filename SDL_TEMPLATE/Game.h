@@ -35,8 +35,8 @@ private:
 	void initSDL_ttf();
 	void initFonts();
 	void setRunningToTrue();
-	void setRunningToFalse();
 	void initMenu();
+	void initSelector();
 	void initBackground();
 	void initPlayerProfile();
 	void initPlayer();
@@ -59,5 +59,6 @@ public:
 	SDL_Renderer* getRenderer();
 	const SDL_Event& getEvent() const;
 	const bool& isRunning() const;
+	void setRunningToFalse();
 };
 

@@ -9,6 +9,7 @@
 // TODO: Paused State   = Continue / Save State / Return to Menu
 // TODO: Game Over      = Play Again / Return to Menu 
 // TODO: music & sfx
+// TODO: compress photos/audios
 
 int SDL_main(int argc, char* argv[]) {
     Game* game = Game::getInstance();
