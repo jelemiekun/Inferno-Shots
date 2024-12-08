@@ -77,7 +77,17 @@ int WaveManager::getEnemyCountToinit() {
 }
 
 int WaveManager::getRandomNumber(const int& max) {
-    int threeFourthOfMax = (max / 8) * 7;
+    int threeFourthOfMax;
+
+    if (max <= 0) {
+        threeFourthOfMax = 1;
+    } else {
+        threeFourthOfMax = static_cast<int>((max / 8) * 7);
+
+        if (threeFourthOfMax <= 0) {
+            threeFourthOfMax = 1;
+        }
+    }
 
     std::random_device dev;
     std::mt19937 rng(dev());
@@ -104,8 +114,8 @@ void WaveManager::initWave() {
     }
 
     // Medium Enemies
-    if (*waveCount > 8) {
-        int mediumEnemyCount = getRandomNumber(enemyCount / 2);
+    if (*waveCount > 1) {
+        int mediumEnemyCount = getRandomNumber(static_cast<int>(enemyCount / 2));
 
         for (int enemyIndex = 0; enemyIndex < mediumEnemyCount; enemyIndex++) {
             std::shared_ptr<EnemyType> mediumEnemy = std::dynamic_pointer_cast<EnemyType>(
@@ -117,8 +127,8 @@ void WaveManager::initWave() {
         }
 
         // Fast Medium Enemies
-        if (*waveCount > 16) {
-            int fastMediumEnemyCount = getRandomNumber(mediumEnemyCount / 2);
+        if (*waveCount > 2) {
+            int fastMediumEnemyCount = getRandomNumber(static_cast<int>(mediumEnemyCount / 2));
 
             for (int enemyIndex = 0; enemyIndex < fastMediumEnemyCount; enemyIndex++) {
                 std::shared_ptr<FastEnemy> fastMediumEnemy = std::dynamic_pointer_cast<FastEnemy>(
@@ -143,7 +153,7 @@ void WaveManager::initWave() {
         enemies.push_back(largeEnemy);
         // Fast Large Enemies
         if (*waveCount > 19) {
-            int fastLargeEnemyCount = getRandomNumber(enemyCount / 10);
+            int fastLargeEnemyCount = getRandomNumber(static_cast<int>(enemyCount / 10));
 
             for (int enemyIndex = 0; enemyIndex < fastLargeEnemyCount; enemyIndex++) {
                 std::shared_ptr<FastEnemy> fastLargeEnemy = std::dynamic_pointer_cast<FastEnemy>(
