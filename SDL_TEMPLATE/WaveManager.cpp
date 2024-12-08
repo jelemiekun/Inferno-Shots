@@ -44,14 +44,14 @@ WaveManager* WaveManager::getInstance() {
 Uint32 WaveManager::getCountdownDuration() const {
     Uint32 duration = 1000;
 
-    if (*waveCount <= 3) {
+    if (*waveCount <= 6) {
         duration = 3500;
-    } else if (*waveCount <= 7) {
-        duration = 4500;
-    } else if (*waveCount <= 10) {
-        duration = 6500;
+    } else if (*waveCount <= 11) {
+        duration = 5000;
+    } else if (*waveCount <= 20) {
+        duration = 7000;
     } else {
-        duration = 9000;
+        duration = 10000;
     }
 
     return duration;
@@ -90,7 +90,7 @@ void WaveManager::initWave() {
     int enemyCount = getEnemyCountToinit();
 
     // Normal Enemies Fast
-    if (*waveCount > 2) {
+    if (*waveCount > 3) {
         int fastEnemyCount = getRandomNumber(enemyCount);
 
         for (int enemyIndex = 0; enemyIndex < fastEnemyCount; enemyIndex++) {
@@ -104,7 +104,7 @@ void WaveManager::initWave() {
     }
 
     // Medium Enemies
-    if (*waveCount > 7) {
+    if (*waveCount > 8) {
         int mediumEnemyCount = getRandomNumber(enemyCount / 2);
 
         for (int enemyIndex = 0; enemyIndex < mediumEnemyCount; enemyIndex++) {
@@ -117,7 +117,7 @@ void WaveManager::initWave() {
         }
 
         // Fast Medium Enemies
-        if (*waveCount > 11) {
+        if (*waveCount > 16) {
             int fastMediumEnemyCount = getRandomNumber(mediumEnemyCount / 2);
 
             for (int enemyIndex = 0; enemyIndex < fastMediumEnemyCount; enemyIndex++) {
@@ -142,7 +142,7 @@ void WaveManager::initWave() {
         largeEnemy->initPos();
         enemies.push_back(largeEnemy);
         // Fast Large Enemies
-        if (*waveCount > 14) {
+        if (*waveCount > 19) {
             int fastLargeEnemyCount = getRandomNumber(enemyCount / 10);
 
             for (int enemyIndex = 0; enemyIndex < fastLargeEnemyCount; enemyIndex++) {

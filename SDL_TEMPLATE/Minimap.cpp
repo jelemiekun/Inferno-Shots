@@ -91,9 +91,6 @@ void Minimap::update() {
 			enemy->getMinimapPixelSize()
 		};
 
-		
-
-
 		if (enemyPos.w != 0 && enemyPos.h != 0) enemies.push_back(enemyPos);
 	}
 }
