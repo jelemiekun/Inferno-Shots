@@ -114,7 +114,7 @@ void WaveManager::initWave() {
     }
 
     // Medium Enemies
-    if (*waveCount > 1) {
+    if (*waveCount > 8) {
         int mediumEnemyCount = getRandomNumber(static_cast<int>(enemyCount / 2));
 
         for (int enemyIndex = 0; enemyIndex < mediumEnemyCount; enemyIndex++) {
@@ -127,7 +127,7 @@ void WaveManager::initWave() {
         }
 
         // Fast Medium Enemies
-        if (*waveCount > 2) {
+        if (*waveCount > 16) {
             int fastMediumEnemyCount = getRandomNumber(static_cast<int>(mediumEnemyCount / 2));
 
             for (int enemyIndex = 0; enemyIndex < fastMediumEnemyCount; enemyIndex++) {

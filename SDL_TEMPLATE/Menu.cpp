@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Text.h"
 #include "Player.h"
+#include "AppInfo.h"
 
 std::string Menu::tempPlayerNamme = " ";
 
@@ -15,6 +16,7 @@ Menu::Menu() : currentState(std::make_unique<MainMenu>()),
 	changeNameFlags(nullptr),
 	pauseFlags(nullptr),
 	gameOverFlags(nullptr),
+	pausedGameOverDstRect(nullptr),
 	playerNameText(nullptr)
 	{}
 
@@ -56,6 +58,15 @@ void Menu::initPlayerNameText() {
 	playerNameText->setFont(Font::MOTION_CONTROL_BOLD);
 	playerNameText->setDstRect({ 318, 360, 260, 60 });
 	playerNameText->setColor({ 0, 0, 0, 255 });
+}
+
+void Menu::initPausedGameOverDstRect() {
+	pausedGameOverDstRect = std::make_unique <SDL_Rect>();
+
+	pausedGameOverDstRect->w = 400;
+	pausedGameOverDstRect->h = 480;
+	pausedGameOverDstRect->x = (SCREEN_WIDTH / 2) - (pausedGameOverDstRect->w / 2);
+	pausedGameOverDstRect->y = (SCREEN_HEIGHT / 2) - (pausedGameOverDstRect->h / 2);
 }
 
 void Menu::changePlayerName() {
@@ -100,6 +111,7 @@ void Menu::initMenu() {
 	initFlags();
 	resetFlags();
 	initPlayerNameText();
+	initPausedGameOverDstRect();
 	setState(std::make_unique<MainMenu>());
 }
 

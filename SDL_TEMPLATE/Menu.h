@@ -64,6 +64,7 @@ private:
     void initPlayerNameText();
 
 public:
+    void initPausedGameOverDstRect();
     void changePlayerName();
     void resetFlags();
     void initMenu();
@@ -81,6 +82,7 @@ public:
     std::unique_ptr<ChangeNameFlags> changeNameFlags;
     std::unique_ptr<PauseFlags> pauseFlags;
     std::unique_ptr<GameOverFlags> gameOverFlags;
+    std::unique_ptr<SDL_Rect> pausedGameOverDstRect;
 
     std::unique_ptr<Text> playerNameText;
 

@@ -102,6 +102,7 @@ public:
 	~Player() = default;
 
 	void initProfile();
+	void updateProfileName();
 	void update();
 	void render();
 	void renderPlayerProfiles() const;

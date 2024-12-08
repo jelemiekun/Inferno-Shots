@@ -8,6 +8,7 @@
 #include "Menu.h"
 #include "Minimap.h"
 #include "Background.h"
+#include "MenuState.h"
 
 void GameMenu::input() {
     Menu::getInstance()->input();
@@ -47,6 +48,10 @@ void GamePlaying::input() {
         case SDLK_w: InvokerPlaying::getInstance()->pressButton(Command_Actions::moveUp); break;
         case SDLK_d: InvokerPlaying::getInstance()->pressButton(Command_Actions::moveRight); break;
         case SDLK_s: InvokerPlaying::getInstance()->pressButton(Command_Actions::moveDown); break;
+        case SDLK_ESCAPE: 
+            Game::getInstance()->setState(std::make_unique<GamePaused>());
+            Menu::getInstance()->setState(std::make_unique<PausedMenu>());
+            break;
         default: break;
         }
         break;
@@ -176,6 +181,9 @@ void GamePaused::update() {
 }
 
 void GamePaused::render() {
+    GamePlaying playing;
+    playing.render();
+
     Menu::getInstance()->render();
 }
 
@@ -188,5 +196,8 @@ void GameOver::update() {
 }
 
 void GameOver::render() {
+    GamePlaying playing;
+    playing.render();
+
     Menu::getInstance()->render();
 }

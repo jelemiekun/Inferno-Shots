@@ -4,6 +4,7 @@
 #include "Menu.h"
 #include "Selector.h"
 #include "Text.h"
+#include "BorderManager.h"
 #include <iostream>
 
 void MainMenu::input() {
@@ -100,6 +101,7 @@ void MainMenu::render() {
 		532, 566, 110, 55
 	};
 	SDL_RenderFillRect(Game::getInstance()->getRenderer(), &tester);*/
+	// TODO tester rects
 }
 
 void TextInputMenu::input() {
@@ -193,7 +195,15 @@ void PausedMenu::update() {
 }
 
 void PausedMenu::render() {
+	SDL_Renderer* renderer = Game::getInstance()->getRenderer();
+	SDL_Rect* dstRect = Menu::getInstance()->pausedGameOverDstRect.get();
 
+	SDL_Rect srcRect = { 0, 0,
+		Menu::getInstance()->pauseGODimension->x / 2, Menu::getInstance()->pauseGODimension->y };
+
+	SDL_RenderCopy(renderer, Menu::getInstance()->mTexturePauseGO.get(), &srcRect, dstRect);
+
+	Border::bRenderBorder(renderer, *dstRect, 3, { 0, 0, 0, 255 } );
 }
 
 void GameOverMenu::input() {
@@ -205,8 +215,13 @@ void GameOverMenu::update() {
 }
 
 void GameOverMenu::render() {
-	SDL_Rect srcRect = { Menu::getInstance()->menuBackgroundDimension->x / 2, 0,
-		Menu::getInstance()->menuBackgroundDimension->x / 2, Menu::getInstance()->menuBackgroundDimension->y };
+	SDL_Renderer* renderer = Game::getInstance()->getRenderer();
+	SDL_Rect* dstRect = Menu::getInstance()->pausedGameOverDstRect.get();
 
-	SDL_RenderCopy(Game::getInstance()->getRenderer(), Menu::getInstance()->mTextureMenu.get(), &srcRect, nullptr);
+	SDL_Rect srcRect = { Menu::getInstance()->pauseGODimension->x / 2, 0,
+		Menu::getInstance()->pauseGODimension->x / 2, Menu::getInstance()->pauseGODimension->y };
+
+	SDL_RenderCopy(renderer, Menu::getInstance()->mTexturePauseGO.get(), &srcRect, dstRect);
+
+	Border::bRenderBorder(renderer, *dstRect, 3, { 0, 0, 0, 255 });
 }

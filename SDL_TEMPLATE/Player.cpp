@@ -11,6 +11,9 @@
 #include "Bullet.h"
 #include "PrototypeRegistry.h"
 #include "WaveManager.h"
+#include "GameState.h"
+#include "Menu.h"
+#include "MenuState.h"
 #include <string>
 
 int Player::playerCounter = 1;
@@ -185,8 +188,10 @@ void Player::heal() {
 void Player::checkHealth() {
     if (*alive && *heartAmount < 1) {
         *alive = false;
-    } else {
+    } else if (!(*alive)) {
         setDeadColor();
+        Game::getInstance()->setState(std::make_unique<GameOver>());
+        Menu::getInstance()->setState(std::make_unique<GameOverMenu>());
     }
 }
 
@@ -383,10 +388,13 @@ void Player::initProfile() {
     textPlayerPosition->setColor({ 255, 255, 255, 255 });
 }
 
-void Player::update() {
+void Player::updateProfileName() {
     textPlayerName->setText(staticStringPlayerName);
     textPlayerName->loadText();
+}
 
+void Player::update() {
+    updateProfileName();
     checkSprint();
     checkFiring();
     if (*alive) updateCommandQueue();
