@@ -15,6 +15,8 @@
 
 int Player::playerCounter = 1;
 
+std::string Player::staticStringPlayerName = "Player";
+
 // Constructor for prototype only, will not increment counter
 Player::Player(int heartAmount, int maxSprintAmount,
     TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay)
@@ -60,7 +62,7 @@ Player::Player(const Player& other)
     deadColorTexture(std::make_unique<SDL_Texture*>()),
     textPlayerName(std::make_unique<Text>()),
     textPlayerPosition(std::make_unique<Text>()),
-    stringPlayerName(std::make_unique<std::string>("Player")), //TODO
+    stringPlayerName(std::make_unique<std::string>(Player::staticStringPlayerName)), //TODO
     dstRectMonitor(std::make_unique<SDL_Rect>()),
     isMovingLeft(std::make_unique<bool>(false)),
     isMovingUpLeft(std::make_unique<bool>(false)),
@@ -371,7 +373,7 @@ void Player::initProfile() {
     playerProfile->init(*ID, *heartAmount, *maxSprintAmount);
 
     textPlayerName->setFont(Font::MOTION_CONTROL_BOLD);
-    textPlayerName->setText("Player 1");
+    textPlayerName->setText(*stringPlayerName);
     textPlayerName->setDstRect(getDstRectTextPlayerName());
     textPlayerName->setColor({ 255, 255, 255, 255 });
     textPlayerName->loadText();
@@ -382,6 +384,9 @@ void Player::initProfile() {
 }
 
 void Player::update() {
+    textPlayerName->setText(staticStringPlayerName);
+    textPlayerName->loadText();
+
     checkSprint();
     checkFiring();
     if (*alive) updateCommandQueue();

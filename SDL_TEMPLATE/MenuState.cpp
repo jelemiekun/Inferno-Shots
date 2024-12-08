@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "Menu.h"
 #include "Selector.h"
+#include "Text.h"
 #include <iostream>
 
 void MainMenu::input() {
@@ -102,14 +103,85 @@ void MainMenu::render() {
 }
 
 void TextInputMenu::input() {
+	SDL_StartTextInput();
 
+	MouseStateFlags* mouseFlags = Menu::getInstance()->mouseStateFlags.get();
+	ChangeNameFlags* nameFlags = Menu::getInstance()->changeNameFlags.get();
+	SDL_Event event = Game::getInstance()->getEvent();
+	std::string& playerName = Menu::tempPlayerNamme;
+
+	static int MPX, MPY = 0; // Mouse Position X/Y
+	switch (event.type) {
+	case SDL_MOUSEMOTION:
+		SDL_GetMouseState(&MPX, &MPY);
+
+		if (MPX >= 480 && MPX <= 700 && MPY >= 465 && MPY <= 520) {
+			mouseFlags->outside = 0;
+			nameFlags->change = 1;
+			nameFlags->cancel = 0;
+		} else if (MPX >= 480 && MPX <= 700 && MPY >= 540 && MPY <= 595) {
+			mouseFlags->outside = 0;
+			nameFlags->change = 0;
+			nameFlags->cancel = 1;
+		}else {
+			mouseFlags->outside = 1;
+		}
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			mouseFlags->clicked = 1;
+		}
+		break;
+	case SDL_MOUSEBUTTONUP:
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			mouseFlags->clicked = 0;
+		}
+		break;
+	case SDL_KEYDOWN:
+		if (event.key.keysym.sym == SDLK_BACKSPACE && !playerName.empty()) {
+			playerName.pop_back();
+		}
+		break;
+	case SDL_TEXTINPUT:
+		if (playerName.length() < Menu::MAX_INPUT_LENGTH) {
+			playerName += event.text.text;
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 void TextInputMenu::update() {
+	Menu* menu = Menu::getInstance();
 
+	if (menu->changeNameFlags->change) {
+		Selector::getInstance()->update(110, 482);
+
+		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Menu::getInstance()->changePlayerName();
+			Menu::getInstance()->setState(std::make_unique<MainMenu>());
+		}
+	} else if (menu->changeNameFlags->cancel) {
+		Selector::getInstance()->update(110, 555);
+
+		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Menu::getInstance()->setState(std::make_unique<MainMenu>());
+		}
+	}
+
+	Menu::getInstance()->playerNameText->setText(Menu::tempPlayerNamme);
+	Menu::getInstance()->playerNameText->loadText();
 }
 
 void TextInputMenu::render() {
+	SDL_Rect srcRect = { Menu::getInstance()->menuBackgroundDimension->x / 2, 0,
+		Menu::getInstance()->menuBackgroundDimension->x / 2, Menu::getInstance()->menuBackgroundDimension->y };
+
+	SDL_RenderCopy(Game::getInstance()->getRenderer(), Menu::getInstance()->mTextureMenu.get(), &srcRect, nullptr);
+	Selector::getInstance()->render();
+
+	Menu::getInstance()->playerNameText->render();
 }
 
 void PausedMenu::input() {

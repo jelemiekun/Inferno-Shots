@@ -3,6 +3,10 @@
 #include "Menu.h"
 #include "MenuState.h"
 #include "Game.h"
+#include "Text.h"
+#include "Player.h"
+
+std::string Menu::tempPlayerNamme = " ";
 
 Menu::Menu() : currentState(std::make_unique<MainMenu>()),
 	menuBackgroundDimension(nullptr),
@@ -10,7 +14,8 @@ Menu::Menu() : currentState(std::make_unique<MainMenu>()),
 	mainMenuFlags(nullptr),
 	changeNameFlags(nullptr),
 	pauseFlags(nullptr),
-	gameOverFlags(nullptr)
+	gameOverFlags(nullptr),
+	playerNameText(nullptr)
 	{}
 
 Menu* Menu::getInstance() {
@@ -45,7 +50,21 @@ void Menu::initFlags() {
 	gameOverFlags = std::make_unique<GameOverFlags>();
 }
 
+void Menu::initPlayerNameText() {
+	playerNameText = std::make_unique<Text>();
+
+	playerNameText->setFont(Font::MOTION_CONTROL_BOLD);
+	playerNameText->setDstRect({ 318, 360, 260, 60 });
+	playerNameText->setColor({ 0, 0, 0, 255 });
+}
+
+void Menu::changePlayerName() {
+	Player::staticStringPlayerName = tempPlayerNamme;
+}
+
 void Menu::resetFlags() {
+	Menu::tempPlayerNamme = Player::staticStringPlayerName;
+
 	mouseStateFlags->outside = 1;
 	mouseStateFlags->clicked = 0;
 
@@ -54,8 +73,8 @@ void Menu::resetFlags() {
 	mainMenuFlags->changeName = 0;
 	mainMenuFlags->exit = 0;
 
-	changeNameFlags->cancel = 0;
 	changeNameFlags->change = 1;
+	changeNameFlags->cancel = 0;
 
 	pauseFlags->resume = 0;
 	pauseFlags->saveGame = 1;
@@ -80,6 +99,7 @@ void Menu::initMenu() {
 
 	initFlags();
 	resetFlags();
+	initPlayerNameText();
 	setState(std::make_unique<MainMenu>());
 }
 

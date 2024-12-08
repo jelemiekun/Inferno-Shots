@@ -6,7 +6,8 @@ std::unordered_map<std::string, std::shared_ptr<TTF_Font>> Text::fonts;
 std::vector<Font> Text::getAllFonts() {
 	return {
 		Font::MOTION_CONTROL_BOLD,
-		Font::MOTION_CONTROL_ITALLIC
+		Font::MOTION_CONTROL_ITALLIC,
+		Font::BOULDER
 	};
 }
 
@@ -40,6 +41,7 @@ std::string Text::getPath(Font font) {
 	switch (font) {
 	case Font::MOTION_CONTROL_BOLD: path = "assets/fonts/MotionControl-Bold.otf"; break;
 	case Font::MOTION_CONTROL_ITALLIC: path = "assets/fonts/MotionControl-Italic.otf"; break;
+	case Font::BOULDER: path = "assets/fonts/Boulder.ttf"; break;
 	default: path = ""; break;
 	}
 

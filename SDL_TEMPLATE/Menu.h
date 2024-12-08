@@ -1,8 +1,10 @@
 #pragma once
 #include <SDL.h>
 #include <memory>
+#include <string>
 
 class MenuState;
+class Text;
 
 struct MouseStateFlags {
     unsigned int outside : 1;
@@ -17,8 +19,8 @@ struct MainMenuFlags {
 };
 
 struct ChangeNameFlags {
-    unsigned int cancel : 1;
     unsigned int change : 1;
+    unsigned int cancel : 1;
 };
 
 struct PauseFlags {
@@ -37,7 +39,10 @@ class Menu {
 private:
     constexpr const static char* MENU_BG_PATH = "assets/images/menuBackgroundWText-Sheet.png";
     constexpr const static char* PAUSE_GO_BG_PATH = "assets/images/pauseGameOverBackground-Sheet.png";
-
+    
+public:
+    constexpr static int MAX_INPUT_LENGTH = 10;
+    static std::string tempPlayerNamme;
 private:
 	Menu();
 
@@ -56,8 +61,10 @@ private:
         std::unique_ptr<SDL_Point>& dimension
     );
     void initFlags();
+    void initPlayerNameText();
 
 public:
+    void changePlayerName();
     void resetFlags();
     void initMenu();
 
@@ -74,6 +81,8 @@ public:
     std::unique_ptr<ChangeNameFlags> changeNameFlags;
     std::unique_ptr<PauseFlags> pauseFlags;
     std::unique_ptr<GameOverFlags> gameOverFlags;
+
+    std::unique_ptr<Text> playerNameText;
 
 private:
 

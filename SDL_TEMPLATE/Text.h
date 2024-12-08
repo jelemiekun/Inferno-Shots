@@ -9,7 +9,8 @@
 enum class Font {
 	// Update getAllFonts and getPath when updating this
 	MOTION_CONTROL_BOLD,
-	MOTION_CONTROL_ITALLIC
+	MOTION_CONTROL_ITALLIC,
+	BOULDER
 };
 
 class Text {

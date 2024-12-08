@@ -26,6 +26,9 @@ public:
 	constexpr static int BULLET_SPEED_SCALAR = 10;
 
 public:
+	static std::string staticStringPlayerName;
+
+public:
 	std::unique_ptr<int> ID;
 	std::unique_ptr<TextureType> textureType;
 	std::unique_ptr<int> maxHeartAmount;
