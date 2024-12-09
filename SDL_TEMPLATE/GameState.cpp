@@ -51,6 +51,7 @@ void GamePlaying::input() {
         case SDLK_ESCAPE: 
             Game::getInstance()->setState(std::make_unique<GamePaused>());
             Menu::getInstance()->setState(std::make_unique<PausedMenu>());
+            WaveManager::getInstance()->pauseCountdownTimer();
             break;
         default: break;
         }

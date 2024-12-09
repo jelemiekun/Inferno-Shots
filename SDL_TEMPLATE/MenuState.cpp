@@ -5,6 +5,7 @@
 #include "Selector.h"
 #include "Text.h"
 #include "BorderManager.h"
+#include "WaveManager.h"
 #include <iostream>
 
 void MainMenu::input() {
@@ -219,6 +220,7 @@ void PausedMenu::input() {
 		switch (event.key.keysym.sym) {
 		case SDLK_ESCAPE:
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
+			WaveManager::getInstance()->unpauseCountdownTimer();
 			break;
 		default:
 			break;
@@ -247,6 +249,7 @@ void PausedMenu::update() {
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
+			WaveManager::getInstance()->unpauseCountdownTimer();
 		}
 	} else if (menu->pauseFlags->saveGame) {
 		Selector::getInstance()->update(130, 413);

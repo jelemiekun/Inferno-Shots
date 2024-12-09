@@ -62,6 +62,8 @@ public:
     bool isCountdownFinish() const;
     bool hasCountdownStarted() const;
     void setCountdownFinish();
+    void pauseCountdownTimer();
+    void unpauseCountdownTimer();
 
     void decreasePlayersFiringCooldown();
 

@@ -107,6 +107,7 @@ void WaveManager::clearEnemies() {
 void WaveManager::resetGame() {
     resetWaveCount();
     clearEnemies();
+    setCountdownFinish();
 }
 
 void WaveManager::initWave() {
@@ -261,6 +262,14 @@ bool WaveManager::hasCountdownStarted() const {
 
 void WaveManager::setCountdownFinish() {
     countdownTimer->setFinish();
+}
+
+void WaveManager::pauseCountdownTimer() {
+    countdownTimer->pause();
+}
+
+void WaveManager::unpauseCountdownTimer() {
+    countdownTimer->unpause();
 }
 
 void WaveManager::decreasePlayersFiringCooldown() {
