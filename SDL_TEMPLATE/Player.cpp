@@ -20,11 +20,11 @@ int Player::playerCounter = 1;
 
 std::string Player::staticStringPlayerName = "Player";
 
+TextureType* Player::textureType = nullptr;
+
 // Constructor for prototype only, will not increment counter
-Player::Player(int heartAmount, int maxSprintAmount,
-    TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay)
+Player::Player(int heartAmount, int maxSprintAmount, SDL_Point position, float movementSpeed, float speedDecay)
     : ID(std::make_unique<int>(0)),
-    textureType(std::make_unique<TextureType>(*textureType)),
     maxHeartAmount(std::make_unique<int>(heartAmount)),
     heartAmount(std::make_unique<int>(heartAmount)),
     maxSprintAmount(std::make_unique<int>(maxSprintAmount)),
@@ -41,7 +41,6 @@ Player::Player(int heartAmount, int maxSprintAmount,
 
 Player::Player(const Player& other)
     : ID(std::make_unique<int>(playerCounter++)),
-    textureType(std::make_unique<TextureType>(*other.textureType)),
     maxHeartAmount(std::make_unique<int>(*other.maxHeartAmount)),
     heartAmount(std::make_unique<int>(*other.heartAmount)),
     maxSprintAmount(std::make_unique<int>(*other.maxSprintAmount)),
@@ -375,6 +374,8 @@ bool Player::canHeal() const {
 }
 
 void Player::initProfile() {
+    Player::textureType = new TextureType(Prototype_Type::PLAYER);
+
     playerProfile->init(*ID, *heartAmount, *maxSprintAmount);
 
     textPlayerName->setFont(Font::MOTION_CONTROL_BOLD);

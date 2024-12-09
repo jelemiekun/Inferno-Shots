@@ -25,12 +25,12 @@ public:
 	constexpr static int BULLET_SPEED_SCALAR = 10;
 
 public:
+	static TextureType* textureType;
 	static int playerCounter;
 	static std::string staticStringPlayerName;
 
 public:
 	std::unique_ptr<int> ID;
-	std::unique_ptr<TextureType> textureType;
 	std::unique_ptr<int> maxHeartAmount;
 	std::unique_ptr<int> heartAmount;
 	std::unique_ptr<int> maxSprintAmount;
@@ -97,7 +97,7 @@ public:
 	std::queue<std::shared_ptr<Command>> commandQueue;
 
 public:
-	Player(int heartCount, int sprintAmount, TextureType* textureType, SDL_Point position, float movementSpeed, float speedDecay);
+	Player(int heartCount, int sprintAmount, SDL_Point position, float movementSpeed, float speedDecay);
 	Player(const Player& other);
 	~Player() = default;
 

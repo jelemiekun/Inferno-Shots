@@ -95,8 +95,7 @@ void Game::initPlayerProfile() {
 void Game::initPlayer() {
 	// Initialize main prototype of Player
 	SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-	TextureType* playerTexture = new TextureType(Prototype_Type::PLAYER); // 150
-	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(1, 650, playerTexture, position, 4.0f, 30.0f);
+	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(1, 650, position, 4.0f, 30.0f);
 
 	// Add main prototype player to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
@@ -231,31 +230,30 @@ void Game::addPlayer() {
 	//}
 
 	// Set commands
-	auto moveLeftCommand = std::make_shared<MoveLeftCommand>();
-	auto moveUpCommand = std::make_shared<MoveUpCommand>();
-	auto moveRightCommand = std::make_shared<MoveRightCommand>();
-	auto moveDownCommand = std::make_shared<MoveDownCommand>();
+	static auto moveLeftCommand = std::make_shared<MoveLeftCommand>();
+	static auto moveUpCommand = std::make_shared<MoveUpCommand>();
+	static auto moveRightCommand = std::make_shared<MoveRightCommand>();
+	static auto moveDownCommand = std::make_shared<MoveDownCommand>();
 
-	auto keyUpMoveLeftCommand = std::make_shared<KeyUpMoveLeftCommand>();
-	auto keyUpMoveUpCommand = std::make_shared<KeyUpMoveUpCommand>();
-	auto keyUpMoveRightCommand = std::make_shared<KeyUpMoveRightCommand>();
-	auto keyUpMoveDownCommand = std::make_shared<KeyUpMoveDownCommand>();
+	static auto keyUpMoveLeftCommand = std::make_shared<KeyUpMoveLeftCommand>();
+	static auto keyUpMoveUpCommand = std::make_shared<KeyUpMoveUpCommand>();
+	static auto keyUpMoveRightCommand = std::make_shared<KeyUpMoveRightCommand>();
+	static auto keyUpMoveDownCommand = std::make_shared<KeyUpMoveDownCommand>();
 
-	auto faceLeftCommand = std::make_shared<FaceLeftCommand>();
-	auto faceUpLeftCommand = std::make_shared<FaceUpLeftCommand>();
-	auto faceUpCommand = std::make_shared<FaceUpCommand>();
-	auto faceUpRightCommand = std::make_shared<FaceUpRightCommand>();
-	auto faceRightCommand = std::make_shared<FaceRightCommand>();
-	auto faceDownRightCommand = std::make_shared<FaceDownRightCommand>();
-	auto faceDownCommand = std::make_shared<FaceDownCommand>();
-	auto faceDownLeftCommand = std::make_shared<FaceDownLeftCommand>();
+	static auto faceLeftCommand = std::make_shared<FaceLeftCommand>();
+	static auto faceUpLeftCommand = std::make_shared<FaceUpLeftCommand>();
+	static auto faceUpCommand = std::make_shared<FaceUpCommand>();
+	static auto faceUpRightCommand = std::make_shared<FaceUpRightCommand>();
+	static 	auto faceRightCommand = std::make_shared<FaceRightCommand>();
+	static auto faceDownRightCommand = std::make_shared<FaceDownRightCommand>();
+	static auto faceDownCommand = std::make_shared<FaceDownCommand>();
+	static auto faceDownLeftCommand = std::make_shared<FaceDownLeftCommand>();
 
+	static 	auto sprintCommand = std::make_shared<SprintCommand>();
+	static auto removeSprintCommand = std::make_shared<RemoveSprintCommand>();
 
-	auto sprintCommand = std::make_shared<SprintCommand>();
-	auto removeSprintCommand = std::make_shared<RemoveSprintCommand>();
-
-	auto fireCommand = std::make_shared<FireCommand>();
-	auto unfireCommand = std::make_shared<UnfireCommand>();
+	static auto fireCommand = std::make_shared<FireCommand>();
+	static auto unfireCommand = std::make_shared<UnfireCommand>();
 
 	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::moveLeft, moveLeftCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::moveUp, moveUpCommand, player1);

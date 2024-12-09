@@ -12,38 +12,37 @@ void MainMenu::input() {
 	MainMenuFlags* menuFlags = Menu::getInstance()->mainMenuFlags.get();
 
 	static int MPX, MPY = 0; // Mouse Position X/Y
-	switch (Game::getInstance()->getEvent().type) {
-	case SDL_MOUSEMOTION:
-		SDL_GetMouseState(&MPX, &MPY);
+	SDL_GetMouseState(&MPX, &MPY);
 
-		if (MPX >= 530 && MPX <= 630 && MPY >= 360 && MPY <= 415) {
-			mouseFlags->outside = 0;
-			menuFlags->play = 1;
-			menuFlags->loadGame = 0;
-			menuFlags->changeName = 0;
-			menuFlags->exit = 0;
-		} else if (MPX >= 465 && MPX <= 710 && MPY >= 428 && MPY <= 483) {
-			mouseFlags->outside = 0;
-			menuFlags->play = 0;
-			menuFlags->loadGame = 1;
-			menuFlags->changeName = 0;
-			menuFlags->exit = 0;
-		} else if (MPX >= 445 && MPX <= 730 && MPY >= 498 && MPY <= 553) {
-			mouseFlags->outside = 0;
-			menuFlags->play = 0;
-			menuFlags->loadGame = 0;
-			menuFlags->changeName = 1;
-			menuFlags->exit = 0;
-		} else if (MPX >= 532 && MPX <= 642 && MPY >= 566 && MPY <= 621) {
-			mouseFlags->outside = 0;
-			menuFlags->play = 0;
-			menuFlags->loadGame = 0;
-			menuFlags->changeName = 0;
-			menuFlags->exit = 1;
-		} else {
-			mouseFlags->outside = 1;
-		}
-		break;
+	if (MPX >= 530 && MPX <= 630 && MPY >= 360 && MPY <= 415) {
+		mouseFlags->outside = 0;
+		menuFlags->play = 1;
+		menuFlags->loadGame = 0;
+		menuFlags->changeName = 0;
+		menuFlags->exit = 0;
+	} else if (MPX >= 465 && MPX <= 710 && MPY >= 428 && MPY <= 483) {
+		mouseFlags->outside = 0;
+		menuFlags->play = 0;
+		menuFlags->loadGame = 1;
+		menuFlags->changeName = 0;
+		menuFlags->exit = 0;
+	} else if (MPX >= 445 && MPX <= 730 && MPY >= 498 && MPY <= 553) {
+		mouseFlags->outside = 0;
+		menuFlags->play = 0;
+		menuFlags->loadGame = 0;
+		menuFlags->changeName = 1;
+		menuFlags->exit = 0;
+	} else if (MPX >= 532 && MPX <= 642 && MPY >= 566 && MPY <= 621) {
+		mouseFlags->outside = 0;
+		menuFlags->play = 0;
+		menuFlags->loadGame = 0;
+		menuFlags->changeName = 0;
+		menuFlags->exit = 1;
+	} else {
+		mouseFlags->outside = 1;
+	}
+	
+	switch (Game::getInstance()->getEvent().type) {
 	case SDL_MOUSEBUTTONDOWN:
 		if (Game::getInstance()->getEvent().button.button == SDL_BUTTON_LEFT) {
 			mouseFlags->clicked = 1;
@@ -116,22 +115,21 @@ void TextInputMenu::input() {
 	std::string& playerName = Menu::tempPlayerNamme;
 
 	static int MPX, MPY = 0; // Mouse Position X/Y
-	switch (event.type) {
-	case SDL_MOUSEMOTION:
-		SDL_GetMouseState(&MPX, &MPY);
+	SDL_GetMouseState(&MPX, &MPY);
 
-		if (MPX >= 480 && MPX <= 700 && MPY >= 465 && MPY <= 520) {
-			mouseFlags->outside = 0;
-			nameFlags->change = 1;
-			nameFlags->cancel = 0;
-		} else if (MPX >= 480 && MPX <= 700 && MPY >= 540 && MPY <= 595) {
-			mouseFlags->outside = 0;
-			nameFlags->change = 0;
-			nameFlags->cancel = 1;
-		}else {
-			mouseFlags->outside = 1;
-		}
-		break;
+	if (MPX >= 480 && MPX <= 700 && MPY >= 465 && MPY <= 520) {
+		mouseFlags->outside = 0;
+		nameFlags->change = 1;
+		nameFlags->cancel = 0;
+	} else if (MPX >= 480 && MPX <= 700 && MPY >= 540 && MPY <= 595) {
+		mouseFlags->outside = 0;
+		nameFlags->change = 0;
+		nameFlags->cancel = 1;
+	} else {
+		mouseFlags->outside = 1;
+	}
+
+	switch (event.type) {
 	case SDL_MOUSEBUTTONDOWN:
 		if (event.button.button == SDL_BUTTON_LEFT) {
 			mouseFlags->clicked = 1;
@@ -195,6 +193,27 @@ void PausedMenu::input() {
 	SDL_Event event = Game::getInstance()->getEvent();
 
 	static int MPX, MPY = 0; // Mouse Position X/Y
+	SDL_GetMouseState(&MPX, &MPY);
+
+	if (MPX >= 500 && MPX <= 680 && MPY >= 330 && MPY <= 385) {
+		mouseFlags->outside = 0;
+		pauseFlags->resume = 1;
+		pauseFlags->saveGame = 0;
+		pauseFlags->exit = 0;
+	} else if (MPX >= 470 && MPX <= 710 && MPY >= 396 && MPY <= 451) {
+		mouseFlags->outside = 0;
+		pauseFlags->resume = 0;
+		pauseFlags->saveGame = 1;
+		pauseFlags->exit = 0;
+	} else if (MPX >= 530 && MPX <= 642 && MPY >= 457 && MPY <= 512) {
+		mouseFlags->outside = 0;
+		pauseFlags->resume = 0;
+		pauseFlags->saveGame = 0;
+		pauseFlags->exit = 1;
+	} else {
+		mouseFlags->outside = 1;
+	}
+
 	switch (event.type) {
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
@@ -203,28 +222,6 @@ void PausedMenu::input() {
 			break;
 		default:
 			break;
-		}
-		break;
-	case SDL_MOUSEMOTION:
-		SDL_GetMouseState(&MPX, &MPY);
-
-		if (MPX >= 500 && MPX <= 680 && MPY >= 330 && MPY <= 385) {
-			mouseFlags->outside = 0;
-			pauseFlags->resume = 1;
-			pauseFlags->saveGame = 0;
-			pauseFlags->exit = 0;
-		} else if (MPX >= 470 && MPX <= 710 && MPY >= 396 && MPY <= 451) {
-			mouseFlags->outside = 0;
-			pauseFlags->resume = 0;
-			pauseFlags->saveGame = 1;
-			pauseFlags->exit = 0;
-		} else if (MPX >= 530 && MPX <= 642 && MPY >= 457 && MPY <= 512) {
-			mouseFlags->outside = 0;
-			pauseFlags->resume = 0;
-			pauseFlags->saveGame = 0;
-			pauseFlags->exit = 1;
-		} else {
-			mouseFlags->outside = 1;
 		}
 		break;
 	case SDL_MOUSEBUTTONDOWN:
@@ -287,22 +284,21 @@ void GameOverMenu::input() {
 	SDL_Event event = Game::getInstance()->getEvent();
 
 	static int MPX, MPY = 0; // Mouse Position X/Y
-	switch (event.type) {
-	case SDL_MOUSEMOTION:
-		SDL_GetMouseState(&MPX, &MPY);
+	SDL_GetMouseState(&MPX, &MPY);
 
-		if (MPX >= 458 && MPX <= 722 && MPY >= 376 && MPY <= 431) {
-			mouseFlags->outside = 0;
-			gameOverFlags->playAgain = 1;
-			gameOverFlags->mainMenu = 0;
-		} else if (MPX >= 458 && MPX <= 722 && MPY >= 442 && MPY <= 497) {
-			mouseFlags->outside = 0;
-			gameOverFlags->playAgain = 0;
-			gameOverFlags->mainMenu = 1;
-		} else {
-			mouseFlags->outside = 1;
-		}
-		break;
+	if (MPX >= 458 && MPX <= 722 && MPY >= 376 && MPY <= 431) {
+		mouseFlags->outside = 0;
+		gameOverFlags->playAgain = 1;
+		gameOverFlags->mainMenu = 0;
+	} else if (MPX >= 458 && MPX <= 722 && MPY >= 442 && MPY <= 497) {
+		mouseFlags->outside = 0;
+		gameOverFlags->playAgain = 0;
+		gameOverFlags->mainMenu = 1;
+	} else {
+		mouseFlags->outside = 1;
+	}
+
+	switch (event.type) {
 	case SDL_MOUSEBUTTONDOWN:
 		if (event.button.button == SDL_BUTTON_LEFT) {
 			mouseFlags->clicked = 1;
