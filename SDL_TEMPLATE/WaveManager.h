@@ -40,12 +40,16 @@ private:
     Uint32 getCountdownDuration() const;
     void setCountdownMaxAmount(Uint32 duration);
     void updateEnemies();
-    void removeEnemies(const std::vector<std::shared_ptr<Enemy>>& enemiesToRemove);
+    void removeDeadEnemies(const std::vector<std::shared_ptr<Enemy>>& enemiesToRemove);
     int getEnemyCountToinit();
     int getRandomNumber(const int& max);
+    void resetWaveCount();
+    void clearEnemies();
 
 public:
     void initCountdownBar();
+
+    void resetGame();
 
     void initWave();
     void update();

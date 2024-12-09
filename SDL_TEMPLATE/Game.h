@@ -44,14 +44,19 @@ private:
 	void initEnemy();
 	void initMiniMap();
 	void initBars();
+	void clearAllPlayers();
+	void addPlayer();
 
 public:
 	static Game* getInstance();
 
 public:
 	void setState(std::unique_ptr<GameState> state);
+	void initState();
 
-	void init();
+	void startGame();
+
+	void initAll();
 	void input();
 	void update();
 	void render();

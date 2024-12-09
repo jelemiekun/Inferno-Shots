@@ -17,7 +17,6 @@ class Bullet;
 class Player : 
 	public Prototype, public std::enable_shared_from_this<Player> {
 private:
-	static int playerCounter;
 	constexpr static int HEALTH_ADDER_COOLDOWN = 700;
 	constexpr static int HEALTH_ADDER = 1;
 public:
@@ -26,6 +25,7 @@ public:
 	constexpr static int BULLET_SPEED_SCALAR = 10;
 
 public:
+	static int playerCounter;
 	static std::string staticStringPlayerName;
 
 public:

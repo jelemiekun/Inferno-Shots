@@ -96,6 +96,19 @@ int WaveManager::getRandomNumber(const int& max) {
     return dist6(rng);
 }
 
+void WaveManager::resetWaveCount() {
+    *waveCount = 0;
+}
+
+void WaveManager::clearEnemies() {
+    enemies.clear();
+}
+
+void WaveManager::resetGame() {
+    resetWaveCount();
+    clearEnemies();
+}
+
 void WaveManager::initWave() {
     int enemyCount = getEnemyCountToinit();
 
@@ -178,19 +191,19 @@ void WaveManager::initWave() {
 }
 
 void WaveManager::updateEnemies() {
-    std::vector<std::shared_ptr<Enemy>> enemiesToRemove;
+    std::vector<std::shared_ptr<Enemy>> deadEnemiesToRemove;
 
     for (auto& enemy : enemies) {
         enemy->update();
         enemy->checkCollision();
-        if (enemy->isDead()) enemiesToRemove.push_back(enemy);
+        if (enemy->isDead()) deadEnemiesToRemove.push_back(enemy);
     }
 
-    removeEnemies(enemiesToRemove);
+    removeDeadEnemies(deadEnemiesToRemove);
 }
 
-void WaveManager::removeEnemies(const std::vector<std::shared_ptr<Enemy>>& enemiesToRemove) {
-    for (const auto& enemy : enemiesToRemove) {
+void WaveManager::removeDeadEnemies(const std::vector<std::shared_ptr<Enemy>>& deadEnemiesToRemove) {
+    for (const auto& enemy : deadEnemiesToRemove) {
         enemies.erase(
             std::remove_if(
                 enemies.begin(),

@@ -95,19 +95,104 @@ void Game::initPlayerProfile() {
 void Game::initPlayer() {
 	// Initialize main prototype of Player
 	SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-	TextureType* playerTexture = new TextureType(Prototype_Type::PLAYER);
-	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(150, 650, playerTexture, position, 4.0f, 30.0f);
+	TextureType* playerTexture = new TextureType(Prototype_Type::PLAYER); // 150
+	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(1, 650, playerTexture, position, 4.0f, 30.0f);
 
 	// Add main prototype player to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
 		Prototype_Type::PLAYER, std::static_pointer_cast<Prototype>(playerPrototype)
 	);
+}
 
+void Game::initBullet() {
+	std::shared_ptr<Bullet> bulletPrototype = std::make_shared<Bullet>();
+
+	PrototypeRegistry::getInstance()->addPrototype(
+		Prototype_Type::BULLET, std::static_pointer_cast<Prototype>(bulletPrototype)
+	);
+}
+
+void Game::initEnemy() {
+	// Normal Enemy
+	{
+		// Normal Enemy
+		std::shared_ptr<TextureType> normalEnemyTexture = std::make_shared<TextureType>(Prototype_Type::NORMAL_ENEMY);
+		std::shared_ptr<EnemyType> normalEnemyPrototype = std::make_shared<EnemyType>(normalEnemyTexture, SDL_Point{ 30, 30 }, 1, 3.0F, 7, 3, 3);
+		PrototypeRegistry::getInstance()->addPrototype(
+			Prototype_Type::NORMAL_ENEMY, std::static_pointer_cast<Prototype>(normalEnemyPrototype)
+		);
+
+		// Normal Enemy Fast
+		std::shared_ptr<Enemy> clonedNormalEnemy = std::static_pointer_cast<Enemy>(normalEnemyPrototype->clone());
+		std::shared_ptr<FastEnemy> fastNormalEnemyPrototype = std::make_shared<FastEnemy>(clonedNormalEnemy);
+
+		PrototypeRegistry::getInstance()->addPrototype(
+			Prototype_Type::NORMAL_ENEMY_FAST, std::static_pointer_cast<Prototype>(fastNormalEnemyPrototype)
+		);
+	}
+    
+	// Medium Enemy
+	{
+		// Medium Enemy
+		std::shared_ptr<TextureType> mediumEnemyTexture = std::make_shared<TextureType>(Prototype_Type::MEDIUM_ENEMY);
+		std::shared_ptr<EnemyType> mediumEnemyPrototype = std::make_shared<EnemyType>(mediumEnemyTexture, SDL_Point{ 78, 78 }, 4, 5.0F, 16, 11, 5);
+		PrototypeRegistry::getInstance()->addPrototype(
+			Prototype_Type::MEDIUM_ENEMY, std::static_pointer_cast<Prototype>(mediumEnemyPrototype) 
+		);
+
+		// Medium Enemy Fast
+		std::shared_ptr<Enemy> clonedMediumEnemy = std::static_pointer_cast<Enemy>(mediumEnemyPrototype->clone());
+		std::shared_ptr<FastEnemy> fastNormalEnemyPrototype = std::make_shared<FastEnemy>(clonedMediumEnemy);
+
+		PrototypeRegistry::getInstance()->addPrototype(
+			Prototype_Type::MEDIUM_ENEMY_FAST, std::static_pointer_cast<Prototype>(fastNormalEnemyPrototype)
+		);
+	}
+
+	// Large Enemy
+	{
+		// Large Enemy
+		std::shared_ptr<TextureType> largeEnemyTexture = std::make_shared<TextureType>(Prototype_Type::LARGE_ENEMY);
+		std::shared_ptr<EnemyType> largeEnemyPrototype = std::make_shared<EnemyType>(largeEnemyTexture, SDL_Point{ 112, 112 }, 10, 2.0F, 30, 37, 7);
+		PrototypeRegistry::getInstance()->addPrototype(
+			Prototype_Type::LARGE_ENEMY, std::static_pointer_cast<Prototype>(largeEnemyPrototype)
+		);
+
+		// Large Enemy Fast
+		std::shared_ptr<Enemy> clonedLargeEnemy = std::static_pointer_cast<Enemy>(largeEnemyPrototype->clone());
+		std::shared_ptr<FastEnemy> fastLargeEnemyPrototype = std::make_shared<FastEnemy>(clonedLargeEnemy);
+
+		PrototypeRegistry::getInstance()->addPrototype(
+			Prototype_Type::LARGE_ENEMY_FAST, std::static_pointer_cast<Prototype>(fastLargeEnemyPrototype)
+		);
+	}
+}
+
+
+void Game::initMiniMap() {
+	Minimap::getInstance()->initMinimap();
+}
+
+void Game::initBars() {
+	WaveManager::getInstance()->initCountdownBar();
+}
+
+Game* Game::getInstance() {
+	static Game instance;
+	return &instance;
+}
+
+void Game::clearAllPlayers() {
+	Player::playerCounter = 1;
+	InvokerPlaying::getInstance()->players.clear();
+}
+
+void Game::addPlayer() {
 	// Clone a player
 	std::shared_ptr<Player> player1 = std::dynamic_pointer_cast<Player>(
 		PrototypeRegistry::getInstance()->getPrototype(Prototype_Type::PLAYER)
 	);
-	
+
 	player1->initProfile();
 
 	// Add player to invoker
@@ -193,87 +278,9 @@ void Game::initPlayer() {
 
 	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::sprint, sprintCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::unsprint, removeSprintCommand, player1);
-	
+
 	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::fire, fireCommand, player1);
 	InvokerPlaying::getInstance()->assignKeyToCommand(Command_Actions::unfire, unfireCommand, player1);
-}
-
-void Game::initBullet() {
-	std::shared_ptr<Bullet> bulletPrototype = std::make_shared<Bullet>();
-
-	PrototypeRegistry::getInstance()->addPrototype(
-		Prototype_Type::BULLET, std::static_pointer_cast<Prototype>(bulletPrototype)
-	);
-}
-
-void Game::initEnemy() {
-	// Normal Enemy
-	{
-		// Normal Enemy
-		std::shared_ptr<TextureType> normalEnemyTexture = std::make_shared<TextureType>(Prototype_Type::NORMAL_ENEMY);
-		std::shared_ptr<EnemyType> normalEnemyPrototype = std::make_shared<EnemyType>(normalEnemyTexture, SDL_Point{ 30, 30 }, 1, 3.0F, 7, 3, 3);
-		PrototypeRegistry::getInstance()->addPrototype(
-			Prototype_Type::NORMAL_ENEMY, std::static_pointer_cast<Prototype>(normalEnemyPrototype)
-		);
-
-		// Normal Enemy Fast
-		std::shared_ptr<Enemy> clonedNormalEnemy = std::static_pointer_cast<Enemy>(normalEnemyPrototype->clone());
-		std::shared_ptr<FastEnemy> fastNormalEnemyPrototype = std::make_shared<FastEnemy>(clonedNormalEnemy);
-
-		PrototypeRegistry::getInstance()->addPrototype(
-			Prototype_Type::NORMAL_ENEMY_FAST, std::static_pointer_cast<Prototype>(fastNormalEnemyPrototype)
-		);
-	}
-    
-	// Medium Enemy
-	{
-		// Medium Enemy
-		std::shared_ptr<TextureType> mediumEnemyTexture = std::make_shared<TextureType>(Prototype_Type::MEDIUM_ENEMY);
-		std::shared_ptr<EnemyType> mediumEnemyPrototype = std::make_shared<EnemyType>(mediumEnemyTexture, SDL_Point{ 78, 78 }, 4, 5.0F, 16, 11, 5);
-		PrototypeRegistry::getInstance()->addPrototype(
-			Prototype_Type::MEDIUM_ENEMY, std::static_pointer_cast<Prototype>(mediumEnemyPrototype) 
-		);
-
-		// Medium Enemy Fast
-		std::shared_ptr<Enemy> clonedMediumEnemy = std::static_pointer_cast<Enemy>(mediumEnemyPrototype->clone());
-		std::shared_ptr<FastEnemy> fastNormalEnemyPrototype = std::make_shared<FastEnemy>(clonedMediumEnemy);
-
-		PrototypeRegistry::getInstance()->addPrototype(
-			Prototype_Type::MEDIUM_ENEMY_FAST, std::static_pointer_cast<Prototype>(fastNormalEnemyPrototype)
-		);
-	}
-
-	// Large Enemy
-	{
-		// Large Enemy
-		std::shared_ptr<TextureType> largeEnemyTexture = std::make_shared<TextureType>(Prototype_Type::LARGE_ENEMY);
-		std::shared_ptr<EnemyType> largeEnemyPrototype = std::make_shared<EnemyType>(largeEnemyTexture, SDL_Point{ 112, 112 }, 10, 2.0F, 30, 37, 7);
-		PrototypeRegistry::getInstance()->addPrototype(
-			Prototype_Type::LARGE_ENEMY, std::static_pointer_cast<Prototype>(largeEnemyPrototype)
-		);
-
-		// Large Enemy Fast
-		std::shared_ptr<Enemy> clonedLargeEnemy = std::static_pointer_cast<Enemy>(largeEnemyPrototype->clone());
-		std::shared_ptr<FastEnemy> fastLargeEnemyPrototype = std::make_shared<FastEnemy>(clonedLargeEnemy);
-
-		PrototypeRegistry::getInstance()->addPrototype(
-			Prototype_Type::LARGE_ENEMY_FAST, std::static_pointer_cast<Prototype>(fastLargeEnemyPrototype)
-		);
-	}
-}
-
-
-void Game::initMiniMap() {
-	Minimap::getInstance()->initMinimap();
-}
-
-void Game::initBars() {
-	WaveManager::getInstance()->initCountdownBar();
-}
-
-Game* Game::getInstance() {
-	static Game instance;
-	return &instance;
 }
 
 void Game::setState(std::unique_ptr<GameState> state) {
@@ -281,7 +288,15 @@ void Game::setState(std::unique_ptr<GameState> state) {
 	gameState = std::move(state);
 }
 
-void Game::init() {
+void Game::startGame() {
+	clearAllPlayers();
+	addPlayer();
+
+	WaveManager::getInstance()->resetGame();
+	Bullet::bullets.clear();
+}
+
+void Game::initAll() {
 	initSDLSubsystems();
 	initWindowCreation();
 	initRendererCreation();

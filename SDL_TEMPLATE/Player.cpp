@@ -65,7 +65,7 @@ Player::Player(const Player& other)
     deadColorTexture(std::make_unique<SDL_Texture*>()),
     textPlayerName(std::make_unique<Text>()),
     textPlayerPosition(std::make_unique<Text>()),
-    stringPlayerName(std::make_unique<std::string>(Player::staticStringPlayerName)), //TODO
+    stringPlayerName(std::make_unique<std::string>(Player::staticStringPlayerName)),
     dstRectMonitor(std::make_unique<SDL_Rect>()),
     isMovingLeft(std::make_unique<bool>(false)),
     isMovingUpLeft(std::make_unique<bool>(false)),

@@ -66,6 +66,7 @@ void MainMenu::update() {
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
+			Game::getInstance()->startGame();
 		}
 	} else if (menu->mainMenuFlags->loadGame) {
 		Selector::getInstance()->update(140, 445);
@@ -95,12 +96,14 @@ void MainMenu::render() {
 	SDL_RenderCopy(Game::getInstance()->getRenderer(), Menu::getInstance()->mTextureMenu.get(), &srcRect, nullptr );
 	Selector::getInstance()->render();
 
-	/*SDL_SetRenderDrawBlendMode(Game::getInstance()->getRenderer(), SDL_BLENDMODE_BLEND);
+	/*
+	SDL_SetRenderDrawBlendMode(Game::getInstance()->getRenderer(), SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(Game::getInstance()->getRenderer(), 255, 0, 0, 120);
 	SDL_Rect tester = {
 		532, 566, 110, 55
 	};
-	SDL_RenderFillRect(Game::getInstance()->getRenderer(), &tester);*/
+	SDL_RenderFillRect(Game::getInstance()->getRenderer(), &tester);
+	*/
 	// TODO tester rects
 }
 
@@ -187,11 +190,81 @@ void TextInputMenu::render() {
 }
 
 void PausedMenu::input() {
+	MouseStateFlags* mouseFlags = Menu::getInstance()->mouseStateFlags.get();
+	PauseFlags* pauseFlags = Menu::getInstance()->pauseFlags.get();
+	SDL_Event event = Game::getInstance()->getEvent();
 
+	static int MPX, MPY = 0; // Mouse Position X/Y
+	switch (event.type) {
+	case SDL_KEYDOWN:
+		switch (event.key.keysym.sym) {
+		case SDLK_ESCAPE:
+			Game::getInstance()->setState(std::make_unique<GamePlaying>());
+			break;
+		default:
+			break;
+		}
+		break;
+	case SDL_MOUSEMOTION:
+		SDL_GetMouseState(&MPX, &MPY);
+
+		if (MPX >= 500 && MPX <= 680 && MPY >= 330 && MPY <= 385) {
+			mouseFlags->outside = 0;
+			pauseFlags->resume = 1;
+			pauseFlags->saveGame = 0;
+			pauseFlags->exit = 0;
+		} else if (MPX >= 470 && MPX <= 710 && MPY >= 396 && MPY <= 451) {
+			mouseFlags->outside = 0;
+			pauseFlags->resume = 0;
+			pauseFlags->saveGame = 1;
+			pauseFlags->exit = 0;
+		} else if (MPX >= 530 && MPX <= 642 && MPY >= 457 && MPY <= 512) {
+			mouseFlags->outside = 0;
+			pauseFlags->resume = 0;
+			pauseFlags->saveGame = 0;
+			pauseFlags->exit = 1;
+		} else {
+			mouseFlags->outside = 1;
+		}
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			mouseFlags->clicked = 1;
+		}
+		break;
+	case SDL_MOUSEBUTTONUP:
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			mouseFlags->clicked = 0;
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 void PausedMenu::update() {
+	Menu* menu = Menu::getInstance();
 
+	if (menu->pauseFlags->resume) {
+		Selector::getInstance()->update(96, 344);
+
+		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Game::getInstance()->setState(std::make_unique<GamePlaying>());
+		}
+	} else if (menu->pauseFlags->saveGame) {
+		Selector::getInstance()->update(130, 413);
+
+		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			//Menu::getInstance()->setState(std::make_unique<MainMenu>()); TODO : save
+		}
+	} else if (menu->pauseFlags->exit) {
+		Selector::getInstance()->update(70, 472);
+
+		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Game::getInstance()->setState(std::make_unique<GameMenu>());
+			Menu::getInstance()->setState(std::make_unique<MainMenu>());
+		}
+	}
 }
 
 void PausedMenu::render() {
@@ -202,16 +275,67 @@ void PausedMenu::render() {
 		Menu::getInstance()->pauseGODimension->x / 2, Menu::getInstance()->pauseGODimension->y };
 
 	SDL_RenderCopy(renderer, Menu::getInstance()->mTexturePauseGO.get(), &srcRect, dstRect);
+	
+	Selector::getInstance()->render();
 
 	Border::bRenderBorder(renderer, *dstRect, 3, { 0, 0, 0, 255 } );
 }
 
 void GameOverMenu::input() {
+	MouseStateFlags* mouseFlags = Menu::getInstance()->mouseStateFlags.get();
+	GameOverFlags* gameOverFlags = Menu::getInstance()->gameOverFlags.get();
+	SDL_Event event = Game::getInstance()->getEvent();
 
+	static int MPX, MPY = 0; // Mouse Position X/Y
+	switch (event.type) {
+	case SDL_MOUSEMOTION:
+		SDL_GetMouseState(&MPX, &MPY);
+
+		if (MPX >= 458 && MPX <= 722 && MPY >= 376 && MPY <= 431) {
+			mouseFlags->outside = 0;
+			gameOverFlags->playAgain = 1;
+			gameOverFlags->mainMenu = 0;
+		} else if (MPX >= 458 && MPX <= 722 && MPY >= 442 && MPY <= 497) {
+			mouseFlags->outside = 0;
+			gameOverFlags->playAgain = 0;
+			gameOverFlags->mainMenu = 1;
+		} else {
+			mouseFlags->outside = 1;
+		}
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			mouseFlags->clicked = 1;
+		}
+		break;
+	case SDL_MOUSEBUTTONUP:
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			mouseFlags->clicked = 0;
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 void GameOverMenu::update() {
+	Menu* menu = Menu::getInstance();
 
+	if (menu->gameOverFlags->playAgain) {
+		Selector::getInstance()->update(148, 393);
+
+		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Game::getInstance()->setState(std::make_unique<GamePlaying>());
+			Game::getInstance()->startGame();
+		}
+	} else if (menu->gameOverFlags->mainMenu) {
+		Selector::getInstance()->update(148, 458);
+
+		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Game::getInstance()->setState(std::make_unique<GameMenu>());
+			Menu::getInstance()->setState(std::make_unique<MainMenu>());
+		}
+	}
 }
 
 void GameOverMenu::render() {
@@ -222,6 +346,7 @@ void GameOverMenu::render() {
 		Menu::getInstance()->pauseGODimension->x / 2, Menu::getInstance()->pauseGODimension->y };
 
 	SDL_RenderCopy(renderer, Menu::getInstance()->mTexturePauseGO.get(), &srcRect, dstRect);
+	Selector::getInstance()->render();
 
 	Border::bRenderBorder(renderer, *dstRect, 3, { 0, 0, 0, 255 });
 }

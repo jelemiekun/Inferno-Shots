@@ -14,7 +14,7 @@
 
 int SDL_main(int argc, char* argv[]) {
     Game* game = Game::getInstance();
-    game->init();
+    game->initAll();
 
     int countFramme = 0;
     Uint32 startTime = SDL_GetTicks();
