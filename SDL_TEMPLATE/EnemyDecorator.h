@@ -19,6 +19,7 @@ public:
     virtual const int getDamage() const override;
     virtual void setDead() override;
     virtual void decreaseHealth() override;
+    virtual Prototype_Type getType() const override;
     virtual int getMinimapPixelSize() override;
     virtual std::shared_ptr<Prototype> clone() const override;
 };

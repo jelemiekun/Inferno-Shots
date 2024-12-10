@@ -13,6 +13,7 @@ class PlayerProfile;
 class Text;
 class Enemy;
 class Bullet;
+class CountdownTimer;
 
 class Player : 
 	public Prototype, public std::enable_shared_from_this<Player> {
@@ -58,6 +59,7 @@ public:
 	std::unique_ptr<Text> textPlayerPosition;
 	std::unique_ptr<std::string> stringPlayerName;
 	std::unique_ptr<SDL_Rect> dstRectMonitor;
+	std::unique_ptr<CountdownTimer> deadTimer;
 	
 	std::unique_ptr<bool> isMovingLeft;
 	std::unique_ptr<bool> isMovingUpLeft;

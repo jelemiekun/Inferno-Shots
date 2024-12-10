@@ -36,6 +36,7 @@ private:
 	void initSDL_image();
 	void initSDL_ttf();
 	void initFonts();
+	void initGameSound();
 	void setRunningToTrue();
 	void initMenu();
 	void initSelector();

@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+#include "GameEnums.h"
 #include <memory>
 #include <SDL.h>
 
@@ -8,6 +9,7 @@ class TextureType;
 
 class EnemyType : public Enemy, public std::enable_shared_from_this<EnemyType> {
 public:
+	std::unique_ptr<Prototype_Type> enemyType;
 	std::shared_ptr<TextureType> textureType;
 	std::unique_ptr<SDL_Point> dimension;
 	std::unique_ptr<int> healthCount;
@@ -27,7 +29,7 @@ private:
 	void move();
 
 public:
-	EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, int healthCount, float speed, int damage, int score, int minimampSize);
+	EnemyType(Prototype_Type enemyType, std::shared_ptr<TextureType> type, SDL_Point dimension, int healthCount, float speed, int damage, int score, int minimampSize);
 	EnemyType(const EnemyType& other);
 
 	void initPos() override;
@@ -42,6 +44,7 @@ public:
 	void decreaseHealth() override;
 	const SDL_Point& getPosition() const override;
 	const SDL_Point& getDimension() const override;
+	Prototype_Type getType() const override;
 	int getMinimapPixelSize() override;
 	const int getDamage() const override;
 };

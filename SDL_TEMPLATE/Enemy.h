@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "Prototype.h"
+#include "GameEnums.h"
 
 class Player;
 
@@ -19,5 +20,6 @@ public:
     virtual const int getDamage() const = 0;
     virtual void setDead() = 0;
     virtual void decreaseHealth() = 0;
+    virtual Prototype_Type getType() const = 0;
     virtual int getMinimapPixelSize() = 0;
 };

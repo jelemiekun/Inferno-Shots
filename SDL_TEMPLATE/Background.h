@@ -18,7 +18,7 @@ public:
 private:
 	void checkIfBackgroundIsLoaded();
 	void setDimension();
-	void setDstRect();
+	void setSrcRect();
 
 public:
 	Background(const Background&) = delete;

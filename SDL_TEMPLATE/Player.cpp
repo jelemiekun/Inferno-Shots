@@ -14,6 +14,8 @@
 #include "GameState.h"
 #include "Menu.h"
 #include "MenuState.h"
+#include "CountdownTimer.h"
+#include "GameSound.h"
 #include <string>
 
 int Player::playerCounter = 1;
@@ -70,6 +72,7 @@ Player::Player(const Player& other)
     textPlayerPosition(std::make_unique<Text>()),
     stringPlayerName(std::make_unique<std::string>(Player::staticStringPlayerName)),
     dstRectMonitor(std::make_unique<SDL_Rect>()),
+    deadTimer(std::make_unique<CountdownTimer>()),
     isMovingLeft(std::make_unique<bool>(false)),
     isMovingUpLeft(std::make_unique<bool>(false)),
     isMovingUp(std::make_unique<bool>(false)),
@@ -199,9 +202,19 @@ void Player::checkHealth() {
     if (*alive && *heartAmount < 1) {
         *alive = false;
     } else if (!(*alive)) {
+        GameSound::getInstance()->stopMusic();
+        GameSound::getInstance()->playSoundFX(SFX::gameOver);
+
         setDeadColor();
-        Game::getInstance()->setState(std::make_unique<GameOver>());
-        Menu::getInstance()->setState(std::make_unique<GameOverMenu>());
+
+        if (!deadTimer->hasStarted()) {
+            deadTimer->start();
+        }
+
+        if (deadTimer->isFinished()) {
+            Game::getInstance()->setState(std::make_unique<GameOver>());
+            Menu::getInstance()->setState(std::make_unique<GameOverMenu>());
+        }
     }
 }
 
@@ -214,6 +227,7 @@ void Player::checkCollisionWithEnemies() {
             takeDamage(enemy->getDamage());
             addScore(enemy->getEnemyScore());
             enemy->setDead();
+            GameSound::getInstance()->playSoundFX(SFX::damage);
         }
     }
 }
@@ -320,7 +334,7 @@ void Player::firing() {
         auto bullet = getBulletPrototype();
         bullet->initPos(getBulletPosition());
         Bullet::bullets.push_back(std::move(bullet));
-
+        GameSound::getInstance()->playSoundFX(SFX::fire);
     }
 }
 
@@ -399,6 +413,8 @@ void Player::initProfile() {
     textPlayerPosition->setFont(Font::MOTION_CONTROL_BOLD);
     textPlayerPosition->setDstRect({ 1080, 160, 85, 30 });
     textPlayerPosition->setColor({ 255, 255, 255, 255 });
+
+    deadTimer->setDuration(3000);
 }
 
 void Player::updateProfileName() {

@@ -9,8 +9,9 @@
 #include <cmath>
 #include <random>
 
-EnemyType::EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, int healthCount,
+EnemyType::EnemyType(Prototype_Type enemyType, std::shared_ptr<TextureType> type, SDL_Point dimension, int healthCount,
 	float speed, int damage, int score, int minimapSize) :
+	enemyType(std::make_unique<Prototype_Type>(enemyType)),
 	textureType(type),
 	dimension(std::make_unique<SDL_Point>(dimension)),
 	healthCount(std::make_unique<int>(healthCount)),
@@ -25,7 +26,8 @@ EnemyType::EnemyType(std::shared_ptr<TextureType> type, SDL_Point dimension, int
 	minimapSize(std::make_unique<int>(minimapSize)) {}
 
 EnemyType::EnemyType(const EnemyType& other)
-	: textureType(other.textureType),
+	: enemyType(std::make_unique<Prototype_Type>(*other.enemyType)),
+	textureType(other.textureType),
 	dimension(std::make_unique<SDL_Point>(*other.dimension)),
 	healthCount(std::make_unique<int>(*other.healthCount)),
 	damage(std::make_unique<int>(*other.damage)),
@@ -177,6 +179,10 @@ std::shared_ptr<Prototype> EnemyType::clone() const {
 
 const SDL_Point& EnemyType::getPosition() const {
 	return *position.get();
+}
+
+Prototype_Type EnemyType::getType() const {
+	return *enemyType;
 }
 
 int EnemyType::getMinimapPixelSize() {

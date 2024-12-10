@@ -9,7 +9,7 @@ void Background::checkIfBackgroundIsLoaded() {
 	if (background) {
 		std::cout << "Background loaded." << '\n';
 		setDimension();
-		setDstRect();
+		setSrcRect();
 	} else {
 		std::cout << "Failed to load background: " << IMG_GetError() << '\n';
 	}
@@ -21,7 +21,7 @@ void Background::setDimension() {
 	SDL_QueryTexture(background, nullptr, nullptr, &dimension->x, &dimension->y);
 }
 
-void Background::setDstRect() {
+void Background::setSrcRect() {
 	srcRect = new SDL_Rect;
 	srcRect->w = SCREEN_WIDTH;
 	srcRect->h = SCREEN_HEIGHT;

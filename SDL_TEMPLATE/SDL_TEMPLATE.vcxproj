@@ -28,6 +28,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEnums.cpp" />
     <ClCompile Include="GameProgressManager.cpp" />
+    <ClCompile Include="GameSound.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InvokerPlaying.cpp" />
     <ClCompile Include="main.cpp" />
@@ -63,6 +64,7 @@
     <ClInclude Include="GameEnums.h" />
     <ClInclude Include="GameProgress.h" />
     <ClInclude Include="GameProgressManager.h" />
+    <ClInclude Include="GameSound.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InvokerPlaying.h" />
     <ClInclude Include="Menu.h" />

@@ -8,6 +8,7 @@
 #include "Bar.h"
 #include "Text.h"
 #include "FastEnemy.h"
+#include "GameSound.h"
 #include <random>
 #include <string>
 
@@ -211,6 +212,8 @@ void WaveManager::initWave() {
                 enemies.push_back(fastLargeEnemy);
             }
         }
+
+        GameSound::getInstance()->playSoundFX(SFX::largeEnemySpawned);
     }
 
     // Normal Enemies
@@ -230,7 +233,19 @@ void WaveManager::updateEnemies() {
     for (auto& enemy : enemies) {
         enemy->update();
         enemy->checkCollision();
-        if (enemy->isDead()) deadEnemiesToRemove.push_back(enemy);
+        if (enemy->isDead()) {
+            deadEnemiesToRemove.push_back(enemy);
+            if (enemy->getType() == Prototype_Type::NORMAL_ENEMY || 
+                enemy->getType() == Prototype_Type::NORMAL_ENEMY_FAST) {
+                GameSound::getInstance()->playSoundFX(SFX::normalEnemyDead);
+            } else if (enemy->getType() == Prototype_Type::MEDIUM_ENEMY ||
+                enemy->getType() == Prototype_Type::MEDIUM_ENEMY_FAST) {
+                GameSound::getInstance()->playSoundFX(SFX::mediumEnemyDead);
+            } else if (enemy->getType() == Prototype_Type::LARGE_ENEMY ||
+                enemy->getType() == Prototype_Type::LARGE_ENEMY_FAST) {
+                GameSound::getInstance()->playSoundFX(SFX::largeEnemyDead);
+            }
+        }
     }
 
     removeDeadEnemies(deadEnemiesToRemove);

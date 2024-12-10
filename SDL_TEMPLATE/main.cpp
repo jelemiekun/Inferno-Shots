@@ -5,7 +5,6 @@
 // TODO : save game state of the game such as player name, player position, and wave number 
 // TODO : music & sfx
 // TODO : compress photos/audios
-// TODO : when dead, add 3 seconds timer before setting different state, then zoom out
 // TODO : controller
 
 int SDL_main(int argc, char* argv[]) {

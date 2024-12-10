@@ -48,6 +48,10 @@ void EnemyDecorator::decreaseHealth() {
     decoratedEnemy->decreaseHealth();
 }
 
+Prototype_Type EnemyDecorator::getType() const {
+    return decoratedEnemy->getType();
+}
+
 
 int EnemyDecorator::getMinimapPixelSize() {
     return decoratedEnemy->getMinimapPixelSize();

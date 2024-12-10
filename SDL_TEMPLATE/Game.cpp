@@ -21,6 +21,7 @@
 #include "Selector.h"
 #include "GameProgressManager.h"
 #include "GameProgress.h"
+#include "GameSound.h"
 #include <cstring> 
 
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GameMenu>()),
@@ -71,6 +72,10 @@ void Game::initFonts() {
 	WaveManager::initTexts();
 }
 
+void Game::initGameSound() {
+	GameSound::getInstance()->initMixer();
+}
+
 void Game::setRunningToTrue() {
 	running = true;
 }
@@ -119,7 +124,8 @@ void Game::initEnemy() {
 	{
 		// Normal Enemy
 		std::shared_ptr<TextureType> normalEnemyTexture = std::make_shared<TextureType>(Prototype_Type::NORMAL_ENEMY);
-		std::shared_ptr<EnemyType> normalEnemyPrototype = std::make_shared<EnemyType>(normalEnemyTexture, SDL_Point{ 30, 30 }, 1, 3.0F, 7, 3, 3);
+		std::shared_ptr<EnemyType> normalEnemyPrototype = std::make_shared<EnemyType>(Prototype_Type::NORMAL_ENEMY, 
+			normalEnemyTexture, SDL_Point{ 30, 30 }, 1, 3.0F, 7, 3, 3);
 		PrototypeRegistry::getInstance()->addPrototype(
 			Prototype_Type::NORMAL_ENEMY, std::static_pointer_cast<Prototype>(normalEnemyPrototype)
 		);
@@ -137,7 +143,8 @@ void Game::initEnemy() {
 	{
 		// Medium Enemy
 		std::shared_ptr<TextureType> mediumEnemyTexture = std::make_shared<TextureType>(Prototype_Type::MEDIUM_ENEMY);
-		std::shared_ptr<EnemyType> mediumEnemyPrototype = std::make_shared<EnemyType>(mediumEnemyTexture, SDL_Point{ 78, 78 }, 4, 5.0F, 16, 11, 5);
+		std::shared_ptr<EnemyType> mediumEnemyPrototype = std::make_shared<EnemyType>(Prototype_Type::MEDIUM_ENEMY, 
+			mediumEnemyTexture, SDL_Point{ 78, 78 }, 4, 5.0F, 16, 11, 5);
 		PrototypeRegistry::getInstance()->addPrototype(
 			Prototype_Type::MEDIUM_ENEMY, std::static_pointer_cast<Prototype>(mediumEnemyPrototype) 
 		);
@@ -155,7 +162,8 @@ void Game::initEnemy() {
 	{
 		// Large Enemy
 		std::shared_ptr<TextureType> largeEnemyTexture = std::make_shared<TextureType>(Prototype_Type::LARGE_ENEMY);
-		std::shared_ptr<EnemyType> largeEnemyPrototype = std::make_shared<EnemyType>(largeEnemyTexture, SDL_Point{ 112, 112 }, 10, 2.0F, 30, 37, 7);
+		std::shared_ptr<EnemyType> largeEnemyPrototype = std::make_shared<EnemyType>(Prototype_Type::LARGE_ENEMY, 
+			largeEnemyTexture, SDL_Point{ 112, 112 }, 10, 2.0F, 30, 37, 7);
 		PrototypeRegistry::getInstance()->addPrototype(
 			Prototype_Type::LARGE_ENEMY, std::static_pointer_cast<Prototype>(largeEnemyPrototype)
 		);
@@ -299,6 +307,8 @@ void Game::startGame() {
 
 	WaveManager::getInstance()->resetGame();
 	Bullet::bullets.clear();
+
+	GameSound::getInstance()->playMusic();
 }
 
 void Game::resetProgress() {
@@ -335,6 +345,7 @@ void Game::initAll() {
 	initSDL_image();
 	initSDL_ttf();
 	initFonts();
+	initGameSound();
 	setRunningToTrue();
 	initMenu();
 	initSelector();
