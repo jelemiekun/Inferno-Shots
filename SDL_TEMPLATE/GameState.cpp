@@ -147,11 +147,13 @@ void GamePlaying::update() {
         if (!WaveManager::getInstance()->hasCountdownStarted()) {
             WaveManager::getInstance()->startCountdown();
             WaveManager::getInstance()->decreasePlayersFiringCooldown();
+
+            WaveManager::getInstance()->incrementWave();
+            WaveManager::getInstance()->updateWaveCountText();
         }
 
         if (WaveManager::getInstance()->isCountdownFinish()) {
             WaveManager::getInstance()->setCountdownFinish();
-            WaveManager::getInstance()->incrementWave();
             WaveManager::getInstance()->initWave();
         }
     }

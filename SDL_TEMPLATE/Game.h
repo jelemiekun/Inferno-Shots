@@ -4,11 +4,13 @@
 #include <SDL_ttf.h>
 
 class GameState;
+struct GameProgress;
 
 class Game {
 
 private:
 	std::unique_ptr<GameState> gameState;
+	std::unique_ptr<GameProgress> gameProgress;
 
 protected:
 	Game();
@@ -44,6 +46,7 @@ private:
 	void initEnemy();
 	void initMiniMap();
 	void initBars();
+	void initGameProgress();
 	void clearAllPlayers();
 	void addPlayer();
 
@@ -52,9 +55,12 @@ public:
 
 public:
 	void setState(std::unique_ptr<GameState> state);
-	void initState();
 
 	void startGame();
+
+	void resetProgress();
+	void loadProgress();
+	void saveProgress();
 
 	void initAll();
 	void input();

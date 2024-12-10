@@ -30,16 +30,21 @@ private:
     static std::unique_ptr<CountdownTimer> countdownTimer;
     static std::unique_ptr<Bar> countdownBar;
     static std::unique_ptr<Text> countdownText;
+    static std::unique_ptr<Text> waveCountText;
+    static std::unique_ptr<Text> playerScoreText;
+    static std::unique_ptr<bool> waveCountFromLoadFile;
     std::vector<std::shared_ptr<Enemy>> enemies;
 
 public:
-    static SDL_Rect getTextDstRect();
+    static SDL_Rect getCountdownTextDstRect();
+    static SDL_Rect getWaveCountTextDstRect();
     static void initTexts();
 
 private:
     Uint32 getCountdownDuration() const;
     void setCountdownMaxAmount(Uint32 duration);
     void updateEnemies();
+    void updatePlayerScoreText();
     void removeDeadEnemies(const std::vector<std::shared_ptr<Enemy>>& enemiesToRemove);
     int getEnemyCountToinit();
     int getRandomNumber(const int& max);
@@ -51,6 +56,8 @@ public:
 
     void resetGame();
 
+    void setWaveCount(int waveCount);
+
     void initWave();
     void update();
     void render();
@@ -61,6 +68,7 @@ public:
     void startCountdown();
     bool isCountdownFinish() const;
     bool hasCountdownStarted() const;
+    void updateWaveCountText();
     void setCountdownFinish();
     void pauseCountdownTimer();
     void unpauseCountdownTimer();

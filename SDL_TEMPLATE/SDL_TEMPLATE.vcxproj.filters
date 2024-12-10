@@ -84,9 +84,15 @@
     <ClCompile Include="Selector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameProgressManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\.gitignore">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -170,6 +176,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Selector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameProgressManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameProgress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

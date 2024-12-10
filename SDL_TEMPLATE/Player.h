@@ -28,6 +28,8 @@ public:
 	static TextureType* textureType;
 	static int playerCounter;
 	static std::string staticStringPlayerName;
+	static int staticScore;
+	static bool playerScoreLoadedFromFile;
 
 public:
 	std::unique_ptr<int> ID;
@@ -71,7 +73,6 @@ private:
 	void setDeadColor();
 	void firing();
 	void takeDamage(int damage);
-	void addScore(int score);
 	std::unique_ptr<Bullet> getBulletPrototype();
 	bool canFire() const;
 	SDL_Point getBulletPosition() const;
@@ -103,6 +104,7 @@ public:
 
 	void initProfile();
 	void updateProfileName();
+	void addScore(int score);
 	void update();
 	void render();
 	void renderPlayerProfiles() const;

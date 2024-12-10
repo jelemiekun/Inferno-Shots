@@ -41,7 +41,7 @@ private:
     constexpr const static char* PAUSE_GO_BG_PATH = "assets/images/pauseGameOverBackground-Sheet.png";
     
 public:
-    constexpr static int MAX_INPUT_LENGTH = 10;
+    constexpr static int MAX_INPUT_LENGTH = 10; // Change also GameProgress
     static std::string tempPlayerNamme;
 private:
 	Menu();

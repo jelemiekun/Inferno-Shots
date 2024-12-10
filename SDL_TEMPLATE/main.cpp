@@ -2,15 +2,11 @@
 #include "Game.h"
 #include "FPSManager.h"
 
-// TODO : player name input
-// TODO : save game state of the game such as player name, player position, and wave number
-// TODO : load saved game state
-// TODO : Menu State     = New Game / Load Game / Exit
-// TODO : Paused State   = Continue / Save State / Return to Menu
-// TODO : Game Over      = Play Again / Return to Menu 
+// TODO : save game state of the game such as player name, player position, and wave number 
 // TODO : music & sfx
 // TODO : compress photos/audios
 // TODO : when dead, add 3 seconds timer before setting different state, then zoom out
+// TODO : controller
 
 int SDL_main(int argc, char* argv[]) {
     Game* game = Game::getInstance();

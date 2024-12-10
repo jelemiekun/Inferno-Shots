@@ -27,6 +27,7 @@
     <ClCompile Include="FPSManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEnums.cpp" />
+    <ClCompile Include="GameProgressManager.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InvokerPlaying.cpp" />
     <ClCompile Include="main.cpp" />
@@ -44,6 +45,7 @@
     <ClCompile Include="WaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.gitignore" />
     <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +61,8 @@
     <ClInclude Include="FPSManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameEnums.h" />
+    <ClInclude Include="GameProgress.h" />
+    <ClInclude Include="GameProgressManager.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InvokerPlaying.h" />
     <ClInclude Include="Menu.h" />

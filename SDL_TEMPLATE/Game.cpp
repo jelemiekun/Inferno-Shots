@@ -19,6 +19,9 @@
 #include "FastEnemy.h"
 #include "Menu.h"
 #include "Selector.h"
+#include "GameProgressManager.h"
+#include "GameProgress.h"
+#include <cstring> 
 
 Game::Game() : gWindow(nullptr), gRenderer(nullptr), gameState(std::make_unique<GameMenu>()),
 				running(false) {}
@@ -95,7 +98,7 @@ void Game::initPlayerProfile() {
 void Game::initPlayer() {
 	// Initialize main prototype of Player
 	SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(1, 650, position, 4.0f, 30.0f);
+	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(1, 700, position, 4.0f, 30.0f);
 
 	// Add main prototype player to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
@@ -174,6 +177,10 @@ void Game::initMiniMap() {
 
 void Game::initBars() {
 	WaveManager::getInstance()->initCountdownBar();
+}
+
+void Game::initGameProgress() {
+	gameProgress = std::make_unique<GameProgress>();
 }
 
 Game* Game::getInstance() {
@@ -294,6 +301,33 @@ void Game::startGame() {
 	Bullet::bullets.clear();
 }
 
+void Game::resetProgress() {
+	strncpy_s(gameProgress->playerName, sizeof(gameProgress->playerName), Player::staticStringPlayerName.c_str(), _TRUNCATE);
+	gameProgress->waveCount = 0;
+	gameProgress->score = 0;
+
+	GameProgressManager::getInstance()->saveProgress(*gameProgress);
+}
+
+void Game::loadProgress() {
+    GameProgressManager::getInstance()->loadProgress(*gameProgress);
+
+    Player::staticStringPlayerName = gameProgress->playerName;
+    Player::staticScore = gameProgress->score;
+	Player::playerScoreLoadedFromFile = true;
+    WaveManager::getInstance()->setWaveCount(gameProgress->waveCount);
+}
+
+
+void Game::saveProgress() {
+	strncpy_s(gameProgress->playerName, sizeof(gameProgress->playerName), Player::staticStringPlayerName.c_str(), _TRUNCATE);
+	gameProgress->playerName[sizeof(gameProgress->playerName) - 1] = '\0';
+	gameProgress->waveCount = WaveManager::getInstance()->getWaveCount();
+	gameProgress->score = Player::staticScore;
+
+	GameProgressManager::getInstance()->saveProgress(*gameProgress);
+}
+
 void Game::initAll() {
 	initSDLSubsystems();
 	initWindowCreation();
@@ -311,6 +345,7 @@ void Game::initAll() {
 	initEnemy();
 	initMiniMap();
 	initBars();
+	initGameProgress();
 }
 
 void Game::input() {

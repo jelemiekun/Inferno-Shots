@@ -22,6 +22,10 @@ std::string Player::staticStringPlayerName = "Player";
 
 TextureType* Player::textureType = nullptr;
 
+int Player::staticScore = 0;
+
+bool Player::playerScoreLoadedFromFile = false;
+
 // Constructor for prototype only, will not increment counter
 Player::Player(int heartAmount, int maxSprintAmount, SDL_Point position, float movementSpeed, float speedDecay)
     : ID(std::make_unique<int>(0)),
@@ -73,7 +77,14 @@ Player::Player(const Player& other)
     isMovingRight(std::make_unique<bool>(false)),
     isMovingDownRight(std::make_unique<bool>(false)),
     isMovingDown(std::make_unique<bool>(false)),
-    isMovingDownLeft(std::make_unique<bool>(false)) {}
+    isMovingDownLeft(std::make_unique<bool>(false)) {
+    if (Player::playerScoreLoadedFromFile) {
+        *score = Player::staticScore;
+        Player::playerScoreLoadedFromFile = false;
+    } else {
+        addScore(0);
+    }
+}
 
 void Player::isCommandMove(Command* command) {
     if (dynamic_cast<MoveLeftCommand*>(command) ||
@@ -319,6 +330,7 @@ void Player::takeDamage(int damage) {
 
 void Player::addScore(int score) {
     *this->score += score;
+    staticScore = *this->score;
 }
 
 SDL_Rect Player::getEnemyRect(Enemy& enemy) {

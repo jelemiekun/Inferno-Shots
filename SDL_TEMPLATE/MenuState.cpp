@@ -71,9 +71,11 @@ void MainMenu::update() {
 	} else if (menu->mainMenuFlags->loadGame) {
 		Selector::getInstance()->update(140, 445);
 
-		/*if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Game::getInstance()->loadProgress();
+			Game::getInstance()->startGame();
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
-		}*/ // TODO: check if there'es saved game
+		}
 	} else if (menu->mainMenuFlags->changeName) {
 		Selector::getInstance()->update(160, 515);
 
@@ -255,7 +257,7 @@ void PausedMenu::update() {
 		Selector::getInstance()->update(130, 413);
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
-			//Menu::getInstance()->setState(std::make_unique<MainMenu>()); TODO : save
+			Game::getInstance()->saveProgress();
 		}
 	} else if (menu->pauseFlags->exit) {
 		Selector::getInstance()->update(70, 472);
@@ -324,6 +326,7 @@ void GameOverMenu::update() {
 		Selector::getInstance()->update(148, 393);
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Game::getInstance()->resetProgress();
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
 			Game::getInstance()->startGame();
 		}
@@ -331,6 +334,7 @@ void GameOverMenu::update() {
 		Selector::getInstance()->update(148, 458);
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			Game::getInstance()->resetProgress();
 			Game::getInstance()->setState(std::make_unique<GameMenu>());
 			Menu::getInstance()->setState(std::make_unique<MainMenu>());
 		}

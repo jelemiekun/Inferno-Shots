@@ -9,6 +9,7 @@
 #include "Text.h"
 #include "FastEnemy.h"
 #include <random>
+#include <string>
 
 std::unique_ptr<int> WaveManager::waveCount = std::make_unique<int>(0);
 
@@ -18,22 +19,45 @@ std::unique_ptr<Bar> WaveManager::countdownBar = std::make_unique<Bar>();
 
 std::unique_ptr<Text> WaveManager::countdownText = std::make_unique<Text>();
 
+std::unique_ptr<Text> WaveManager::waveCountText = std::make_unique<Text>();
+
+std::unique_ptr<Text> WaveManager::playerScoreText = std::make_unique<Text>();
+
+std::unique_ptr<bool> WaveManager::waveCountFromLoadFile = std::make_unique<bool>(false);
 
 WaveManager::WaveManager() {}
 
-SDL_Rect WaveManager::getTextDstRect() {
+SDL_Rect WaveManager::getCountdownTextDstRect() {
     SDL_Rect dstRect{ 0, 0, 300, 35 };
     dstRect.x = (SCREEN_WIDTH / 2) - (dstRect.w / 2);
     dstRect.y = SCREEN_HEIGHT - dstRect.h - 80;
     return dstRect;
 }
 
+SDL_Rect WaveManager::getWaveCountTextDstRect() {
+    SDL_Rect dstRect{ 5, 0, 100, 25 };
+    dstRect.y = SCREEN_HEIGHT - dstRect.h - dstRect.x - 5;
+    return dstRect;
+}
+
 void WaveManager::initTexts() {
     countdownText->setFont(Font::MOTION_CONTROL_BOLD);
     countdownText->setText("Time Until Next Wave:");
-    countdownText->setDstRect(getTextDstRect());
+    countdownText->setDstRect(getCountdownTextDstRect());
     countdownText->setColor({ 255, 255, 255, 255 });
     countdownText->loadText();
+
+    waveCountText->setFont(Font::MOTION_CONTROL_BOLD);
+    SDL_Rect waveCountTextDstRect = getWaveCountTextDstRect();
+    waveCountText->setDstRect(waveCountTextDstRect);
+    waveCountText->setColor({ 255, 255, 255, 255 });
+
+    playerScoreText->setFont(Font::MOTION_CONTROL_BOLD);
+    SDL_Rect playerScoreTextDstRect = waveCountTextDstRect;
+    playerScoreTextDstRect.x = 14;
+    playerScoreTextDstRect.y -= waveCountTextDstRect.h;
+    playerScoreText->setDstRect(playerScoreTextDstRect);
+    playerScoreText->setColor({ 255, 255, 255, 255 });
 }
 
 WaveManager* WaveManager::getInstance() {
@@ -97,7 +121,11 @@ int WaveManager::getRandomNumber(const int& max) {
 }
 
 void WaveManager::resetWaveCount() {
-    *waveCount = 0;
+    if (!(*waveCountFromLoadFile)) {
+        *waveCount = 0;
+    } else {
+        *waveCountFromLoadFile = false;
+    }
 }
 
 void WaveManager::clearEnemies() {
@@ -108,6 +136,11 @@ void WaveManager::resetGame() {
     resetWaveCount();
     clearEnemies();
     setCountdownFinish();
+}
+
+void WaveManager::setWaveCount(int waveCount) {
+    *waveCountFromLoadFile = true;
+    *WaveManager::waveCount.get() = waveCount;
 }
 
 void WaveManager::initWave() {
@@ -203,6 +236,11 @@ void WaveManager::updateEnemies() {
     removeDeadEnemies(deadEnemiesToRemove);
 }
 
+void WaveManager::updatePlayerScoreText() {
+    playerScoreText->setText("Score: " + std::to_string(Player::staticScore));
+    playerScoreText->loadText();
+}
+
 void WaveManager::removeDeadEnemies(const std::vector<std::shared_ptr<Enemy>>& deadEnemiesToRemove) {
     for (const auto& enemy : deadEnemiesToRemove) {
         enemies.erase(
@@ -219,6 +257,7 @@ void WaveManager::removeDeadEnemies(const std::vector<std::shared_ptr<Enemy>>& d
 void WaveManager::update() {
     updateEnemies();
     countdownBar->update(static_cast<float>(countdownTimer->getDurationTime() - countdownTimer->getElapsedTime()));
+    updatePlayerScoreText();
 }
 
 
@@ -231,6 +270,9 @@ void WaveManager::render() {
         countdownText->render();
         countdownBar->render();
     }
+
+    waveCountText->render();
+    playerScoreText->render();
 }
 
 bool WaveManager::isWaveFinish() const {
@@ -258,6 +300,11 @@ bool WaveManager::isCountdownFinish() const {
 
 bool WaveManager::hasCountdownStarted() const {
     return countdownTimer->hasStarted();
+}
+
+void WaveManager::updateWaveCountText() {
+    waveCountText->setText(" Wave: " +  std::to_string(*waveCount));
+    waveCountText->loadText();
 }
 
 void WaveManager::setCountdownFinish() {
