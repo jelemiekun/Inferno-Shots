@@ -202,7 +202,6 @@ void Player::checkHealth() {
     if (*alive && *heartAmount < 1) {
         *alive = false;
     } else if (!(*alive)) {
-        GameSound::getInstance()->stopMusic();
         GameSound::getInstance()->playSoundFX(SFX::gameOver);
 
         setDeadColor();

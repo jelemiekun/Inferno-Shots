@@ -6,9 +6,14 @@
 #include "Text.h"
 #include "BorderManager.h"
 #include "WaveManager.h"
+#include "GameSound.h"
 #include <iostream>
 
 void MainMenu::input() {
+	static int previousState = -1; 
+	int currentState = -1;
+	static bool playMusic = true;
+
 	MouseStateFlags* mouseFlags = Menu::getInstance()->mouseStateFlags.get();
 	MainMenuFlags* menuFlags = Menu::getInstance()->mainMenuFlags.get();
 
@@ -16,31 +21,41 @@ void MainMenu::input() {
 	SDL_GetMouseState(&MPX, &MPY);
 
 	if (MPX >= 530 && MPX <= 630 && MPY >= 360 && MPY <= 415) {
+		currentState = 0;
 		mouseFlags->outside = 0;
 		menuFlags->play = 1;
 		menuFlags->loadGame = 0;
 		menuFlags->changeName = 0;
 		menuFlags->exit = 0;
 	} else if (MPX >= 465 && MPX <= 710 && MPY >= 428 && MPY <= 483) {
+		currentState = 1;
 		mouseFlags->outside = 0;
 		menuFlags->play = 0;
 		menuFlags->loadGame = 1;
 		menuFlags->changeName = 0;
 		menuFlags->exit = 0;
 	} else if (MPX >= 445 && MPX <= 730 && MPY >= 498 && MPY <= 553) {
+		currentState = 2;
 		mouseFlags->outside = 0;
 		menuFlags->play = 0;
 		menuFlags->loadGame = 0;
 		menuFlags->changeName = 1;
 		menuFlags->exit = 0;
 	} else if (MPX >= 532 && MPX <= 642 && MPY >= 566 && MPY <= 621) {
+		currentState = 3;
 		mouseFlags->outside = 0;
 		menuFlags->play = 0;
 		menuFlags->loadGame = 0;
 		menuFlags->changeName = 0;
 		menuFlags->exit = 1;
 	} else {
+		currentState = -1;
 		mouseFlags->outside = 1;
+	}
+
+	if (currentState != previousState && currentState != -1) {
+		GameSound::getInstance()->playSoundFX(SFX::select);
+		previousState = currentState;
 	}
 	
 	switch (Game::getInstance()->getEvent().type) {
@@ -67,6 +82,7 @@ void MainMenu::update() {
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
 			Game::getInstance()->startGame();
+			GameSound::getInstance()->playSoundFX(SFX::click);
 		}
 	} else if (menu->mainMenuFlags->loadGame) {
 		Selector::getInstance()->update(140, 445);
@@ -75,18 +91,21 @@ void MainMenu::update() {
 			Game::getInstance()->loadProgress();
 			Game::getInstance()->startGame();
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
+			GameSound::getInstance()->playSoundFX(SFX::click);
 		}
 	} else if (menu->mainMenuFlags->changeName) {
 		Selector::getInstance()->update(160, 515);
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			menu->setState(std::make_unique<TextInputMenu>());
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
 		}
 	} else if (menu->mainMenuFlags->exit) {
 		Selector::getInstance()->update(72, 583);
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			Game::getInstance()->setRunningToFalse();
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
 		}
 	}
 }
@@ -110,6 +129,10 @@ void MainMenu::render() {
 }
 
 void TextInputMenu::input() {
+	static int previousState = -1;
+	int currentState = -1;
+	static bool playMusic = true;
+
 	SDL_StartTextInput();
 
 	MouseStateFlags* mouseFlags = Menu::getInstance()->mouseStateFlags.get();
@@ -121,15 +144,23 @@ void TextInputMenu::input() {
 	SDL_GetMouseState(&MPX, &MPY);
 
 	if (MPX >= 480 && MPX <= 700 && MPY >= 465 && MPY <= 520) {
+		currentState = 0;
 		mouseFlags->outside = 0;
 		nameFlags->change = 1;
 		nameFlags->cancel = 0;
 	} else if (MPX >= 480 && MPX <= 700 && MPY >= 540 && MPY <= 595) {
+		currentState = 1;
 		mouseFlags->outside = 0;
 		nameFlags->change = 0;
 		nameFlags->cancel = 1;
 	} else {
+		currentState = -1;
 		mouseFlags->outside = 1;
+	}
+
+	if (currentState != previousState && currentState != -1) {
+		GameSound::getInstance()->playSoundFX(SFX::select);
+		previousState = currentState;
 	}
 
 	switch (event.type) {
@@ -167,12 +198,14 @@ void TextInputMenu::update() {
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			Menu::getInstance()->changePlayerName();
 			Menu::getInstance()->setState(std::make_unique<MainMenu>());
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
 		}
 	} else if (menu->changeNameFlags->cancel) {
 		Selector::getInstance()->update(110, 555);
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			Menu::getInstance()->setState(std::make_unique<MainMenu>());
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
 		}
 	}
 
@@ -191,6 +224,10 @@ void TextInputMenu::render() {
 }
 
 void PausedMenu::input() {
+	static int previousState = -1;
+	int currentState = -1;
+	static bool playMusic = true;
+
 	MouseStateFlags* mouseFlags = Menu::getInstance()->mouseStateFlags.get();
 	PauseFlags* pauseFlags = Menu::getInstance()->pauseFlags.get();
 	SDL_Event event = Game::getInstance()->getEvent();
@@ -199,22 +236,31 @@ void PausedMenu::input() {
 	SDL_GetMouseState(&MPX, &MPY);
 
 	if (MPX >= 500 && MPX <= 680 && MPY >= 330 && MPY <= 385) {
+		currentState = 0;
 		mouseFlags->outside = 0;
 		pauseFlags->resume = 1;
 		pauseFlags->saveGame = 0;
 		pauseFlags->exit = 0;
 	} else if (MPX >= 470 && MPX <= 710 && MPY >= 396 && MPY <= 451) {
+		currentState = 1;
 		mouseFlags->outside = 0;
 		pauseFlags->resume = 0;
 		pauseFlags->saveGame = 1;
 		pauseFlags->exit = 0;
 	} else if (MPX >= 530 && MPX <= 642 && MPY >= 457 && MPY <= 512) {
+		currentState = 2;
 		mouseFlags->outside = 0;
 		pauseFlags->resume = 0;
 		pauseFlags->saveGame = 0;
 		pauseFlags->exit = 1;
 	} else {
+		currentState = -1;
 		mouseFlags->outside = 1;
+	}
+
+	if (currentState != previousState && currentState != -1) {
+		GameSound::getInstance()->playSoundFX(SFX::select);
+		previousState = currentState;
 	}
 
 	switch (event.type) {
@@ -252,19 +298,24 @@ void PausedMenu::update() {
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
 			WaveManager::getInstance()->unpauseCountdownTimer();
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
+			GameSound::getInstance()->pauseSoundFX(SFX::ticking);
 		}
 	} else if (menu->pauseFlags->saveGame) {
 		Selector::getInstance()->update(130, 413);
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
 			Game::getInstance()->saveProgress();
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
 		}
 	} else if (menu->pauseFlags->exit) {
 		Selector::getInstance()->update(70, 472);
 
 		if (!menu->mouseStateFlags->outside && menu->mouseStateFlags->clicked) {
+			GameSound::getInstance()->playMusic();
 			Game::getInstance()->setState(std::make_unique<GameMenu>());
 			Menu::getInstance()->setState(std::make_unique<MainMenu>());
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
 		}
 	}
 }
@@ -284,6 +335,10 @@ void PausedMenu::render() {
 }
 
 void GameOverMenu::input() {
+	static int previousState = -1;
+	int currentState = -1;
+	static bool playMusic = true;
+
 	MouseStateFlags* mouseFlags = Menu::getInstance()->mouseStateFlags.get();
 	GameOverFlags* gameOverFlags = Menu::getInstance()->gameOverFlags.get();
 	SDL_Event event = Game::getInstance()->getEvent();
@@ -292,15 +347,23 @@ void GameOverMenu::input() {
 	SDL_GetMouseState(&MPX, &MPY);
 
 	if (MPX >= 458 && MPX <= 722 && MPY >= 376 && MPY <= 431) {
+		currentState = 0;
 		mouseFlags->outside = 0;
 		gameOverFlags->playAgain = 1;
 		gameOverFlags->mainMenu = 0;
 	} else if (MPX >= 458 && MPX <= 722 && MPY >= 442 && MPY <= 497) {
+		currentState = 1;
 		mouseFlags->outside = 0;
 		gameOverFlags->playAgain = 0;
 		gameOverFlags->mainMenu = 1;
 	} else {
+		currentState = -1;
 		mouseFlags->outside = 1;
+	}
+
+	if (currentState != previousState && currentState != -1) {
+		GameSound::getInstance()->playSoundFX(SFX::select);
+		previousState = currentState;
 	}
 
 	switch (event.type) {
@@ -329,6 +392,7 @@ void GameOverMenu::update() {
 			Game::getInstance()->resetProgress();
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
 			Game::getInstance()->startGame();
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
 		}
 	} else if (menu->gameOverFlags->mainMenu) {
 		Selector::getInstance()->update(148, 458);
@@ -337,6 +401,7 @@ void GameOverMenu::update() {
 			Game::getInstance()->resetProgress();
 			Game::getInstance()->setState(std::make_unique<GameMenu>());
 			Menu::getInstance()->setState(std::make_unique<MainMenu>());
+			GameSound::getInstance()->playSoundFX(SFX::minorClick);
 		}
 	}
 }

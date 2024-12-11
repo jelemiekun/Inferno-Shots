@@ -145,6 +145,8 @@ void WaveManager::setWaveCount(int waveCount) {
 }
 
 void WaveManager::initWave() {
+    GameSound::getInstance()->stopSoundFX();
+
     int enemyCount = getEnemyCountToinit();
 
     // Normal Enemies Fast
@@ -191,6 +193,8 @@ void WaveManager::initWave() {
 
     // Large Enemies
     if (*waveCount % 5 == 0 && *waveCount > 9) {
+        GameSound::getInstance()->playSoundFX(SFX::largeEnemySpawned);
+
         int largeEnemyCount = 1;
 
         std::shared_ptr<EnemyType> largeEnemy = std::dynamic_pointer_cast<EnemyType>(
@@ -212,8 +216,6 @@ void WaveManager::initWave() {
                 enemies.push_back(fastLargeEnemy);
             }
         }
-
-        GameSound::getInstance()->playSoundFX(SFX::largeEnemySpawned);
     }
 
     // Normal Enemies
@@ -306,6 +308,7 @@ void WaveManager::startCountdown() {
         setCountdownMaxAmount(duration);
         countdownTimer->setDuration(duration);
         countdownTimer->start();
+        GameSound::getInstance()->playSoundFX(SFX::ticking);
     }
 }
 

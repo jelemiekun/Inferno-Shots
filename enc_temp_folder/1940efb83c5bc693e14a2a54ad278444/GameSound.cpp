@@ -79,7 +79,7 @@ void GameSound::loadSoundFX() {
 void GameSound::setAudiosVolume() {
     Mix_VolumeMusic(60);
 
-    Mix_VolumeChunk(click, 54);
+    Mix_VolumeChunk(click, 84);
     Mix_VolumeChunk(minorClick, 65);
     Mix_VolumeChunk(damage, 54);
     Mix_VolumeChunk(fire, 25);

@@ -3,6 +3,7 @@
 
 enum class SFX {
 	click,
+	minorClick,
 	damage,
 	fire,
 	largeEnemySpawned,
@@ -25,11 +26,13 @@ public:
 	GameSound& operator=(GameSound&&) = delete;
 
 	static GameSound* getInstance();
+	int tickingChannel = -1;
 
 private:
 	Mix_Music* music;
 
 	Mix_Chunk* click;
+	Mix_Chunk* minorClick;
 	Mix_Chunk* damage;
 	Mix_Chunk* fire;
 	Mix_Chunk* largeEnemySpawned;
@@ -46,8 +49,11 @@ public:
 	void initMixer();
 	void loadMusic();
 	void loadSoundFX();
+	void setAudiosVolume();
 	void playMusic();
 	void stopMusic();
 	void playSoundFX(const SFX& sfx);
+	void stopSoundFX();
+	void pauseSoundFX(const SFX& sfx);
 };
 

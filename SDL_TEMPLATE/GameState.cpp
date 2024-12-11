@@ -9,6 +9,7 @@
 #include "Minimap.h"
 #include "Background.h"
 #include "MenuState.h"
+#include "GameSound.h"
 
 void GameMenu::input() {
     Menu::getInstance()->input();
@@ -52,6 +53,8 @@ void GamePlaying::input() {
             Game::getInstance()->setState(std::make_unique<GamePaused>());
             Menu::getInstance()->setState(std::make_unique<PausedMenu>());
             WaveManager::getInstance()->pauseCountdownTimer();
+            GameSound::getInstance()->playSoundFX(SFX::minorClick);
+            GameSound::getInstance()->pauseSoundFX(SFX::ticking);
             break;
         default: break;
         }

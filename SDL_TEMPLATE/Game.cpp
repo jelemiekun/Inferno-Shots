@@ -74,6 +74,7 @@ void Game::initFonts() {
 
 void Game::initGameSound() {
 	GameSound::getInstance()->initMixer();
+	GameSound::getInstance()->playMusic();
 }
 
 void Game::setRunningToTrue() {
@@ -103,7 +104,7 @@ void Game::initPlayerProfile() {
 void Game::initPlayer() {
 	// Initialize main prototype of Player
 	SDL_Point position = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(1, 700, position, 4.0f, 30.0f);
+	std::shared_ptr<Player> playerPrototype = std::make_shared<Player>(150, 700, position, 4.0f, 30.0f);
 
 	// Add main prototype player to Prototype Registry
 	PrototypeRegistry::getInstance()->addPrototype(
@@ -308,7 +309,7 @@ void Game::startGame() {
 	WaveManager::getInstance()->resetGame();
 	Bullet::bullets.clear();
 
-	GameSound::getInstance()->playMusic();
+	GameSound::getInstance()->stopMusic();
 }
 
 void Game::resetProgress() {
