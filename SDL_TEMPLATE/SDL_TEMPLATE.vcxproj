@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
+    <None Include="..\Dockerfile" />
     <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
@@ -134,16 +135,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>Inferno Shooter</TargetName>
+    <TargetName>Inferno_Shooter</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>Inferno Shooter</TargetName>
+    <TargetName>Inferno_Shooter</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>Inferno Shooter</TargetName>
+    <TargetName>Inferno_Shooter</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>Inferno Shooter</TargetName>
+    <TargetName>Inferno_Shooter</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

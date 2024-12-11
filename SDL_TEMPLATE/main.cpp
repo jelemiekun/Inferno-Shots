@@ -2,7 +2,6 @@
 #include "Game.h"
 #include "FPSManager.h"
 
-// TODO : compress photos/audios
 // TODO : controller
 
 int SDL_main(int argc, char* argv[]) {
