@@ -269,6 +269,7 @@ void PausedMenu::input() {
 		case SDLK_ESCAPE:
 			Game::getInstance()->setState(std::make_unique<GamePlaying>());
 			WaveManager::getInstance()->unpauseCountdownTimer();
+			GameSound::getInstance()->pauseSoundFX(SFX::ticking);
 			break;
 		default:
 			break;
@@ -402,6 +403,7 @@ void GameOverMenu::update() {
 			Game::getInstance()->setState(std::make_unique<GameMenu>());
 			Menu::getInstance()->setState(std::make_unique<MainMenu>());
 			GameSound::getInstance()->playSoundFX(SFX::minorClick);
+			GameSound::getInstance()->playMusic();
 		}
 	}
 }

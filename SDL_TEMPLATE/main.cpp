@@ -2,8 +2,6 @@
 #include "Game.h"
 #include "FPSManager.h"
 
-// TODO : save game state of the game such as player name, player position, and wave number 
-// TODO : music & sfx
 // TODO : compress photos/audios
 // TODO : controller
 

@@ -1,7 +1,21 @@
 #include "GameSound.h"
 #include <iostream>
 
-GameSound::GameSound() {}
+GameSound::GameSound()
+    : music(nullptr),
+    click(nullptr),
+    minorClick(nullptr),
+    damage(nullptr),
+    fire(nullptr),
+    largeEnemySpawned(nullptr),
+    largeEnemyDead(nullptr),
+    mediumEnemyDead(nullptr),
+    normalEnemyDead(nullptr),
+    select(nullptr),
+    gameOver(nullptr),
+    ticking(nullptr),
+    tickingChannel(-1) {
+}
 
 GameSound* GameSound::getInstance() {
     static GameSound instance;
@@ -87,8 +101,8 @@ void GameSound::setAudiosVolume() {
     Mix_VolumeChunk(largeEnemyDead, 40);
     Mix_VolumeChunk(mediumEnemyDead, 40);
     Mix_VolumeChunk(normalEnemyDead, 40);
-    Mix_VolumeChunk(select, 20);
-    Mix_VolumeChunk(gameOver, 10);
+    Mix_VolumeChunk(select, 14);
+    Mix_VolumeChunk(gameOver, 7);
     Mix_VolumeChunk(ticking, 70);
 }
 
@@ -102,8 +116,6 @@ void GameSound::stopMusic() {
 }
 
 void GameSound::playSoundFX(const SFX& sfx) {
-    setAudiosVolume();
-
     switch (sfx) {
     case SFX::click:
         Mix_PlayChannel(-1, click, 0);
